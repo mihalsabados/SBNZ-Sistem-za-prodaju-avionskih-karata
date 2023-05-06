@@ -1,1 +1,1 @@
-# SBNZ-Sistem-za-upravljanje-aerodroma
+# SBNZ-Sistem-za-upravljanje-aerodromom
