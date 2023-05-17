@@ -1,0 +1,70 @@
+mat-card {
+    max-width: 400px;
+    margin: 5em auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5rem;
+  }
+  
+  mat-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  
+  mat-form-field {
+    display: block;
+  }
+  
+  .registerLink {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    /*optional*/
+    font-family: arial, sans-serif;
+    /*input has OS specific font-family*/
+    color: #069;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 20px;
+  }
+  
+  .buttonDiv {
+    display: block;
+  }
+  
+  .secondLoginStepForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #mfa-partitioned {
+    padding-left: 15px;
+    letter-spacing: 32px;
+    border: 0;
+    background-image: linear-gradient(to left, black 70%, rgba(255, 255, 255, 0) 0%);
+    background-position: bottom;
+    background-size: 50px 1px;
+    background-repeat: repeat-x;
+    background-position-x: 35px;
+    width: 305px;
+    min-width: 305px;
+    outline: none;
+    font-size: 30px;
+  }
+  
+  #mfa-divInner {
+    left: 0;
+    position: sticky;
+  }
+  
+  #mfa-divOuter {
+    width: 290px;
+    overflow: hidden;
+  }
+  
+  
