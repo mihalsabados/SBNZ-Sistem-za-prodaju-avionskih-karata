@@ -12,6 +12,7 @@ import { BuyTicketPageComponent } from './buy-ticket/buy-ticket-page/buy-ticket-
 import { LoginComponent } from './login/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { HttpClientModule } from '@angular/common/http';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
-    MatProgressBarModule
+    MatProgressBarModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

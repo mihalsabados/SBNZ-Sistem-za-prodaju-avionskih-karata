@@ -5,10 +5,6 @@ b
 2model/src/main/java/com/ftn/sbnz/dto/LoginDTO.java,1\1\11240ae32f28bb8cc70b0c0dfb05c9d1fa2ab117
 w
 Gservice/src/main/java/com/ftn/sbnz/exception/UserNotFoundException.java,c\1\c1dd73c751b81696beebea934e35bc6d11aa17ca
-q
-Aservice/src/main/java/com/ftn/sbnz/controller/UserController.java,6\4\6489c5db8a5ccb84e0891b11acb7406c53df1e95
-?
-service/pom.xml,a\1\a1f4042fbcf78e2ab86d486176a2378cd0a26e9a
 x
 Hservice/src/test/java/com/ftn/sbnz/service/tests/CEPEntryPointsTest.java,c\9\c9aa5ed33391e897e266c93e6f54c7a1888cd102
 q

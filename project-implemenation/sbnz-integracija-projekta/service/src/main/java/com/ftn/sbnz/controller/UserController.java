@@ -3,10 +3,7 @@ import com.ftn.sbnz.dto.LoginDTO;
 import com.ftn.sbnz.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import lombok.*;
 
 import java.util.HashMap;
@@ -15,6 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
+@CrossOrigin
 public class UserController {
     private final UserService userService;
 

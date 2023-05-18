@@ -3,12 +3,8 @@ g
 7model/src/main/java/com/ftn/sbnz/enums/LoyaltyType.java,a\b\ab5de6ec5aac1334319b3f0a4511a61500577ab8
 b
 2model/src/main/java/com/ftn/sbnz/dto/LoginDTO.java,1\1\11240ae32f28bb8cc70b0c0dfb05c9d1fa2ab117
-q
-Aservice/src/main/java/com/ftn/sbnz/controller/UserController.java,6\4\6489c5db8a5ccb84e0891b11acb7406c53df1e95
 w
 Gservice/src/main/java/com/ftn/sbnz/exception/UserNotFoundException.java,c\1\c1dd73c751b81696beebea934e35bc6d11aa17ca
-?
-service/pom.xml,a\1\a1f4042fbcf78e2ab86d486176a2378cd0a26e9a
 p
 @service/src/main/java/com/ftn/sbnz/service/SampleAppService.java,7\b\7b39e6704218b3038303a997148c16a03c96bd4f
 r
