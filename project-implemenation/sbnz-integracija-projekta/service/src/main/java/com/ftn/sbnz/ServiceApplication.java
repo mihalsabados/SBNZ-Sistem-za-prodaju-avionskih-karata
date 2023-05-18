@@ -24,6 +24,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class ServiceApplication implements CommandLineRunner{
 
+	@Autowired
 	private UserRepository userRepository;
 	
 	private static Logger log = LoggerFactory.getLogger(ServiceApplication.class);

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="flightsTicket@localhost" uuid="f4aa6e1d-3c36-45d2-8733-f28f48554ee9">
+    <data-source source="LOCAL" name="MongoDB - flightTickets@localhost" uuid="9a88268c-9f78-4dd8-a195-2da9f1aba910">
       <driver-ref>mongo</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.dbschema.MongoJdbcDriver</jdbc-driver>
-      <jdbc-url>mongodb://localhost:27017/flightsTicket</jdbc-url>
+      <jdbc-url>mongodb://localhost:27017/flightTickets</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
