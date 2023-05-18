@@ -3,23 +3,23 @@
       <form [formGroup]="loginDataForm" (ngSubmit)="onLogin()">
         <mat-icon color="primary">lock</mat-icon>
         <h2>Log In</h2>
-        <mat-error *ngIf="!loginDataForm.valid">
+        <mat-error *ngIf="!loginDataForm.valid && loginDataForm.touched">
           The username and password were not recognized
         </mat-error>
-        <mat-form-field>
+        <mat-form-field class="field">
           <input matInput placeholder="Email" formControlName="email" name="email" type="email" required>
           <mat-error>
             Please provide a valid email address
           </mat-error>
         </mat-form-field>
-        <mat-form-field>
+        <mat-form-field class="field">
           <input matInput type="password" placeholder="Password" formControlName="password" name="password" required>
           <mat-error>
             Please provide a valid password
           </mat-error>
         </mat-form-field>
         <div class="buttonDiv" *ngIf="!loading">
-          <button mat-raised-button color="primary" [disabled]="!loginDataForm.valid">Next</button>
+          <button mat-raised-button color="primary" [disabled]="!loginDataForm.valid">Log In</button>
           <br/>
         </div>
         <div *ngIf="loading">

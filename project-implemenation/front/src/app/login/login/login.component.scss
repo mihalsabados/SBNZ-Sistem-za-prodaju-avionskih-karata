@@ -1,11 +1,12 @@
 mat-card {
     max-width: 400px;
-    margin: 5em auto;
+    margin: 0 auto;
     text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 5rem;
+    top:10rem;
+    padding-bottom: 20px;
   }
   
   mat-card-content {
@@ -17,6 +18,7 @@ mat-card {
   
   mat-form-field {
     display: block;
+    min-width: 360px;
   }
   
   .registerLink {
@@ -35,36 +37,10 @@ mat-card {
   .buttonDiv {
     display: block;
   }
-  
-  .secondLoginStepForm {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  #mfa-partitioned {
-    padding-left: 15px;
-    letter-spacing: 32px;
-    border: 0;
-    background-image: linear-gradient(to left, black 70%, rgba(255, 255, 255, 0) 0%);
-    background-position: bottom;
-    background-size: 50px 1px;
-    background-repeat: repeat-x;
-    background-position-x: 35px;
-    width: 305px;
-    min-width: 305px;
-    outline: none;
-    font-size: 30px;
-  }
-  
-  #mfa-divInner {
-    left: 0;
-    position: sticky;
-  }
-  
-  #mfa-divOuter {
-    width: 290px;
-    overflow: hidden;
+
+  mat-icon{
+    transform: scale(1.5);
+    margin-top: 10px;
   }
   
   
