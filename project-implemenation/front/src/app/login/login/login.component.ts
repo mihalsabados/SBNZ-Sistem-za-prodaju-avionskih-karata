@@ -1,8 +1,9 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import {Router} from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { LoginCredentials } from 'src/app/model/loginCredentials';
-import { UserService } from 'src/app/services/user.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 
 @Component({
@@ -14,7 +15,7 @@ export class LoginComponent {
   loginDataForm: FormGroup; 
   public loading = false;
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private toastr:ToastrService, private router:Router) {}
 
   ngOnInit(): void {
     this.loginDataForm = new FormGroup({
@@ -34,11 +35,14 @@ export class LoginComponent {
     this.userService.login(loginCredentials).subscribe({
       next:(res)=>{
         this.loading = false;
-        console.log('uspeh')
+        console.log('uspeh');
+        this.toastr.success("Successful login");
+        this.router.navigateByUrl("flights");
       },
       error:(err)=>{
         this.loading = false;
-        console.log('greska')
+        console.log('greska');
+        this.toastr.error("Bad credentials");
       }
     });
   }

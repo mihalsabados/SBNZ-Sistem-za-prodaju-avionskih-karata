@@ -1,0 +1,32 @@
+.container{
+    padding-bottom: 50px;
+}
+
+.infoDiv{
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.tableDiv{
+    width: 1200px;
+    margin: 0 auto;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    cursor: pointer;
+  }
+
+.mat-mdc-row:hover .mat-mdc-cell {
+    border-color: currentColor;
+}
+  
+.demo-row-is-clicked {
+font-weight: bold;
+}

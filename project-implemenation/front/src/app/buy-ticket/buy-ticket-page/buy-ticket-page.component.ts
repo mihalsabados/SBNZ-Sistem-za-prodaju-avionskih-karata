@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-buy-ticket-page',
@@ -7,17 +9,21 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./buy-ticket-page.component.scss']
 })
 export class BuyTicketPageComponent {
-  // public buyTicketForm: FormGroup;
+  public buyTicketForm: FormGroup;
 
-  // constructor(private toastrService:ToastrService, private router:Router){
-  // }
+  constructor(private toastrService:ToastrService, private router:Router){
+  }
 
 
-  // ngOnInit(): void {
-  //   this.buyTicketForm = new FormGroup({
-  //     email: new FormControl('', [Validators.required, Validators.email]),
-  //     firstName: new FormControl('', [Validators.required]),
-  //     lastName: new FormControl('', [Validators.required]),
-  //   })
-  // }
+  ngOnInit(): void {
+    this.buyTicketForm = new FormGroup({
+      email: new FormControl('', [Validators.required, Validators.email]),
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
+    })
+  }
+
+  onSubmit(){
+    
+  }
 }

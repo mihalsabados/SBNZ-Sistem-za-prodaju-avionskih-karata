@@ -13,13 +13,17 @@ import { LoginComponent } from './login/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { HttpClientModule } from '@angular/common/http';
+import { ToastrModule } from 'ngx-toastr';
+import { FlightsPageComponent } from './buy-ticket/flights-page/flights-page.component';
+import {MatTableModule} from '@angular/material/table';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     BuyTicketPageComponent,
-    LoginComponent
+    LoginComponent,
+    FlightsPageComponent
   ],
   imports: [
     BrowserModule,
@@ -32,7 +36,13 @@ import { HttpClientModule } from '@angular/common/http';
     MatButtonModule,
     ReactiveFormsModule,
     MatProgressBarModule,
-    HttpClientModule
+    HttpClientModule,
+    MatTableModule,
+    ToastrModule.forRoot({
+      timeOut: 5000,
+      positionClass: 'toast-bottom-center',
+      preventDuplicates: true,
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

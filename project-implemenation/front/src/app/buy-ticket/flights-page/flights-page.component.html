@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="infoDiv">
+        <h1 class="table-title">Flights</h1>
+    </div>
+
+    <div class="tableDiv">
+
+        <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
+            <ng-container matColumnDef="destination">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Destination </th>
+            <td mat-cell *matCellDef="let element">
+                {{element.destination}}
+            </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="distance">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Distance </th>
+            <td mat-cell *matCellDef="let element"> {{element.distance}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="price">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Price </th>
+            <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+            </ng-container>
+            <ng-container matColumnDef="departure">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Departure </th>
+            <td mat-cell *matCellDef="let element"> {{element.departure}}</td>
+            </ng-container>
+            <ng-container matColumnDef="soldTickets">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Sold Tickets </th>
+            <td mat-cell *matCellDef="let element"> {{element.soldTickets}} </td>
+            </ng-container>
+            <ng-container matColumnDef="numberOfSeats">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Number of Seats </th>
+            <td mat-cell *matCellDef="let element"> {{element.numberOfSeats}} </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="clickedRow(row)"></tr>
+        </table>
+    </div>
+</div>
