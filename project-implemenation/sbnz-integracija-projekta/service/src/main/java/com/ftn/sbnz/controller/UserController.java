@@ -1,5 +1,6 @@
 package com.ftn.sbnz.controller;
 import com.ftn.sbnz.dto.LoginDTO;
+import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +18,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String,Boolean>> checkCredentials(@RequestBody LoginDTO loginDTO) {
-        boolean credentialsValid = userService.login(loginDTO);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("credentialsValid", credentialsValid);
-
-        if (!credentialsValid) {
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> checkCredentials(@RequestBody LoginDTO loginDTO) {
+        User user = userService.login(loginDTO);
+        if (user == null) {
+            return ResponseEntity.badRequest().build();
         } else {
-            return new ResponseEntity<>(response, HttpStatus.OK);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
 }

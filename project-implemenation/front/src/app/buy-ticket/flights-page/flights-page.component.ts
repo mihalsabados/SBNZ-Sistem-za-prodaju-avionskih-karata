@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -14,13 +15,16 @@ export class FlightsPageComponent implements OnInit{
   displayedColumns = ['destination', 'distance', 'price', 'departure', 'soldTickets', 'numberOfSeats'];
 
   flights:any = [];
+  loggedUser:any;
 
   dataSource = new MatTableDataSource(this.flights);
 
-  constructor(private flightService:FlightService, private toaster:ToastrService, private router:Router) {}
+  constructor(private flightService:FlightService, private toaster:ToastrService, private router:Router, private authService:AuthService) {}
 
   ngOnInit(): void {
     this.loadData();
+    this.loggedUser = this.authService.getCurrentUser();
+    this.loggedUser.loyaltyColor = this.loggedUser.loyaltyStatus == "BRONZE"?"#CD7F32":this.loggedUser.loyaltyStatus == "SILVER"?"#C0C0C0":"#FFD700";
   }
 
   private loadData(){
@@ -34,10 +38,13 @@ export class FlightsPageComponent implements OnInit{
   );
   }
 
-
   clickedRow(row:any){
-    console.log(row);
+    this.router.navigateByUrl("buy-ticket/"+row.id);
+  }
 
+  logOut(){
+    this.authService.logOut();
+    this.router.navigateByUrl("/");
   }
 
 }

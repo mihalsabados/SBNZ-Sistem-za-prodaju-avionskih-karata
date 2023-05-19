@@ -3,6 +3,7 @@ import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms'
 import {Router} from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { LoginCredentials } from 'src/app/model/loginCredentials';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 
@@ -15,7 +16,7 @@ export class LoginComponent {
   loginDataForm: FormGroup; 
   public loading = false;
 
-  constructor(private userService: UserService, private toastr:ToastrService, private router:Router) {}
+  constructor(private userService: UserService, private toastr:ToastrService, private router:Router, private authService:AuthService) {}
 
   ngOnInit(): void {
     this.loginDataForm = new FormGroup({
@@ -35,13 +36,12 @@ export class LoginComponent {
     this.userService.login(loginCredentials).subscribe({
       next:(res)=>{
         this.loading = false;
-        console.log('uspeh');
         this.toastr.success("Successful login");
         this.router.navigateByUrl("flights");
+        this.authService.setCurrentUser(res);
       },
       error:(err)=>{
         this.loading = false;
-        console.log('greska');
         this.toastr.error("Bad credentials");
       }
     });

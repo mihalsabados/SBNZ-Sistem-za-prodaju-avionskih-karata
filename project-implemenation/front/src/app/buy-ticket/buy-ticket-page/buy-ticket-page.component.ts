@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/services/auth/auth.service';
 
 @Component({
   selector: 'app-buy-ticket-page',
@@ -11,7 +12,10 @@ import { ToastrService } from 'ngx-toastr';
 export class BuyTicketPageComponent {
   public buyTicketForm: FormGroup;
 
-  constructor(private toastrService:ToastrService, private router:Router){
+  flightId:number;
+
+  constructor(private toastrService:ToastrService, private router:Router, private authService:AuthService, private route: ActivatedRoute){
+    this.flightId = (route.snapshot.paramMap.get('id') as string) as unknown as number;
   }
 
 

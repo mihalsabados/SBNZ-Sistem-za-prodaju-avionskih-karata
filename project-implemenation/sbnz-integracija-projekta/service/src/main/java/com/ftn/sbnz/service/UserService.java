@@ -12,13 +12,12 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public boolean login(LoginDTO loginDTO) {
+    public User login(LoginDTO loginDTO) {
         try {
-            User user = userRepository.findByEmail(loginDTO.getEmail())
+            return userRepository.findByEmail(loginDTO.getEmail())
                     .orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
-            return user.getPassword().equals(loginDTO.getPassword());
         }catch (Exception e){
-            return false;
+            return null;
         }
 
     }
