@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DiscountRepository extends MongoRepository<Discount, String> {
-
+    Discount findByName(String discountName);
 }
