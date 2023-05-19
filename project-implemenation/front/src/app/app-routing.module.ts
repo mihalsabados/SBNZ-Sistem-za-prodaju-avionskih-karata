@@ -13,8 +13,8 @@ const routes: Routes = [
     path:"flights",
     component: FlightsPageComponent
   },
-   {
-    path:"buy-ticket",
+  {
+    path:"buy-ticket/:id",
     component: BuyTicketPageComponent
   },
 
