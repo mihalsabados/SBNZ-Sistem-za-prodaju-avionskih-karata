@@ -1,6 +1,7 @@
 package com.ftn.sbnz;
 
 import com.ftn.sbnz.enums.LoyaltyType;
+import com.ftn.sbnz.enums.TicketType;
 import com.ftn.sbnz.model.Discount;
 import com.ftn.sbnz.model.Flight;
 import com.ftn.sbnz.model.Ticket;
@@ -95,11 +96,11 @@ public class ServiceApplication implements CommandLineRunner{
 		);
 
 		List<Ticket> tickets = List.of(
-			new Ticket(1L, passengerList.get(0), passengerList.get(0), null, 40000),
-			new Ticket(2L, passengerList.get(1), passengerList.get(0), null, 40000),
-			new Ticket(3L, passengerList.get(2), passengerList.get(0), null, 40000),
-			new Ticket(4L, passengerList.get(1), passengerList.get(1), null, 40000),
-			new Ticket(5L, passengerList.get(2), passengerList.get(3), null, 40000)
+			new Ticket(1L, passengerList.get(0), passengerList.get(0), null, 40000, TicketType.BUSINESS),
+			new Ticket(2L, passengerList.get(1), passengerList.get(0), null, 40000, TicketType.BUSINESS),
+			new Ticket(3L, passengerList.get(2), passengerList.get(0), null, 40000, TicketType.BUSINESS),
+			new Ticket(4L, passengerList.get(1), passengerList.get(1), null, 40000, TicketType.BUSINESS),
+			new Ticket(5L, passengerList.get(2), passengerList.get(3), null, 40000, TicketType.BUSINESS)
 		);
 		ticketRepository.saveAll(tickets);
 		return tickets;
