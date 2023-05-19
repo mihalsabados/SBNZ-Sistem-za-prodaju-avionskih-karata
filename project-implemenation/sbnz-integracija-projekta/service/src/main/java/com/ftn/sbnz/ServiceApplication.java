@@ -52,6 +52,8 @@ public class ServiceApplication implements CommandLineRunner{
 
 	private void deleteAllEntities() {
 		this.userRepository.deleteAll();
+		this.flightRepository.deleteAll();
+		this.ticketRepository.deleteAll();
 	}
 
 	private void createInitialUsers() {

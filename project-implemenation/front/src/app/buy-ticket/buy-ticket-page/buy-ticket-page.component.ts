@@ -6,6 +6,9 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { Location } from '@angular/common';
 import { TicketData } from 'src/app/model/ticketData';
 import { TicketService } from 'src/app/services/ticket/ticket.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ResponseDialogComponent } from '../response-dialog/response-dialog/response-dialog.component';
+import { TicketToShowDTO } from 'src/app/model/ticketToShowDTO';
 
 @Component({
   selector: 'app-buy-ticket-page',
@@ -26,7 +29,9 @@ export class BuyTicketPageComponent {
   pickedCardType: string = 'Economic';
   cardTypes: string[] = ['Economic', 'Business'];
 
-  constructor(private toastrService:ToastrService, private router:Router, private authService:AuthService, private route: ActivatedRoute, private location: Location, private ticketService: TicketService){
+  ticketToShow: TicketToShowDTO;
+
+  constructor(private toastrService:ToastrService, private router:Router, private authService:AuthService, private route: ActivatedRoute, private location: Location, private ticketService: TicketService, private responseDialog: MatDialog){
     this.flightId = (route.snapshot.paramMap.get('id') as string) as unknown as number;
     this.destination = (route.snapshot.paramMap.get('destination') as string) as unknown as string;
     this.departure = (route.snapshot.paramMap.get('departure') as string) as unknown as Date;
@@ -56,18 +61,27 @@ export class BuyTicketPageComponent {
       flightId: this.flightId,
       cardType: this.pickedCardType,
     };
-
-    console.log(ticketData);
     
     this.ticketService.createTicket(ticketData).subscribe({
       next: (res) => {
+        console.log(res)
         this.toastrService.success("Ticket successfully reserved");
-        //dialog
+        this.ticketToShow = res;
+        this.openResponseDialog();
       },
       error: (err) => {
         this.toastrService.warning("Something went wrong, please try again!");
       }
 	  });
+  }
+
+  openResponseDialog() {
+    const dialogRef = this.responseDialog.open(ResponseDialogComponent, {
+      data: this.ticketToShow,
+    });
+    dialogRef.afterClosed().subscribe(() => {
+      console.log('izasao');
+    });
   }
 
   goBack(): void {
