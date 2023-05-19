@@ -3,6 +3,8 @@ package com.ftn.sbnz.controller;
 import com.ftn.sbnz.dto.FlightDTO;
 import com.ftn.sbnz.dto.LoginDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
+import com.ftn.sbnz.dto.ticket.TicketToShowDTO;
+import com.ftn.sbnz.model.Ticket;
 import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.service.FlightService;
 import com.ftn.sbnz.service.TicketService;
@@ -22,10 +24,8 @@ public class TicketController {
     private final TicketService ticketService;
 
     @PostMapping("/create-ticket")
-    public ResponseEntity<?> createTicket(@RequestBody TicketDataDTO ticketDataDTO) {
-        boolean success = ticketService.createTicket(ticketDataDTO);
-        if (!success)
-            return ResponseEntity.badRequest().build();
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<TicketToShowDTO> createTicket(@RequestBody TicketDataDTO ticketDataDTO) {
+        TicketToShowDTO ticketToShowDTO = ticketService.createTicket(ticketDataDTO);
+        return ResponseEntity.ok(ticketToShowDTO);
     }
 }

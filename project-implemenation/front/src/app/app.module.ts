@@ -18,6 +18,8 @@ import { FlightsPageComponent } from './buy-ticket/flights-page/flights-page.com
 import {MatTableModule} from '@angular/material/table';
 import {MatRadioModule} from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
+import { ResponseDialogComponent } from './buy-ticket/response-dialog/response-dialog/response-dialog.component';
+import {MatDialogModule} from "@angular/material/dialog"
 
 
 @NgModule({
@@ -25,7 +27,8 @@ import { FormsModule } from '@angular/forms';
     AppComponent,
     BuyTicketPageComponent,
     LoginComponent,
-    FlightsPageComponent
+    FlightsPageComponent,
+    ResponseDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +45,7 @@ import { FormsModule } from '@angular/forms';
     MatTableModule,
     MatRadioModule,
     FormsModule,
+    MatDialogModule,
     ToastrModule.forRoot({
       timeOut: 5000,
       positionClass: 'toast-bottom-center',
