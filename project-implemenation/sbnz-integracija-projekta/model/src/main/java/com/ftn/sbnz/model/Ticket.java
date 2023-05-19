@@ -1,5 +1,6 @@
 package com.ftn.sbnz.model;
 
+import com.ftn.sbnz.enums.TicketType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
@@ -23,4 +24,5 @@ public class Ticket {
     @DBRef
     private List<Discount> discounts;
     private double finalPrice;
+    private TicketType ticketType;
 }

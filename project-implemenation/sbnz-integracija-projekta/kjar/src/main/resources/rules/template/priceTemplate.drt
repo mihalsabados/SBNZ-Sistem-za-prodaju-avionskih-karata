@@ -1,0 +1,24 @@
+template header
+ticketType
+minDistance
+maxDistance
+price
+
+package template
+
+import com.ftn.sbnz.model.Ticket
+import com.ftn.sbnz.model.Flight
+
+template "price template"
+
+rule "Price_@{row.rowNumber}"
+    when
+        $flight: Flight($tickets: soldTickets,
+                distance >= @{minDistance},
+                distance < @{maxDistance})
+        $ticket: Ticket(ticketType == @{ticketType}) from $tickets
+    then
+        modify($ticket){setFinalPrice(@{price})};
+end
+
+end template
