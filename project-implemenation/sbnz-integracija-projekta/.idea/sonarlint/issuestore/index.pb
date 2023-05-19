@@ -1,6 +1,4 @@
 
-g
-7model/src/main/java/com/ftn/sbnz/enums/LoyaltyType.java,a\b\ab5de6ec5aac1334319b3f0a4511a61500577ab8
 b
 2model/src/main/java/com/ftn/sbnz/dto/LoginDTO.java,1\1\11240ae32f28bb8cc70b0c0dfb05c9d1fa2ab117
 w

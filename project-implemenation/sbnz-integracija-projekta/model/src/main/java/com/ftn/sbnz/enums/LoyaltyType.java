@@ -1,5 +1,5 @@
 package com.ftn.sbnz.enums;
 
 public enum LoyaltyType {
-    NONE, BRONZE, SILVER, GOLD
+    REGULAR, BRONZE, SILVER, GOLD
 }

@@ -24,7 +24,7 @@ export class FlightsPageComponent implements OnInit{
   ngOnInit(): void {
     this.loadData();
     this.loggedUser = this.authService.getCurrentUser();
-    this.loggedUser.loyaltyColor = this.loggedUser.loyaltyStatus == "BRONZE"?"#CD7F32":this.loggedUser.loyaltyStatus == "SILVER"?"#C0C0C0":"#FFD700";
+    this.loggedUser.loyaltyColor = this.loggedUser.loyaltyStatus == "REGULAR"?"#F0F8FF":this.loggedUser.loyaltyStatus == "BRONZE"?"#CD7F32":this.loggedUser.loyaltyStatus == "SILVER"?"#C0C0C0":"#FFD700";
   }
 
   private loadData(){

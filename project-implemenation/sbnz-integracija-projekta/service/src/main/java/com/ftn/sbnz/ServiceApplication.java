@@ -59,7 +59,7 @@ public class ServiceApplication implements CommandLineRunner{
 		userRepository.save(new User("misa@gmail.com", password, "Misa", "Jokic", "Stojanova 22", "0613005551", "Novi Sad", LoyaltyType.BRONZE));
 		userRepository.save(new User("jelena@gmail.com", password, "Jelena", "Jelenic", "Stojanova 23", "0613005552", "Novi Sad", LoyaltyType.SILVER));
 		userRepository.save(new User("pera@gmail.com", password, "Pera", "Peric", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.GOLD));
-		userRepository.save(new User("perafdsa@gmail.com", password, "Pera", "Peric", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.GOLD));
+		userRepository.save(new User("perafdsa@gmail.com", password, "Pera", "Peric", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR));
 	}
 
 	private void createInitialDiscounts(){
