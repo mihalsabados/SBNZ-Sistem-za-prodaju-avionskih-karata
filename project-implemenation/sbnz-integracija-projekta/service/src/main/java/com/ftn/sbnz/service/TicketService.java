@@ -10,30 +10,20 @@ import com.ftn.sbnz.model.Ticket;
 import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.dto.ticket.TicketToShowDTO;
 import com.ftn.sbnz.exception.FlightNotFoundException;
-import com.ftn.sbnz.exception.UserNotFoundException;
-import com.ftn.sbnz.model.Discount;
-import com.ftn.sbnz.model.Flight;
-import com.ftn.sbnz.model.Ticket;
-import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.repository.DiscountRepository;
 import com.ftn.sbnz.repository.FlightRepository;
 import com.ftn.sbnz.repository.TicketRepository;
 import com.ftn.sbnz.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.kie.api.KieServices;
+import org.drools.template.ObjectDataCompiler;
 import org.kie.api.io.ResourceType;
-import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.utils.KieHelper;
 import org.springframework.stereotype.Service;
 
-import org.drools.template.ObjectDataCompiler;
-
 import java.io.InputStream;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -55,7 +45,7 @@ public class TicketService {
         ticket.setPayer(payer);
         ticket.setId(this.ticketRepository.count() + 1);
         ticket.setTicketType(TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
-        setPrice(ticket);
+
         ticketRepository.save(ticket);
         addTicketToFlight(ticketDataDTO.getFlightId(), ticket);
         return new TicketToShowDTO(
@@ -73,9 +63,10 @@ public class TicketService {
                 orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
         flight.getSoldTickets().add(ticket);
         flightRepository.save(flight);
+        setPrice(flight, ticket);
     }
 
-    private void setPrice(Ticket ticket) {
+    private void setPrice(Flight flight, Ticket ticket) {
         InputStream template = TicketService.class.getResourceAsStream("/rules/template/priceTemplate.drt");
 
         List<PriceTemplate> priceTemplates = List.of(
@@ -111,10 +102,14 @@ public class TicketService {
         kieHelper.addContent(drl, ResourceType.DRL);
         KieSession ksession = kieHelper.build().newKieSession();
 
+        ksession.insert(flight);
         ksession.insert(ticket);
 
         int rulesFired = ksession.fireAllRules();
         System.out.println("Rules fired for price template: "+rulesFired);
+        ticketRepository.save(ticket);
+
+
     }
 
     private User createNewUser(PassengerDataDTO passengerData) {
