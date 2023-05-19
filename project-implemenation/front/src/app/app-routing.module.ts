@@ -14,7 +14,7 @@ const routes: Routes = [
     component: FlightsPageComponent
   },
   {
-    path:"buy-ticket/:id",
+    path:"buy-ticket/:id/:destination/:departure",
     component: BuyTicketPageComponent
   },
 

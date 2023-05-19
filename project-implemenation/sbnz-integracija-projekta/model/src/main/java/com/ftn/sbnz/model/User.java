@@ -1,4 +1,5 @@
 package com.ftn.sbnz.model;
+import com.ftn.sbnz.dto.ticket.PassengerDataDTO;
 import com.ftn.sbnz.enums.LoyaltyType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -21,4 +22,15 @@ public class User {
     private String phoneNumber;
     private String place;
     private LoyaltyType loyaltyStatus;
+
+    public User(PassengerDataDTO passengerData) {
+        this.email = passengerData.getEmailPassenger();
+        this.password = "12345678";
+        this.firstName = passengerData.getFirstNamePassenger();
+        this.lastName = passengerData.getLastNamePassenger();
+        this.address = passengerData.getAddressPassenger();
+        this.phoneNumber = passengerData.getPhoneNumberPassenger();
+        this.place = passengerData.getPlacePassenger();
+        this.loyaltyStatus = LoyaltyType.REGULAR;
+    }
 }

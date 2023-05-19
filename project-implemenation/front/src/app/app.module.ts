@@ -16,6 +16,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { ToastrModule } from 'ngx-toastr';
 import { FlightsPageComponent } from './buy-ticket/flights-page/flights-page.component';
 import {MatTableModule} from '@angular/material/table';
+import {MatRadioModule} from '@angular/material/radio';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -38,6 +40,8 @@ import {MatTableModule} from '@angular/material/table';
     MatProgressBarModule,
     HttpClientModule,
     MatTableModule,
+    MatRadioModule,
+    FormsModule,
     ToastrModule.forRoot({
       timeOut: 5000,
       positionClass: 'toast-bottom-center',
