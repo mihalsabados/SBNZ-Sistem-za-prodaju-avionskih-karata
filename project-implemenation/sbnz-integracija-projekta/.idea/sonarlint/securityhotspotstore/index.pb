@@ -1,10 +1,4 @@
 
-b
-2model/src/main/java/com/ftn/sbnz/dto/LoginDTO.java,1\1\11240ae32f28bb8cc70b0c0dfb05c9d1fa2ab117
-w
-Gservice/src/main/java/com/ftn/sbnz/exception/UserNotFoundException.java,c\1\c1dd73c751b81696beebea934e35bc6d11aa17ca
-p
-@service/src/main/java/com/ftn/sbnz/service/SampleAppService.java,7\b\7b39e6704218b3038303a997148c16a03c96bd4f
 r
 Bservice/src/test/java/com/ftn/sbnz/service/tests/CEPRulesTest.java,5\8\589e9a3e5a2e846124dc4615fd60875710b21b70
 s
@@ -13,5 +7,3 @@ x
 Hservice/src/test/java/com/ftn/sbnz/service/tests/CEPEntryPointsTest.java,c\9\c9aa5ed33391e897e266c93e6f54c7a1888cd102
 q
 Aservice/src/main/java/com/ftn/sbnz/repository/UserRepository.java,b\7\b71667b367e497c75c081bfa72737b09335d29b2
-t
-Dservice/src/main/java/com/ftn/sbnz/service/SampleHomeController.java,4\d\4d3d66daf33a5fd226a7426bb475932d394fd9f4

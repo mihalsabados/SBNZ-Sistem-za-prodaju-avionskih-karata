@@ -16,6 +16,7 @@ export class FlightsPageComponent implements OnInit{
 
   flights:any = [];
   loggedUser:any;
+  loyaltyColor: string;
 
   dataSource = new MatTableDataSource(this.flights);
 
@@ -24,7 +25,7 @@ export class FlightsPageComponent implements OnInit{
   ngOnInit(): void {
     this.loadData();
     this.loggedUser = this.authService.getCurrentUser();
-    this.loggedUser.loyaltyColor = this.loggedUser.loyaltyStatus == "REGULAR"?"#F0F8FF":this.loggedUser.loyaltyStatus == "BRONZE"?"#CD7F32":this.loggedUser.loyaltyStatus == "SILVER"?"#C0C0C0":"#FFD700";
+    this.loyaltyColor = this.loggedUser.loyaltyStatus == "REGULAR"?"#F0F8FF":this.loggedUser.loyaltyStatus == "BRONZE"?"#CD7F32":this.loggedUser.loyaltyStatus == "SILVER"?"#C0C0C0":"#FFD700";
   }
 
   private loadData(){
@@ -39,7 +40,7 @@ export class FlightsPageComponent implements OnInit{
   }
 
   clickedRow(row:any){
-    this.router.navigateByUrl("buy-ticket/"+row.id);
+    this.router.navigateByUrl("buy-ticket/"+ row.id + "/" + row.destination + "/" + row.departure);
   }
 
   logOut(){

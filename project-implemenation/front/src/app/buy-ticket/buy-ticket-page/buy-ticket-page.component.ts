@@ -3,6 +3,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { Location } from '@angular/common';
+import { TicketData } from 'src/app/model/ticketData';
+import { TicketService } from 'src/app/services/ticket/ticket.service';
 
 @Component({
   selector: 'app-buy-ticket-page',
@@ -10,24 +13,88 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   styleUrls: ['./buy-ticket-page.component.scss']
 })
 export class BuyTicketPageComponent {
-  public buyTicketForm: FormGroup;
-
+  public anotherPassengerForm: FormGroup;
+  loggedUser:any;
   flightId:number;
+  destination: string;
+  departure: Date;
+  loyaltyColor: string;
 
-  constructor(private toastrService:ToastrService, private router:Router, private authService:AuthService, private route: ActivatedRoute){
+  pickedPassengerStatus: string = 'Only for me';
+  passengerStatuses: string[] = ['Only for me', 'For another passenger'];
+
+  pickedCardType: string = 'Economic';
+  cardTypes: string[] = ['Economic', 'Business'];
+
+  constructor(private toastrService:ToastrService, private router:Router, private authService:AuthService, private route: ActivatedRoute, private location: Location, private ticketService: TicketService){
     this.flightId = (route.snapshot.paramMap.get('id') as string) as unknown as number;
+    this.destination = (route.snapshot.paramMap.get('destination') as string) as unknown as string;
+    this.departure = (route.snapshot.paramMap.get('departure') as string) as unknown as Date;
   }
 
 
   ngOnInit(): void {
-    this.buyTicketForm = new FormGroup({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      firstName: new FormControl('', [Validators.required]),
-      lastName: new FormControl('', [Validators.required]),
+    this.loggedUser = this.authService.getCurrentUser();
+    this.loyaltyColor = this.loggedUser.loyaltyStatus == "REGULAR"?"#F0F8FF":this.loggedUser.loyaltyStatus == "BRONZE"?"#CD7F32":this.loggedUser.loyaltyStatus == "SILVER"?"#C0C0C0":"#FFD700";
+
+    this.anotherPassengerForm = new FormGroup({
+      emailPassenger: new FormControl('', [Validators.required, Validators.email]),
+      firstNamePassenger: new FormControl('', [Validators.required]),
+      lastNamePassenger: new FormControl('', [Validators.required]),
+      addressPassenger: new FormControl('', [Validators.required]),
+      phoneNumberPassenger: new FormControl('', [Validators.required]),
+      placePassenger: new FormControl('', [Validators.required]),
     })
+
+    this.passengerIsPayer();
   }
 
   onSubmit(){
+    let ticketData: TicketData = {
+      passengerData: this.anotherPassengerForm.value,
+      payerEmail: this.loggedUser.email,
+      flightId: this.flightId,
+      cardType: this.pickedCardType,
+    };
+
+    console.log(ticketData);
     
+    this.ticketService.createTicket(ticketData).subscribe({
+      next: (res) => {
+        this.toastrService.success("Ticket successfully reserved");
+        //dialog
+      },
+      error: (err) => {
+        this.toastrService.warning("Something went wrong, please try again!");
+      }
+	  });
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+
+  cancel(){
+    this.location.back();
+  }
+
+  onClickOnlyForMe(){
+    this.anotherPassengerForm.reset();
+    this.passengerIsPayer();
+  }
+
+  onClickForAnotherPassenger(){
+    this.anotherPassengerForm.reset();
+  }
+
+  passengerIsPayer(){
+    this.anotherPassengerForm.patchValue({
+      emailPassenger: this.loggedUser.email,
+      firstNamePassenger: this.loggedUser.firstName,
+      lastNamePassenger: this.loggedUser.lastName,
+      addressPassenger: this.loggedUser.address,
+      phoneNumberPassenger: this.loggedUser.phoneNumber,
+      placePassenger: this.loggedUser.place
+    });
   }
 }
