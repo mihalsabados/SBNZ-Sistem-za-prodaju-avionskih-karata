@@ -79,9 +79,6 @@ export class BuyTicketPageComponent {
     const dialogRef = this.responseDialog.open(ResponseDialogComponent, {
       data: this.ticketToShow,
     });
-    dialogRef.afterClosed().subscribe(() => {
-      console.log('izasao');
-    });
   }
 
   goBack(): void {
