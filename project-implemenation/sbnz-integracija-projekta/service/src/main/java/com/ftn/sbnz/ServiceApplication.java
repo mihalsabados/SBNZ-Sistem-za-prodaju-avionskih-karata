@@ -76,6 +76,8 @@ public class ServiceApplication implements CommandLineRunner{
 			new Discount("3 economic tickets", 7),
 			new Discount("4 economic tickets", 10),
 			new Discount("5 or more economic tickets", 12),
+			// Forward chaining
+			new Discount("popular flight with over 8000km", 12),
 			// CEP discounts
 			new Discount("less than 4 seats", 10),
 			new Discount("4-8 seats", 5),
@@ -107,20 +109,20 @@ public class ServiceApplication implements CommandLineRunner{
 	}
 
 	private void createInitialFlights(List<Ticket> tickets) {
-		flightRepository.save(new Flight(1L, "London", 1694, 40000, LocalDateTime.of(2023, 6, 10, 14, 0), tickets, 150));
-		flightRepository.save(new Flight(2L, "Istanbul", 642, 40000, LocalDateTime.of(2023, 6, 10, 12, 0), tickets, 120));
-		flightRepository.save(new Flight(3L, "Vienna", 536, 35000, LocalDateTime.of(2023, 6, 11, 9, 0), tickets, 125));
-		flightRepository.save(new Flight(4L, "Munich", 871, 45000, LocalDateTime.of(2023, 6, 7, 8, 30), tickets, 125));
-		flightRepository.save(new Flight(5L, "Zurich", 1082, 55000, LocalDateTime.of(2023, 6, 11, 10, 0), tickets, 120));
-		flightRepository.save(new Flight(6L, "Rome", 1107, 48000, LocalDateTime.of(2023, 6, 10, 15, 0), tickets, 150));
-		flightRepository.save(new Flight(7L, "Paris", 1376, 60000, LocalDateTime.of(2023, 6, 9, 11, 30), tickets, 180));
-		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, LocalDateTime.of(2023, 6, 9, 5, 0), tickets, 150));
-		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, LocalDateTime.of(2023, 6, 8, 19, 30), tickets, 180));
-		flightRepository.save(new Flight(10L, "New York City", 7978, 100000, LocalDateTime.of(2023, 6, 8, 22, 0), tickets, 220));
-		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, LocalDateTime.of(2023, 6, 12, 12, 30), tickets, 220));
-		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, LocalDateTime.of(2023, 6, 9, 20, 0), tickets, 220));
-		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, LocalDateTime.of(2023, 6, 7, 7, 30), tickets, 220));
-		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 5, 30), tickets, 220));
+		flightRepository.save(new Flight(1L, "London", 1694, 40000, LocalDateTime.of(2023, 6, 10, 14, 0), tickets, 150, false));
+		flightRepository.save(new Flight(2L, "Istanbul", 642, 40000, LocalDateTime.of(2023, 6, 10, 12, 0), tickets, 120, false));
+		flightRepository.save(new Flight(3L, "Vienna", 536, 35000, LocalDateTime.of(2023, 6, 11, 9, 0), tickets, 125, true));
+		flightRepository.save(new Flight(4L, "Munich", 871, 45000, LocalDateTime.of(2023, 6, 7, 8, 30), tickets, 125, false));
+		flightRepository.save(new Flight(5L, "Zurich", 1082, 55000, LocalDateTime.of(2023, 6, 11, 10, 0), tickets, 120, false));
+		flightRepository.save(new Flight(6L, "Rome", 1107, 48000, LocalDateTime.of(2023, 6, 10, 15, 0), tickets, 150, true));
+		flightRepository.save(new Flight(7L, "Paris", 1376, 60000, LocalDateTime.of(2023, 6, 9, 11, 30), tickets, 180, false));
+		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, LocalDateTime.of(2023, 6, 9, 5, 0), tickets, 150, false));
+		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, LocalDateTime.of(2023, 6, 8, 19, 30), tickets, 180, false));
+		flightRepository.save(new Flight(10L, "New York City", 7978, 100000, LocalDateTime.of(2023, 6, 8, 22, 0), tickets, 220, false));
+		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, LocalDateTime.of(2023, 6, 12, 12, 30), tickets, 220, false));
+		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, LocalDateTime.of(2023, 6, 9, 20, 0), tickets, 220, true));
+		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, LocalDateTime.of(2023, 6, 7, 7, 30), tickets, 220, false));
+		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 5, 30), tickets, 220, true));
 	}
 
 	@Bean

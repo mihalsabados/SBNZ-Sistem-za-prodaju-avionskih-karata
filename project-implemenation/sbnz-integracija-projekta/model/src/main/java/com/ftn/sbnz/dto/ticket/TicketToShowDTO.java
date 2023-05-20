@@ -1,5 +1,6 @@
 package com.ftn.sbnz.dto.ticket;
 import com.ftn.sbnz.model.Discount;
+import com.ftn.sbnz.model.Ticket;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,9 @@ import java.util.List;
 public class TicketToShowDTO {
     private List<Discount> discounts;
     private double finalPrice;
+
+    public TicketToShowDTO(Ticket ticket){
+        this.discounts = ticket.getDiscounts();
+        this.finalPrice = ticket.getFinalPrice();
+    }
 }

@@ -1,0 +1,19 @@
+package rules.forward;
+import  com.ftn.sbnz.model.Flight;
+import  com.ftn.sbnz.model.Ticket;
+
+declare TicketAdded
+    ticketId: Long
+    flightId: Long
+end
+
+rule "Available seats on a flight"
+    when
+        $t: Ticket()
+        $fl: Flight(soldTickets.size() < numberOfSeats)
+    then
+        $fl.getSoldTickets().add($t);
+        insert(new TicketAdded($t.getId(), $fl.getId()));
+        System.out.println("Nestoo");
+end
+

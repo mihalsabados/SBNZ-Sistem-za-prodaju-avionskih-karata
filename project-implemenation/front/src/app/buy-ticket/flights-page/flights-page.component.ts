@@ -12,7 +12,7 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./flights-page.component.scss']
 })
 export class FlightsPageComponent implements OnInit{
-  displayedColumns = ['destination', 'distance', 'price', 'departure', 'soldTickets', 'numberOfSeats'];
+  displayedColumns = ['destination', 'distance', 'price', 'departure', 'soldTickets', 'numberOfSeats', 'popular'];
 
   flights:any = [];
   loggedUser:any;

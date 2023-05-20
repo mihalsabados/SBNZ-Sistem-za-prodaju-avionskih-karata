@@ -16,7 +16,9 @@ import com.ftn.sbnz.repository.TicketRepository;
 import com.ftn.sbnz.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.drools.template.ObjectDataCompiler;
+import org.kie.api.KieServices;
 import org.kie.api.io.ResourceType;
+import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
 import org.kie.internal.utils.KieHelper;
 import org.springframework.stereotype.Service;
@@ -33,35 +35,41 @@ public class TicketService {
     private final FlightRepository flightRepository;
     private final DiscountRepository discountRepository;
 
+
+    private KieContainer getKieContainer(){
+        KieServices ks = KieServices.Factory.get();
+        return ks.newKieClasspathContainer();
+    }
+
+
     public TicketToShowDTO createTicket(TicketDataDTO ticketDataDTO) {
-        Ticket ticket = new Ticket();
         User passenger = this.userRepository.findByEmail(ticketDataDTO.getPassengerData().getEmailPassenger()).
                 orElse(createNewUser(ticketDataDTO.getPassengerData()));
-        ticket.setPassenger(passenger);
-
         User payer = this.userRepository.findByEmail(ticketDataDTO.getPayerEmail()).
                 orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
 
-        ticket.setPayer(payer);
-        ticket.setId(this.ticketRepository.count() + 1);
-        ticket.setTicketType(TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
+        long newId = this.ticketRepository.count() + 1;
+
+        Ticket ticket = new Ticket(newId, passenger, payer, null, 0,
+                TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
 
         ticketRepository.save(ticket);
         addTicketToFlight(ticketDataDTO.getFlightId(), ticket);
-        return new TicketToShowDTO(
-            Arrays.asList(
-                    this.discountRepository.findByName("2 business tickets"),
-                    this.discountRepository.findByName("3 business tickets"),
-                    this.discountRepository.findByName("4 business tickets")
-            ),
-            50.000
-        );
+        return new TicketToShowDTO(ticket);
     }
 
     private void addTicketToFlight(Long flightId, Ticket ticket) {
         Flight flight = this.flightRepository.findById(flightId).
                 orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
-        flight.getSoldTickets().add(ticket);
+
+        KieSession ksession = getKieContainer().newKieSession("forwardKsession");
+
+        ksession.insert(flight);
+        ksession.insert(ticket);
+
+        long ruleFireCount = ksession.fireAllRules();
+        System.out.println(ruleFireCount);
+
         flightRepository.save(flight);
         setPrice(flight, ticket);
     }
@@ -108,8 +116,6 @@ public class TicketService {
         int rulesFired = ksession.fireAllRules();
         System.out.println("Rules fired for price template: "+rulesFired);
         ticketRepository.save(ticket);
-
-
     }
 
     private User createNewUser(PassengerDataDTO passengerData) {
