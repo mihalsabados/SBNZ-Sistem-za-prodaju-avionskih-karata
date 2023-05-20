@@ -25,5 +25,6 @@ public class Flight {
     @DBRef
     private List<Ticket> soldTickets;
     private int numberOfSeats;
+    private boolean popular;
 
 }
