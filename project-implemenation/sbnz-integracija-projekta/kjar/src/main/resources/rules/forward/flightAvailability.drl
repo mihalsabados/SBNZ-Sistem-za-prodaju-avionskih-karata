@@ -1,19 +1,31 @@
 package rules.forward;
+
 import  com.ftn.sbnz.model.Flight;
 import  com.ftn.sbnz.model.Ticket;
+
+global Long flightId
 
 declare TicketAdded
     ticketId: Long
     flightId: Long
+    destination: String
 end
 
 rule "Available seats on a flight"
     when
         $t: Ticket()
-        $fl: Flight(soldTickets.size() < numberOfSeats)
+        $fl: Flight(id == flightId ,soldTickets.size() < numberOfSeats)
     then
         $fl.getSoldTickets().add($t);
-        insert(new TicketAdded($t.getId(), $fl.getId()));
+        insert(new TicketAdded($t.getId(), $fl.getId(), $fl.getDestination()));
         System.out.println("Nestoo");
 end
+
+//rule "New Ticket added and average occupancy on destination more than 80%"
+//    when
+//        TicketAdded($dest: destination)
+//        $occu: accumulate
+//    then
+//
+//end
 

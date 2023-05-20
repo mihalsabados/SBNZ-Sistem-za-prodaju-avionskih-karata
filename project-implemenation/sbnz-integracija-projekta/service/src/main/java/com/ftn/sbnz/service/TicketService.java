@@ -64,7 +64,8 @@ public class TicketService {
 
         KieSession ksession = getKieContainer().newKieSession("forwardKsession");
 
-        ksession.insert(flight);
+        ksession.setGlobal("flightId", flightId);
+        this.flightRepository.findAll().forEach(ksession::insert);
         ksession.insert(ticket);
 
         long ruleFireCount = ksession.fireAllRules();
