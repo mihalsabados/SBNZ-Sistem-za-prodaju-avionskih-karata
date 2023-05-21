@@ -2,7 +2,11 @@ package rules.forward;
 
 import  com.ftn.sbnz.model.Flight;
 import  com.ftn.sbnz.model.Ticket;
+
 import java.util.List;
+import  com.ftn.sbnz.dto.ticket.TicketToShowDTO;
+import java.lang.Math;
+
 
 global Long flightId
 
@@ -19,6 +23,8 @@ rule "Available seats on a flight"
     then
         $fl.getSoldTickets().add($t);
         insert(new TicketAdded($t.getId(), $fl.getId(), $fl.getDestination()));
+        System.out.println("RULE1");
+        System.out.println("Uspesno kupljeno");
 end
 
 rule "New Ticket added and average occupancy on destination more than 80%"
@@ -35,5 +41,72 @@ rule "New Ticket added and average occupancy on destination more than 80%"
                     setPopular(true)
                 }
         System.out.println("ALAA");
+end
+
+rule "Available seats on the flight with the same destination and different departure"
+    when
+        $t: Ticket()
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
+        $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
+            $desiredDeparture: departure)
+        $fl2: Flight(this != $fl1, soldTickets.size() < numberOfSeats, destination == $desiredDestination,
+            departure != $desiredDeparture, $alternativeFlightId: id)
+    then
+        System.out.println("RULE10");
+        modify($flightSuggestion){setAlternativeFlightId($alternativeFlightId)}
+end
+
+
+rule "No available seats on the flight with the same destination and different departure"
+    when
+        $t: Ticket()
+        $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
+            $desiredDeparture: departure)
+        not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
+    then
+        System.out.println("RULE11");
+        System.out.println("Nema leta sa istom destinacijom i drugim vremenskim terminom");
+end
+
+rule "No available seats on the flight with the same destination but exists one within 500km"
+    when
+        $t: Ticket()
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
+        $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
+            $desiredDeparture: departure, $fl1Distance: distance)
+        not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
+        $fl2: Flight(this != $fl1, soldTickets.size() < numberOfSeats, Math.abs($fl1Distance - distance) <= 500,
+        $alternativeFlightId: id)
+    then
+        System.out.println("RULE12");
+        modify($flightSuggestion){setAlternativeFlightId($alternativeFlightId)}
+end
+
+rule "No available seats on the flight with the same destination and doesn't exist any within 500km"
+    when
+        $t: Ticket()
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
+        $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
+            $desiredDeparture: departure, $fl1Distance: distance)
+        not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
+        not Flight(this != $fl1, soldTickets.size() < numberOfSeats, Math.abs($fl1Distance - distance) <= 500)
+    then
+        System.out.println("RULE13");
+        System.out.println("Nema sa slicnom udaljenoscu");
+end
+
+rule "No available seats on the flight within 500km, but exists popular flight"
+    when
+        $t: Ticket()
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
+        $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
+            $desiredDeparture: departure, $fl1Distance: distance)
+        not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
+        not Flight(this != $fl1, soldTickets.size() < numberOfSeats, Math.abs($fl1Distance - distance) <= 500)
+        $fl2: Flight(this != $fl1, soldTickets.size() < numberOfSeats, popular == true, $alternativeFlightId: id)
+
+    then
+        System.out.println("RULE14");
+        modify($flightSuggestion){setAlternativeFlightId($alternativeFlightId)}
 end
 

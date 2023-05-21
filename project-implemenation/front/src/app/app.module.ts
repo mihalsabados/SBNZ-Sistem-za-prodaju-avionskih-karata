@@ -19,7 +19,8 @@ import {MatTableModule} from '@angular/material/table';
 import {MatRadioModule} from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { ResponseDialogComponent } from './buy-ticket/response-dialog/response-dialog/response-dialog.component';
-import {MatDialogModule} from "@angular/material/dialog"
+import {MatDialogModule} from "@angular/material/dialog";
+import { FlightSuggestionDialogComponent } from './buy-ticket/flight-suggestion/flight-suggestion-dialog/flight-suggestion-dialog.component'
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import {MatDialogModule} from "@angular/material/dialog"
     BuyTicketPageComponent,
     LoginComponent,
     FlightsPageComponent,
-    ResponseDialogComponent
+    ResponseDialogComponent,
+    FlightSuggestionDialogComponent
   ],
   imports: [
     BrowserModule,

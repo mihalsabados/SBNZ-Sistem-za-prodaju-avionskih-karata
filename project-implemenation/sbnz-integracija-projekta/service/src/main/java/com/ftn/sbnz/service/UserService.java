@@ -21,4 +21,9 @@ public class UserService {
         }
 
     }
+
+    public User getUserByEmail(String payerEmail) {
+        return this.userRepository.findByEmail(payerEmail).orElseThrow(() ->
+                new UserNotFoundException("User with this email not found!"));
+    }
 }
