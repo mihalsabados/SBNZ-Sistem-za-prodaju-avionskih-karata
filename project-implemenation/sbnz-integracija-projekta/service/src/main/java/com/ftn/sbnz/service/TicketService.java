@@ -1,5 +1,6 @@
 package com.ftn.sbnz.service;
 
+import com.ftn.sbnz.dto.FlightSuggestionDTO;
 import com.ftn.sbnz.dto.ticket.PassengerDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
 import com.ftn.sbnz.enums.TicketType;
@@ -65,12 +66,13 @@ public class TicketService {
         KieSession ksession = getKieContainer().newKieSession("forwardKsession");
 
         ksession.setGlobal("flightId", flightId);
+        FlightSuggestionDTO flightSuggestionDTO = new FlightSuggestionDTO(0L);
+        ksession.insert(flightSuggestionDTO);
         this.flightRepository.findAll().forEach(ksession::insert);
         ksession.insert(ticket);
-
         long ruleFireCount = ksession.fireAllRules();
         System.out.println(ruleFireCount);
-
+        System.out.println(flightSuggestionDTO.getFlightId());
         flightRepository.save(flight);
         setPrice(flight, ticket);
     }
