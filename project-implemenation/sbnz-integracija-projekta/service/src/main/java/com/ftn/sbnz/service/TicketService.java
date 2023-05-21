@@ -140,6 +140,7 @@ public class TicketService {
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
 
         ticketRepository.save(ticket);
+        long suggestedFlightId = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
         setPrice(ticketDataDTO.getFlightId(), ticket);
         return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId());
     }

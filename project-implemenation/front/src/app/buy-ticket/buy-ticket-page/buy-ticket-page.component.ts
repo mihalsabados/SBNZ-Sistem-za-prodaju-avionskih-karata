@@ -102,7 +102,8 @@ export class BuyTicketPageComponent {
       data: this.flightSuggestion,
     });
     dialogRef.afterClosed().subscribe(suggestedFlightId => {
-      this.acceptSuggestedFlight(suggestedFlightId);
+      if(suggestedFlightId)
+        this.acceptSuggestedFlight(suggestedFlightId);
     });
   }
 

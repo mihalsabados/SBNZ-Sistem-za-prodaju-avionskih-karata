@@ -119,21 +119,12 @@ public class ServiceApplication implements CommandLineRunner{
 		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, LocalDateTime.of(2023, 6, 9, 5, 0), tickets, 150, false));
 		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, LocalDateTime.of(2023, 6, 8, 19, 30), tickets, 180, false));
 		flightRepository.save(new Flight(10L, "New York City", 7978, 100000, LocalDateTime.of(2023, 6, 8, 22, 0), tickets, 220, false));
-		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, LocalDateTime.of(2023, 6, 12, 12, 30), tickets, 220, false));
+		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, LocalDateTime.of(2023, 6, 12, 12, 30), tickets, 5, false));
 		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, LocalDateTime.of(2023, 6, 9, 20, 0), tickets, 220, true));
 		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, LocalDateTime.of(2023, 6, 7, 7, 30), tickets, 220, false));
-		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 5, 30), tickets, 6, true));
-		//flightRepository.save(new Flight(15L, "London", 9178, 110000, LocalDateTime.of(2023, 7, 11, 5, 30), tickets, 220, true)); //radi testa
+		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 5, 30), tickets, 6, false));
+		flightRepository.save(new Flight(15L, "London", 1694, 110000, LocalDateTime.of(2023, 7, 11, 5, 30), tickets, 5, true)); //radi testa
+		flightRepository.save(new Flight(16L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 8, 30), tickets, 6, false));
 	}
-
-//	@Bean
-//	public KieContainer kieContainer() {
-//		KieServices ks = KieServices.Factory.get();
-//		KieContainer kContainer = ks
-//				.newKieContainer(ks.newReleaseId("com.ftn.sbnz", "kjar", "0.0.1-SNAPSHOT"));
-//		KieScanner kScanner = ks.newKieScanner(kContainer);
-//		kScanner.start(1000);
-//		return kContainer;
-//	}
 
 }
