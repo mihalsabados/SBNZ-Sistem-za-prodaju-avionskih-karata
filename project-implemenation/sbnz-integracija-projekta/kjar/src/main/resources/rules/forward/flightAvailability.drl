@@ -2,6 +2,7 @@ package rules.forward;
 
 import  com.ftn.sbnz.model.Flight;
 import  com.ftn.sbnz.model.Ticket;
+import java.util.List;
 
 global Long flightId
 
@@ -18,14 +19,21 @@ rule "Available seats on a flight"
     then
         $fl.getSoldTickets().add($t);
         insert(new TicketAdded($t.getId(), $fl.getId(), $fl.getDestination()));
-        System.out.println("Nestoo");
 end
 
-//rule "New Ticket added and average occupancy on destination more than 80%"
-//    when
-//        TicketAdded($dest: destination)
-//        $occu: accumulate
-//    then
-//
-//end
+rule "New Ticket added and average occupancy on destination more than 80%"
+    when
+        TicketAdded($dest: destination)
+        $flightList: List() from collect(Flight(destination == $dest))
+        $averageOccupancy: Number(intValue >= 0.04) from accumulate(
+            $fl: Flight($ticketNum: soldTickets.size(), $seatsNum: numberOfSeats) from $flightList,
+            average($ticketNum / $seatsNum)
+        )
+        $flight: Flight() from $flightList
+    then
+        modify($flight) {
+                    setPopular(true)
+                }
+        System.out.println("ALAA");
+end
 

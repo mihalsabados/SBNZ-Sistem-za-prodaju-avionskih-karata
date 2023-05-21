@@ -123,6 +123,7 @@ public class ServiceApplication implements CommandLineRunner{
 		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, LocalDateTime.of(2023, 6, 9, 20, 0), tickets, 220, true));
 		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, LocalDateTime.of(2023, 6, 7, 7, 30), tickets, 220, false));
 		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 5, 30), tickets, 220, true));
+		flightRepository.save(new Flight(15L, "London", 1694, 40000, LocalDateTime.of(2023, 6, 12, 9, 0), tickets, 100, false));
 	}
 
 	@Bean
