@@ -34,6 +34,8 @@ export class BuyTicketPageComponent {
   ticketToShow: TicketToShowDTO;
   flightSuggestion: FlightDTO;
 
+  loading: boolean = false;
+
   constructor(private toastrService:ToastrService, private router:Router, private authService:AuthService, private route: ActivatedRoute, private location: Location, private ticketService: TicketService, private responseDialog: MatDialog, private flightSuggestionDialog: MatDialog){
     this.flightId = (route.snapshot.paramMap.get('id') as string) as unknown as number;
     this.destination = (route.snapshot.paramMap.get('destination') as string) as unknown as string;
@@ -58,6 +60,8 @@ export class BuyTicketPageComponent {
   }
 
   onSubmit(){
+    this.loading = true;
+
     let ticketData: TicketData = {
       passengerData: this.anotherPassengerForm.value,
       payerEmail: this.loggedUser.email,
@@ -67,7 +71,7 @@ export class BuyTicketPageComponent {
     
     this.ticketService.createTicket(ticketData).subscribe({
       next: (res) => {
-        console.log(res)
+        this.loading = false;
         if (typeof res === 'object' && res !== null && 'discounts' in res) {
           this.toastrService.success("Ticket successfully reserved");
           this.ticketToShow = res;
@@ -76,6 +80,7 @@ export class BuyTicketPageComponent {
 
         else{
           this.flightSuggestion = res;
+          console.log(this.flightSuggestion);
           this.openFlightSuggestionDialog();
         }
         
@@ -96,6 +101,32 @@ export class BuyTicketPageComponent {
     const dialogRef = this.flightSuggestionDialog.open(FlightSuggestionDialogComponent, {
       data: this.flightSuggestion,
     });
+    dialogRef.afterClosed().subscribe(suggestedFlightId => {
+      this.acceptSuggestedFlight(suggestedFlightId);
+    });
+  }
+
+  acceptSuggestedFlight(suggestedFlightId: number){
+    this.loading = true;
+    let ticketData: TicketData = {
+      passengerData: this.anotherPassengerForm.value,
+      payerEmail: this.loggedUser.email,
+      flightId: suggestedFlightId,
+      cardType: this.pickedCardType,
+    };
+    
+    this.ticketService.acceptSuggestedFlight(ticketData).subscribe({
+      next: (res) => {
+        this.loading = false;
+        this.toastrService.success("Ticket successfully reserved");
+        this.ticketToShow = res;
+        console.log(this.ticketToShow);
+        this.openResponseDialog();
+      },
+      error: (err) => {
+        this.toastrService.warning("Something went wrong, please try again!");
+      }
+	  });
   }
 
   goBack(): void {
