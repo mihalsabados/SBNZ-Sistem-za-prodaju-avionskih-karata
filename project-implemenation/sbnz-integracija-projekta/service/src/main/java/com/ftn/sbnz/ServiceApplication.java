@@ -77,7 +77,7 @@ public class ServiceApplication implements CommandLineRunner{
 			new Discount("4 economic tickets", 10),
 			new Discount("5 or more economic tickets", 12),
 			// Forward chaining
-			new Discount("popular flight with over 8000km", 12),
+			new Discount("Popular flight with over 8000km", 12),
 			// CEP discounts
 			new Discount("less than 4 seats", 10),
 			new Discount("4-8 seats", 5),
@@ -122,7 +122,7 @@ public class ServiceApplication implements CommandLineRunner{
 //		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, LocalDateTime.of(2023, 6, 12, 12, 30), tickets, 220, false));
 //		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, LocalDateTime.of(2023, 6, 9, 20, 0), tickets, 220, true));
 //		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, LocalDateTime.of(2023, 6, 7, 7, 30), tickets, 220, false));
-//		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 5, 30), tickets, 220, true));
+		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 5, 30), tickets, 6, true));
 		//flightRepository.save(new Flight(15L, "London", 9178, 110000, LocalDateTime.of(2023, 7, 11, 5, 30), tickets, 220, true)); //radi testa
 	}
 

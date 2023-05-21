@@ -57,27 +57,26 @@ public class TicketService {
         if(suggestedFlightId != ticketDataDTO.getFlightId())
             return new TicketToShowDTO(suggestedFlightId);
         ticketRepository.save(ticket);
-        addTicketToFlight(ticketDataDTO.getFlightId(), ticket);
-        return new TicketToShowDTO(ticket);
+
+        Flight flight = this.flightRepository.findById(suggestedFlightId).
+                orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
+        setPrice(flight, ticket);
+        return new TicketToShowDTO(ticket, suggestedFlightId);
     }
 
     private long checkTicketFlight(Long flightId, Ticket ticket) {
         KieSession ksession = getKieContainer().newKieSession("forwardKsession");
 
         ksession.setGlobal("flightId", flightId);
-        TicketToShowDTO ticketToShowDTO = new TicketToShowDTO(0L); //0L je defaultna vrednost, ako ostane 0L na kraju pravila, znaci da nema preporuke
+        TicketToShowDTO ticketToShowDTO = new TicketToShowDTO(flightId); //0L je defaultna vrednost, ako ostane 0L na kraju pravila, znaci da nema preporuke
         ksession.insert(ticketToShowDTO);
-        this.flightRepository.findAll().forEach(ksession::insert);
+        List<Flight> allFlights = this.flightRepository.findAll();
+        allFlights.forEach(ksession::insert);
         ksession.insert(ticket);
+        this.discountRepository.findAll().forEach(ksession::insert);
         ksession.fireAllRules();
+        this.flightRepository.saveAll(allFlights);
         return ticketToShowDTO.getAlternativeFlightId();
-    }
-
-    private void addTicketToFlight(Long flightId, Ticket ticket) {
-        Flight flight = this.flightRepository.findById(flightId).
-                orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
-        flightRepository.save(flight);
-        setPrice(flight, ticket);
     }
 
     private void setPrice(Flight flight, Ticket ticket) {

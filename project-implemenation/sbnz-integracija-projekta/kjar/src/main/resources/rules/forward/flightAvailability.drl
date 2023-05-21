@@ -5,13 +5,20 @@ import  com.ftn.sbnz.model.Ticket;
 
 import java.util.List;
 import  com.ftn.sbnz.dto.ticket.TicketToShowDTO;
-import java.lang.Math;
+import java.lang.Math
+import com.ftn.sbnz.model.Discount
+import java.util.ArrayList;
 
 
 global Long flightId
 
 declare TicketAdded
     ticketId: Long
+    flightId: Long
+    destination: String
+end
+
+declare PopularFlight
     flightId: Long
     destination: String
 end
@@ -23,25 +30,46 @@ rule "Available seats on a flight"
     then
         $fl.getSoldTickets().add($t);
         insert(new TicketAdded($t.getId(), $fl.getId(), $fl.getDestination()));
-        System.out.println("RULE1");
+        System.out.println("RULE7");
         System.out.println("Uspesno kupljeno");
 end
+
 
 rule "New Ticket added and average occupancy on destination more than 80%"
     when
         TicketAdded($dest: destination)
         $flightList: List() from collect(Flight(destination == $dest))
-        $averageOccupancy: Number(intValue >= 0.04) from accumulate(
-            $fl: Flight($ticketNum: soldTickets.size(), $seatsNum: numberOfSeats) from $flightList,
-            average($ticketNum / $seatsNum)
+        Number(doubleValue >= 0.8) from accumulate(
+            $fl: Flight($ticketNum: Integer.valueOf(soldTickets.size()), $seatsNum: Integer.valueOf(numberOfSeats)) from $flightList,
+            average($ticketNum.doubleValue() / $seatsNum.doubleValue())
         )
         $flight: Flight() from $flightList
     then
         modify($flight) {
                     setPopular(true)
                 }
-        System.out.println("ALAA");
+        if ($flight.getId() == flightId.longValue()) {
+            insert(new PopularFlight($flight.getId(), $flight.getDestination()));
+        }
+        System.out.println("RULE8");
 end
+
+
+rule "Popular flight with distance more than 8000km"
+    when
+        $ticket: Ticket()
+        PopularFlight($flightId: flightId)
+        $fl: Flight(id == $flightId , distance > 8000)
+        $discount: Discount(name == "Popular flight with over 8000km")
+    then
+        if ($ticket.getDiscounts() == null) {
+                $ticket.setDiscounts(new ArrayList<>(List.of($discount)));
+        } else {
+            $ticket.getDiscounts().add($discount);
+        }
+        System.out.println("RULE9");
+end
+
 
 rule "Available seats on the flight with the same destination and different departure"
     when

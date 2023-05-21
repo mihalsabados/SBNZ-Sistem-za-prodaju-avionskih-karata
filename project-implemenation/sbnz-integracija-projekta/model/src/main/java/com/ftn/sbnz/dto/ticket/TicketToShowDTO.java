@@ -17,9 +17,10 @@ public class TicketToShowDTO {
     private double finalPrice;
     private long alternativeFlightId;
 
-    public TicketToShowDTO(Ticket ticket){
+    public TicketToShowDTO(Ticket ticket, long flightId){
         this.discounts = ticket.getDiscounts();
         this.finalPrice = ticket.getFinalPrice();
+        this.alternativeFlightId = flightId;
     }
 
     public TicketToShowDTO(long alternativeFlightId){
