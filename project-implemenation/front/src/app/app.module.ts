@@ -21,6 +21,7 @@ import { FormsModule } from '@angular/forms';
 import { ResponseDialogComponent } from './buy-ticket/response-dialog/response-dialog/response-dialog.component';
 import {MatDialogModule} from "@angular/material/dialog";
 import { FlightSuggestionDialogComponent } from './buy-ticket/flight-suggestion/flight-suggestion-dialog/flight-suggestion-dialog.component'
+import {MatGridListModule} from '@angular/material/grid-list';
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import { FlightSuggestionDialogComponent } from './buy-ticket/flight-suggestion/
     MatRadioModule,
     FormsModule,
     MatDialogModule,
+    MatGridListModule,
     ToastrModule.forRoot({
       timeOut: 5000,
       positionClass: 'toast-bottom-center',

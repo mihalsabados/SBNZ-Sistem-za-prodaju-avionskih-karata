@@ -58,14 +58,14 @@ public class TicketService {
             return new TicketToShowDTO(suggestedFlightId);
         ticketRepository.save(ticket);
         addTicketToFlight(ticketDataDTO.getFlightId(), ticket);
-        return new TicketToShowDTO(ticket);
+        return new TicketToShowDTO(suggestedFlightId);
     }
 
     private long checkTicketFlight(Long flightId, Ticket ticket) {
         KieSession ksession = getKieContainer().newKieSession("forwardKsession");
 
         ksession.setGlobal("flightId", flightId);
-        TicketToShowDTO ticketToShowDTO = new TicketToShowDTO(0L); //0L je defaultna vrednost, ako ostane 0L na kraju pravila, znaci da nema preporuke
+        TicketToShowDTO ticketToShowDTO = new TicketToShowDTO(flightId);
         ksession.insert(ticketToShowDTO);
         this.flightRepository.findAll().forEach(ksession::insert);
         ksession.insert(ticket);
@@ -130,4 +130,19 @@ public class TicketService {
         return user;
     }
 
+    public TicketToShowDTO acceptSuggestedFlight(TicketDataDTO ticketDataDTO) {
+        User passenger = this.userRepository.findByEmail(ticketDataDTO.getPassengerData().getEmailPassenger()).
+                orElse(createNewUser(ticketDataDTO.getPassengerData()));
+        User payer = this.userRepository.findByEmail(ticketDataDTO.getPayerEmail()).
+                orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
+
+        long newId = this.ticketRepository.count() + 1;
+
+        Ticket ticket = new Ticket(newId, passenger, payer, null, 0,
+                TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
+
+        ticketRepository.save(ticket);
+        addTicketToFlight(ticketDataDTO.getFlightId(), ticket);
+        return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId());
+    }
 }

@@ -89,6 +89,7 @@
     <div class="button-div">
       <button mat-raised-button color="primary" type="button" (click)="onSubmit()" [disabled]="!anotherPassengerForm.valid && pickedPassengerStatus === 'For another passenger'" class="submit-button">Submit</button>
       <button mat-raised-button color="warn" (click)="cancel()" class="cancel-button">Cancel</button>
+      <mat-progress-bar mode="buffer" *ngIf="loading"></mat-progress-bar>
     </div>
   </mat-card>
 </div>

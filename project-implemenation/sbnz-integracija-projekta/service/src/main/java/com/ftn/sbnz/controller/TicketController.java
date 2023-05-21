@@ -32,4 +32,10 @@ public class TicketController {
         }
         return ResponseEntity.ok(ticketToShowDTO);
     }
+
+    @PostMapping("/accept-suggested-flight")
+    public ResponseEntity<?> acceptSuggestedFlight(@RequestBody TicketDataDTO ticketDataDTO) {
+        TicketToShowDTO ticketToShowDTO = ticketService.acceptSuggestedFlight(ticketDataDTO);
+        return ResponseEntity.ok(ticketToShowDTO);
+    }
 }

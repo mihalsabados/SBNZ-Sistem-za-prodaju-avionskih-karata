@@ -27,7 +27,7 @@ end
 rule "Available seats on the flight with the same destination and different departure"
     when
         $t: Ticket()
-        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == flightId)
         $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
             $desiredDeparture: departure)
         $fl2: Flight(this != $fl1, soldTickets.size() < numberOfSeats, destination == $desiredDestination,
@@ -52,7 +52,7 @@ end
 rule "No available seats on the flight with the same destination but exists one within 500km"
     when
         $t: Ticket()
-        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == flightId)
         $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
             $desiredDeparture: departure, $fl1Distance: distance)
         not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
@@ -66,7 +66,7 @@ end
 rule "No available seats on the flight with the same destination and doesn't exist any within 500km"
     when
         $t: Ticket()
-        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == flightId)
         $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
             $desiredDeparture: departure, $fl1Distance: distance)
         not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
@@ -79,7 +79,7 @@ end
 rule "No available seats on the flight within 500km, but exists popular flight"
     when
         $t: Ticket()
-        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == flightId)
         $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
             $desiredDeparture: departure, $fl1Distance: distance)
         not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
