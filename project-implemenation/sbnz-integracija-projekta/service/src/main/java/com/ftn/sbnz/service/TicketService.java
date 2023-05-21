@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Arrays;
 
 @Service
 @AllArgsConstructor
@@ -58,9 +57,7 @@ public class TicketService {
             return new TicketToShowDTO(suggestedFlightId);
         ticketRepository.save(ticket);
 
-        Flight flight = this.flightRepository.findById(suggestedFlightId).
-                orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
-        setPrice(flight, ticket);
+        setPrice(suggestedFlightId, ticket);
         return new TicketToShowDTO(ticket, suggestedFlightId);
     }
 
@@ -68,7 +65,7 @@ public class TicketService {
         KieSession ksession = getKieContainer().newKieSession("forwardKsession");
 
         ksession.setGlobal("flightId", flightId);
-        TicketToShowDTO ticketToShowDTO = new TicketToShowDTO(flightId); //0L je defaultna vrednost, ako ostane 0L na kraju pravila, znaci da nema preporuke
+        TicketToShowDTO ticketToShowDTO = new TicketToShowDTO(flightId);
         ksession.insert(ticketToShowDTO);
         List<Flight> allFlights = this.flightRepository.findAll();
         allFlights.forEach(ksession::insert);
@@ -79,7 +76,9 @@ public class TicketService {
         return ticketToShowDTO.getAlternativeFlightId();
     }
 
-    private void setPrice(Flight flight, Ticket ticket) {
+    private void setPrice(Long flightId, Ticket ticket) {
+        Flight flight = this.flightRepository.findById(flightId).
+                orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
         InputStream template = TicketService.class.getResourceAsStream("/rules/template/priceTemplate.drt");
 
         List<PriceTemplate> priceTemplates = List.of(
@@ -129,4 +128,19 @@ public class TicketService {
         return user;
     }
 
+    public TicketToShowDTO acceptSuggestedFlight(TicketDataDTO ticketDataDTO) {
+        User passenger = this.userRepository.findByEmail(ticketDataDTO.getPassengerData().getEmailPassenger()).
+                orElse(createNewUser(ticketDataDTO.getPassengerData()));
+        User payer = this.userRepository.findByEmail(ticketDataDTO.getPayerEmail()).
+                orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
+
+        long newId = this.ticketRepository.count() + 1;
+
+        Ticket ticket = new Ticket(newId, passenger, payer, null, 0,
+                TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
+
+        ticketRepository.save(ticket);
+        setPrice(ticketDataDTO.getFlightId(), ticket);
+        return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId());
+    }
 }

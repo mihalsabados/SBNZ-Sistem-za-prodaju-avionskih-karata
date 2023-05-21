@@ -15,4 +15,8 @@ export class TicketService {
   createTicket(ticketData: TicketData): Observable<any>{
     return this.http.post(this.backUrl + "create-ticket", ticketData);
   }
+
+  acceptSuggestedFlight(ticketData: TicketData): Observable<any>{
+    return this.http.post(this.backUrl + "accept-suggested-flight", ticketData);
+  }
 }
