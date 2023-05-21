@@ -2,7 +2,7 @@ package rules.forward;
 
 import  com.ftn.sbnz.model.Flight;
 import  com.ftn.sbnz.model.Ticket;
-import  com.ftn.sbnz.dto.FlightSuggestionDTO;
+import  com.ftn.sbnz.dto.ticket.TicketToShowDTO;
 import java.lang.Math;
 
 global Long flightId
@@ -27,14 +27,14 @@ end
 rule "Available seats on the flight with the same destination and different departure"
     when
         $t: Ticket()
-        $flightSuggestion: FlightSuggestionDTO(flightId == 0)
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
         $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
             $desiredDeparture: departure)
         $fl2: Flight(this != $fl1, soldTickets.size() < numberOfSeats, destination == $desiredDestination,
             departure != $desiredDeparture, $alternativeFlightId: id)
     then
         System.out.println("RULE10");
-        modify($flightSuggestion){setFlightId($alternativeFlightId)}
+        modify($flightSuggestion){setAlternativeFlightId($alternativeFlightId)}
 end
 
 
@@ -52,7 +52,7 @@ end
 rule "No available seats on the flight with the same destination but exists one within 500km"
     when
         $t: Ticket()
-        $flightSuggestion: FlightSuggestionDTO(flightId == 0)
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
         $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
             $desiredDeparture: departure, $fl1Distance: distance)
         not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
@@ -60,13 +60,13 @@ rule "No available seats on the flight with the same destination but exists one 
         $alternativeFlightId: id)
     then
         System.out.println("RULE12");
-        modify($flightSuggestion){setFlightId($alternativeFlightId)}
+        modify($flightSuggestion){setAlternativeFlightId($alternativeFlightId)}
 end
 
 rule "No available seats on the flight with the same destination and doesn't exist any within 500km"
     when
         $t: Ticket()
-        $flightSuggestion: FlightSuggestionDTO(flightId == 0)
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
         $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
             $desiredDeparture: departure, $fl1Distance: distance)
         not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
@@ -79,7 +79,7 @@ end
 rule "No available seats on the flight within 500km, but exists popular flight"
     when
         $t: Ticket()
-        $flightSuggestion: FlightSuggestionDTO(flightId == 0)
+        $flightSuggestion: TicketToShowDTO(alternativeFlightId == 0)
         $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
             $desiredDeparture: departure, $fl1Distance: distance)
         not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
@@ -88,6 +88,6 @@ rule "No available seats on the flight within 500km, but exists popular flight"
 
     then
         System.out.println("RULE14");
-        modify($flightSuggestion){setFlightId($alternativeFlightId)}
+        modify($flightSuggestion){setAlternativeFlightId($alternativeFlightId)}
 end
 

@@ -15,9 +15,14 @@ import java.util.List;
 public class TicketToShowDTO {
     private List<Discount> discounts;
     private double finalPrice;
+    private long alternativeFlightId;
 
     public TicketToShowDTO(Ticket ticket){
         this.discounts = ticket.getDiscounts();
         this.finalPrice = ticket.getFinalPrice();
+    }
+
+    public TicketToShowDTO(long alternativeFlightId){
+        this.alternativeFlightId = alternativeFlightId;
     }
 }

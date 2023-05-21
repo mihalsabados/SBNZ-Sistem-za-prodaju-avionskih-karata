@@ -9,6 +9,8 @@ import { TicketService } from 'src/app/services/ticket/ticket.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ResponseDialogComponent } from '../response-dialog/response-dialog/response-dialog.component';
 import { TicketToShowDTO } from 'src/app/model/ticketToShowDTO';
+import { FlightSuggestionDialogComponent } from '../flight-suggestion/flight-suggestion-dialog/flight-suggestion-dialog.component';
+import { FlightDTO } from 'src/app/model/flightDTO';
 
 @Component({
   selector: 'app-buy-ticket-page',
@@ -30,8 +32,9 @@ export class BuyTicketPageComponent {
   cardTypes: string[] = ['Economic', 'Business'];
 
   ticketToShow: TicketToShowDTO;
+  flightSuggestion: FlightDTO;
 
-  constructor(private toastrService:ToastrService, private router:Router, private authService:AuthService, private route: ActivatedRoute, private location: Location, private ticketService: TicketService, private responseDialog: MatDialog){
+  constructor(private toastrService:ToastrService, private router:Router, private authService:AuthService, private route: ActivatedRoute, private location: Location, private ticketService: TicketService, private responseDialog: MatDialog, private flightSuggestionDialog: MatDialog){
     this.flightId = (route.snapshot.paramMap.get('id') as string) as unknown as number;
     this.destination = (route.snapshot.paramMap.get('destination') as string) as unknown as string;
     this.departure = (route.snapshot.paramMap.get('departure') as string) as unknown as Date;
@@ -65,9 +68,17 @@ export class BuyTicketPageComponent {
     this.ticketService.createTicket(ticketData).subscribe({
       next: (res) => {
         console.log(res)
-        this.toastrService.success("Ticket successfully reserved");
-        this.ticketToShow = res;
-        this.openResponseDialog();
+        if (typeof res === 'object' && res !== null && 'discounts' in res) {
+          this.toastrService.success("Ticket successfully reserved");
+          this.ticketToShow = res;
+          this.openResponseDialog();
+        }
+
+        else{
+          this.flightSuggestion = res;
+          this.openFlightSuggestionDialog();
+        }
+        
       },
       error: (err) => {
         this.toastrService.warning("Something went wrong, please try again!");
@@ -78,6 +89,12 @@ export class BuyTicketPageComponent {
   openResponseDialog() {
     const dialogRef = this.responseDialog.open(ResponseDialogComponent, {
       data: this.ticketToShow,
+    });
+  }
+
+  openFlightSuggestionDialog() {
+    const dialogRef = this.flightSuggestionDialog.open(FlightSuggestionDialogComponent, {
+      data: this.flightSuggestion,
     });
   }
 

@@ -1,6 +1,5 @@
 package com.ftn.sbnz.service;
 
-import com.ftn.sbnz.dto.FlightSuggestionDTO;
 import com.ftn.sbnz.dto.ticket.PassengerDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
 import com.ftn.sbnz.enums.TicketType;
@@ -54,25 +53,29 @@ public class TicketService {
         Ticket ticket = new Ticket(newId, passenger, payer, null, 0,
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
 
+        long suggestedFlightId = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
+        if(suggestedFlightId != ticketDataDTO.getFlightId())
+            return new TicketToShowDTO(suggestedFlightId);
         ticketRepository.save(ticket);
         addTicketToFlight(ticketDataDTO.getFlightId(), ticket);
         return new TicketToShowDTO(ticket);
     }
 
-    private void addTicketToFlight(Long flightId, Ticket ticket) {
-        Flight flight = this.flightRepository.findById(flightId).
-                orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
-
+    private long checkTicketFlight(Long flightId, Ticket ticket) {
         KieSession ksession = getKieContainer().newKieSession("forwardKsession");
 
         ksession.setGlobal("flightId", flightId);
-        FlightSuggestionDTO flightSuggestionDTO = new FlightSuggestionDTO(0L);
-        ksession.insert(flightSuggestionDTO);
+        TicketToShowDTO ticketToShowDTO = new TicketToShowDTO(0L); //0L je defaultna vrednost, ako ostane 0L na kraju pravila, znaci da nema preporuke
+        ksession.insert(ticketToShowDTO);
         this.flightRepository.findAll().forEach(ksession::insert);
         ksession.insert(ticket);
-        long ruleFireCount = ksession.fireAllRules();
-        System.out.println(ruleFireCount);
-        System.out.println(flightSuggestionDTO.getFlightId());
+        ksession.fireAllRules();
+        return ticketToShowDTO.getAlternativeFlightId();
+    }
+
+    private void addTicketToFlight(Long flightId, Ticket ticket) {
+        Flight flight = this.flightRepository.findById(flightId).
+                orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
         flightRepository.save(flight);
         setPrice(flight, ticket);
     }
