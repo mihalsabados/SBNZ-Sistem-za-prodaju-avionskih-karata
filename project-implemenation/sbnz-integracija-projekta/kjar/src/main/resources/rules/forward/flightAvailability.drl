@@ -2,8 +2,13 @@ package rules.forward;
 
 import  com.ftn.sbnz.model.Flight;
 import  com.ftn.sbnz.model.Ticket;
+
+import java.util.List;
 import  com.ftn.sbnz.dto.ticket.TicketToShowDTO;
-import java.lang.Math;
+import java.lang.Math
+import com.ftn.sbnz.model.Discount
+import java.util.ArrayList;
+
 
 global Long flightId
 
@@ -13,6 +18,18 @@ declare TicketAdded
     destination: String
 end
 
+declare PopularFlight
+    flightId: Long
+    destination: String
+end
+
+declare  NoFlightsWithSameDestination
+    distance: Integer
+end
+
+declare NoFlightsWithSimilarDistance
+end
+
 rule "Available seats on a flight"
     when
         $t: Ticket()
@@ -20,9 +37,46 @@ rule "Available seats on a flight"
     then
         $fl.getSoldTickets().add($t);
         insert(new TicketAdded($t.getId(), $fl.getId(), $fl.getDestination()));
-        System.out.println("RULE1");
+        System.out.println("RULE7");
         System.out.println("Uspesno kupljeno");
 end
+
+
+rule "New Ticket added and average occupancy on destination more than 80%"
+    when
+        TicketAdded($dest: destination)
+        $flightList: List() from collect(Flight(destination == $dest))
+        Number(doubleValue >= 0.8) from accumulate(
+            $fl: Flight($ticketNum: Integer.valueOf(soldTickets.size()), $seatsNum: Integer.valueOf(numberOfSeats)) from $flightList,
+            average($ticketNum.doubleValue() / $seatsNum.doubleValue())
+        )
+        $flight: Flight() from $flightList
+    then
+        modify($flight) {
+                    setPopular(true)
+                }
+        if ($flight.getId() == flightId.longValue()) {
+            insert(new PopularFlight($flight.getId(), $flight.getDestination()));
+        }
+        System.out.println("RULE8");
+end
+
+
+rule "Popular flight with distance more than 8000km"
+    when
+        $ticket: Ticket()
+        PopularFlight($flightId: flightId)
+        $fl: Flight(id == $flightId , distance > 8000)
+        $discount: Discount(name == "Popular flight with over 8000km")
+    then
+        if ($ticket.getDiscounts() == null) {
+                $ticket.setDiscounts(new ArrayList<>(List.of($discount)));
+        } else {
+            $ticket.getDiscounts().add($discount);
+        }
+        System.out.println("RULE9");
+end
+
 
 rule "Available seats on the flight with the same destination and different departure"
     when
@@ -42,21 +96,18 @@ rule "No available seats on the flight with the same destination and different d
     when
         $t: Ticket()
         $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
-            $desiredDeparture: departure)
-        not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
+            $desiredDeparture: departure, $distance:distance)
+        not Flight(this != $fl1, soldTickets.size() < numberOfSeats, destination == $desiredDestination)
     then
+        insert(new NoFlightsWithSameDestination($distance));
         System.out.println("RULE11");
-        System.out.println("Nema leta sa istom destinacijom i drugim vremenskim terminom");
 end
 
 rule "No available seats on the flight with the same destination but exists one within 500km"
     when
-        $t: Ticket()
         $flightSuggestion: TicketToShowDTO(alternativeFlightId == flightId)
-        $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
-            $desiredDeparture: departure, $fl1Distance: distance)
-        not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
-        $fl2: Flight(this != $fl1, soldTickets.size() < numberOfSeats, Math.abs($fl1Distance - distance) <= 500,
+        NoFlightsWithSameDestination($dist: distance)
+        $fl2: Flight(id != flightId, soldTickets.size() < numberOfSeats, Math.abs($dist - distance) <= 500,
         $alternativeFlightId: id)
     then
         System.out.println("RULE12");
@@ -65,27 +116,19 @@ end
 
 rule "No available seats on the flight with the same destination and doesn't exist any within 500km"
     when
-        $t: Ticket()
         $flightSuggestion: TicketToShowDTO(alternativeFlightId == flightId)
-        $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
-            $desiredDeparture: departure, $fl1Distance: distance)
-        not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
-        not Flight(this != $fl1, soldTickets.size() < numberOfSeats, Math.abs($fl1Distance - distance) <= 500)
+        NoFlightsWithSameDestination($dist: distance)
+        not Flight(id != flightId, soldTickets.size() < numberOfSeats, Math.abs($dist - distance) <= 500)
     then
         System.out.println("RULE13");
-        System.out.println("Nema sa slicnom udaljenoscu");
+        insert(new NoFlightsWithSimilarDistance());
 end
 
 rule "No available seats on the flight within 500km, but exists popular flight"
     when
-        $t: Ticket()
+        NoFlightsWithSimilarDistance()
         $flightSuggestion: TicketToShowDTO(alternativeFlightId == flightId)
-        $fl1: Flight(soldTickets.size() >= numberOfSeats, id == flightId, $desiredDestination: destination,
-            $desiredDeparture: departure, $fl1Distance: distance)
-        not Flight(this != $fl1, soldTickets.size() >= numberOfSeats, destination == $desiredDestination)
-        not Flight(this != $fl1, soldTickets.size() < numberOfSeats, Math.abs($fl1Distance - distance) <= 500)
-        $fl2: Flight(this != $fl1, soldTickets.size() < numberOfSeats, popular == true, $alternativeFlightId: id)
-
+        $fl2: Flight(id != flightId, soldTickets.size() < numberOfSeats, popular == true, $alternativeFlightId: id)
     then
         System.out.println("RULE14");
         modify($flightSuggestion){setAlternativeFlightId($alternativeFlightId)}

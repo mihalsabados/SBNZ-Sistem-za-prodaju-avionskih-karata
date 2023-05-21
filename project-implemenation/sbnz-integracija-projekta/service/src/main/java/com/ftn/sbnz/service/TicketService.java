@@ -25,7 +25,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Arrays;
 
 @Service
 @AllArgsConstructor
@@ -57,8 +56,9 @@ public class TicketService {
         if(suggestedFlightId != ticketDataDTO.getFlightId())
             return new TicketToShowDTO(suggestedFlightId);
         ticketRepository.save(ticket);
-        addTicketToFlight(ticketDataDTO.getFlightId(), ticket);
-        return new TicketToShowDTO(suggestedFlightId);
+
+        setPrice(suggestedFlightId, ticket);
+        return new TicketToShowDTO(ticket, suggestedFlightId);
     }
 
     private long checkTicketFlight(Long flightId, Ticket ticket) {
@@ -67,20 +67,18 @@ public class TicketService {
         ksession.setGlobal("flightId", flightId);
         TicketToShowDTO ticketToShowDTO = new TicketToShowDTO(flightId);
         ksession.insert(ticketToShowDTO);
-        this.flightRepository.findAll().forEach(ksession::insert);
+        List<Flight> allFlights = this.flightRepository.findAll();
+        allFlights.forEach(ksession::insert);
         ksession.insert(ticket);
+        this.discountRepository.findAll().forEach(ksession::insert);
         ksession.fireAllRules();
+        this.flightRepository.saveAll(allFlights);
         return ticketToShowDTO.getAlternativeFlightId();
     }
 
-    private void addTicketToFlight(Long flightId, Ticket ticket) {
+    private void setPrice(Long flightId, Ticket ticket) {
         Flight flight = this.flightRepository.findById(flightId).
                 orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
-        flightRepository.save(flight);
-        setPrice(flight, ticket);
-    }
-
-    private void setPrice(Flight flight, Ticket ticket) {
         InputStream template = TicketService.class.getResourceAsStream("/rules/template/priceTemplate.drt");
 
         List<PriceTemplate> priceTemplates = List.of(
@@ -142,7 +140,8 @@ public class TicketService {
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
 
         ticketRepository.save(ticket);
-        addTicketToFlight(ticketDataDTO.getFlightId(), ticket);
+        long suggestedFlightId = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
+        setPrice(ticketDataDTO.getFlightId(), ticket);
         return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId());
     }
 }
