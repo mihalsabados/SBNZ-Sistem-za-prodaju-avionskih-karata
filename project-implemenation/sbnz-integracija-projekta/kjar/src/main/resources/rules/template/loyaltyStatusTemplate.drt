@@ -1,0 +1,42 @@
+template header
+minPrice
+maxPrice
+status
+discountName
+
+package rules.template
+
+import com.ftn.sbnz.model.Ticket
+import com.ftn.sbnz.model.Flight
+import com.ftn.sbnz.model.Discount
+import com.ftn.sbnz.model.User
+import com.ftn.sbnz.enums.LoyaltyType
+
+import java.util.ArrayList;
+import java.util.List;
+
+template "loyalty status template"
+
+    rule "Loyalty_@{row.rowNumber}"
+        when
+            $d: Discount(name == "@{discountName}")
+            $t:Ticket()
+            $u:User()
+            $flight: Flight($soldTickets: soldTickets)
+            accumulate(
+                $totalAmount: Double(sum($amount)) from accumulate(
+                    $t: Ticket(payer == $u, $paid: finalPrice) from $soldTickets,
+                    sum($paid)
+                )
+            )
+        then
+            modify($u) {
+                setLoyaltyStatus(LoyaltyType.valueOf("@{status}"))
+            }
+            if ($t.getDiscounts() == null) {
+                $t.setDiscounts(new ArrayList<>());
+            }
+            $t.getDiscounts().add($d);
+            $t.setFinalPrice($t.getFinalPrice() - (($d.getPercentage() / 100) * $t.getFinalPrice()));
+    end
+end template

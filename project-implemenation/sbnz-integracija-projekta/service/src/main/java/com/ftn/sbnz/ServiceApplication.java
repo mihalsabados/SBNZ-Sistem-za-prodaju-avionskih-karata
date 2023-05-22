@@ -23,6 +23,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -98,11 +99,11 @@ public class ServiceApplication implements CommandLineRunner{
 		);
 
 		List<Ticket> tickets = List.of(
-			new Ticket(1L, passengerList.get(0), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS),
-			new Ticket(2L, passengerList.get(1), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS),
-			new Ticket(3L, passengerList.get(2), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS),
-			new Ticket(4L, passengerList.get(1), passengerList.get(1), null, 40000, 40000, TicketType.BUSINESS),
-			new Ticket(5L, passengerList.get(2), passengerList.get(3), null, 40000, 40000, TicketType.BUSINESS)
+			new Ticket(1L, passengerList.get(0), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS, new Date()),
+			new Ticket(2L, passengerList.get(1), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS, new Date()),
+			new Ticket(3L, passengerList.get(2), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS, new Date()),
+			new Ticket(4L, passengerList.get(1), passengerList.get(1), null, 40000, 40000, TicketType.BUSINESS, new Date()),
+			new Ticket(5L, passengerList.get(2), passengerList.get(3), null, 40000, 40000, TicketType.BUSINESS, new Date())
 		);
 		ticketRepository.saveAll(tickets);
 		return tickets;
