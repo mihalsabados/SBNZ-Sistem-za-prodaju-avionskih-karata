@@ -23,6 +23,7 @@ rule "Price_@{row.rowNumber}"
         )
     then
         modify($t){setFinalPrice(@{price});}
+        modify($t){setBasePrice(@{price});}
 end
 
 end template

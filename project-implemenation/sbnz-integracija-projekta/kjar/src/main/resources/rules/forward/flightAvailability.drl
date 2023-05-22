@@ -75,6 +75,7 @@ rule "Popular flight with distance more than 8000km"
             $ticket.getDiscounts().add($discount);
         }
         System.out.println("RULE9");
+        $ticket.setFinalPrice($ticket.getFinalPrice() - (($discount.getPercentage() / 100) * $ticket.getFinalPrice()));
 end
 
 

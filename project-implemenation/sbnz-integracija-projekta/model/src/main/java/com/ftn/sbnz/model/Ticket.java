@@ -24,5 +24,6 @@ public class Ticket {
     @DBRef
     private List<Discount> discounts;
     private double finalPrice;
+    private double basePrice;
     private TicketType ticketType;
 }

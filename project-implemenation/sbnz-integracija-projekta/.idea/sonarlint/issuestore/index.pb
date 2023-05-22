@@ -11,14 +11,10 @@ g
 7model/src/main/java/com/ftn/sbnz/enums/LoyaltyType.java,a\b\ab5de6ec5aac1334319b3f0a4511a61500577ab8
 q
 Aservice/src/main/java/com/ftn/sbnz/controller/UserController.java,6\4\6489c5db8a5ccb84e0891b11acb7406c53df1e95
-q
-Amodel/src/main/java/com/ftn/sbnz/dto/ticket/PassengerDataDTO.java,b\9\b9e68869aafb79010a55984e8b82d5fb058ba470
 p
 @service/src/main/java/com/ftn/sbnz/service/SampleAppService.java,7\b\7b39e6704218b3038303a997148c16a03c96bd4f
 w
 Gservice/src/main/java/com/ftn/sbnz/exception/UserNotFoundException.java,c\1\c1dd73c751b81696beebea934e35bc6d11aa17ca
-b
-2model/src/main/java/com/ftn/sbnz/dto/LoginDTO.java,1\1\11240ae32f28bb8cc70b0c0dfb05c9d1fa2ab117
 y
 Iservice/src/main/java/com/ftn/sbnz/exception/FlightNotFoundException.java,e\6\e6affb58f4922cf05dd5ca094a8b954aeb9ad8e3
 u
@@ -27,3 +23,9 @@ B
 service/.gitignore,4\e\4e5534d7cff2ea4925a7f705910f7bb2f595abf4
 ?
 service/pom.xml,a\1\a1f4042fbcf78e2ab86d486176a2378cd0a26e9a
+s
+Cservice/src/main/java/com/ftn/sbnz/repository/FlightRepository.java,e\c\ec66f15b08de21a4807fa3c7dd296cb1177b9d3f
+t
+Dservice/src/main/java/com/ftn/sbnz/service/SampleHomeController.java,4\d\4d3d66daf33a5fd226a7426bb475932d394fd9f4
+m
+=service/src/main/java/com/ftn/sbnz/service/FlightService.java,a\0\a0adbcad4cf0f5053b3f41ae96a31f2639a0d28c
