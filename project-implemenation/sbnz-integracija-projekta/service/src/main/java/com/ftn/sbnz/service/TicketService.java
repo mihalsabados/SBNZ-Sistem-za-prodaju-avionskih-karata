@@ -14,12 +14,7 @@ import com.ftn.sbnz.repository.TicketRepository;
 import com.ftn.sbnz.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.drools.template.ObjectDataCompiler;
-import org.kie.api.KieBase;
-import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
-import org.kie.api.builder.KieFileSystem;
-import org.kie.api.conf.EventProcessingOption;
-import org.kie.api.io.Resource;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -27,8 +22,7 @@ import org.kie.internal.utils.KieHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.io.StringReader;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,14 +61,19 @@ public class TicketService {
         setPrice(suggestedFlightId, ticket);
         setPopularFlightWithOver8000kmDiscount(ticket);
         setTicketNumberDiscount(suggestedFlightId, ticket);
-        setUserLoyaltyStatusAndDiscount(payer, ticket);
+        setUserLoyaltyStatus(payer, ticket);
         setUserLoyaltyDiscounts(payer, ticket);
         return new TicketToShowDTO(ticket, suggestedFlightId);
     }
 
     private void setUserLoyaltyDiscounts(User payer, Ticket ticket) {
-        if(ticket.getDiscounts() != null && !(payer.getLoyaltyStatus() == LoyaltyType.REGULAR)){
-            Discount discount = ticket.getDiscounts().stream().filter(discount1 -> discount1.getName().endsWith("loyalty status")).collect(Collectors.toList()).get(0);
+        if(!(payer.getLoyaltyStatus() == LoyaltyType.REGULAR)){
+            String loyaltyType = payer.getLoyaltyStatus().name().toLowerCase();
+            String cap = loyaltyType.substring(0, 1).toUpperCase() + loyaltyType.substring(1);
+            Discount discount = this.discountRepository.findByName(cap+ " loyalty status");
+            if(ticket.getDiscounts() == null)
+                ticket.setDiscounts(new ArrayList<>());
+            ticket.getDiscounts().add(discount);
             double finalPrice = ticket.getFinalPrice();
             double percentage = discount.getPercentage()/100;
             ticket.setFinalPrice(finalPrice - finalPrice*percentage);
@@ -91,7 +90,7 @@ public class TicketService {
         }
     }
 
-    private void setUserLoyaltyStatusAndDiscount(User payer, Ticket ticket) {
+    private void setUserLoyaltyStatus(User payer, Ticket ticket) {
         InputStream template = TicketService.class.getResourceAsStream("/rules/template/loyaltyStatusTemplate.drt");
 
         List<LoyaltyStatusTemplate> loyaltyStatusTemplates = List.of(
@@ -107,17 +106,13 @@ public class TicketService {
         KieSession ksession = kieHelper.build().newKieSession();
 
         ksession.insert(payer);
-        ksession.insert(ticket);
-        this.flightRepository.findAll().forEach(ksession::insert);
+        this.ticketRepository.findAll().forEach(ksession::insert);
         this.discountRepository.findAll().forEach(ksession::insert);
 
 
         int rulesFired = ksession.fireAllRules();
         System.out.println("Rules fired for price template: "+rulesFired);
 
-
-
-        ticketRepository.save(ticket);
         userRepository.save(payer);
     }
 
