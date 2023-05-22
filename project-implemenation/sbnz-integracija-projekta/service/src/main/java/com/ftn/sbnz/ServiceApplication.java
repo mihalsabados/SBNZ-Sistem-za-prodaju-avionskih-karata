@@ -98,11 +98,11 @@ public class ServiceApplication implements CommandLineRunner{
 		);
 
 		List<Ticket> tickets = List.of(
-			new Ticket(1L, passengerList.get(0), passengerList.get(0), null, 40000, TicketType.BUSINESS),
-			new Ticket(2L, passengerList.get(1), passengerList.get(0), null, 40000, TicketType.BUSINESS),
-			new Ticket(3L, passengerList.get(2), passengerList.get(0), null, 40000, TicketType.BUSINESS),
-			new Ticket(4L, passengerList.get(1), passengerList.get(1), null, 40000, TicketType.BUSINESS),
-			new Ticket(5L, passengerList.get(2), passengerList.get(3), null, 40000, TicketType.BUSINESS)
+			new Ticket(1L, passengerList.get(0), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS),
+			new Ticket(2L, passengerList.get(1), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS),
+			new Ticket(3L, passengerList.get(2), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS),
+			new Ticket(4L, passengerList.get(1), passengerList.get(1), null, 40000, 40000, TicketType.BUSINESS),
+			new Ticket(5L, passengerList.get(2), passengerList.get(3), null, 40000, 40000, TicketType.BUSINESS)
 		);
 		ticketRepository.saveAll(tickets);
 		return tickets;

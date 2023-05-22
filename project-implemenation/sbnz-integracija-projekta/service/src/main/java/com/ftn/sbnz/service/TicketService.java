@@ -4,10 +4,7 @@ import com.ftn.sbnz.dto.ticket.PassengerDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
 import com.ftn.sbnz.enums.TicketType;
 import com.ftn.sbnz.exception.UserNotFoundException;
-import com.ftn.sbnz.model.Flight;
-import com.ftn.sbnz.model.PriceTemplate;
-import com.ftn.sbnz.model.Ticket;
-import com.ftn.sbnz.model.User;
+import com.ftn.sbnz.model.*;
 import com.ftn.sbnz.dto.ticket.TicketToShowDTO;
 import com.ftn.sbnz.exception.FlightNotFoundException;
 import com.ftn.sbnz.repository.DiscountRepository;
@@ -49,7 +46,7 @@ public class TicketService {
 
         long newId = this.ticketRepository.count() + 1;
 
-        Ticket ticket = new Ticket(newId, passenger, payer, null, 0,
+        Ticket ticket = new Ticket(newId, passenger, payer, null,0, 0,
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
 
         long suggestedFlightId = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
@@ -58,6 +55,7 @@ public class TicketService {
         ticketRepository.save(ticket);
 
         setPrice(suggestedFlightId, ticket);
+        setTicketNumberDiscount(suggestedFlightId, ticket);
         return new TicketToShowDTO(ticket, suggestedFlightId);
     }
 
@@ -122,6 +120,40 @@ public class TicketService {
         ticketRepository.save(ticket);
     }
 
+    private void setTicketNumberDiscount(Long flightId, Ticket ticket) {
+        Flight flight = this.flightRepository.findById(flightId).
+                orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
+        InputStream template = TicketService.class.getResourceAsStream("/rules/template/ticketNumberDiscountTemplate.drt");
+
+        List<TicketNumberDiscountTemplate> ticketNumberDiscountTemplates = List.of(
+                new TicketNumberDiscountTemplate(2, 3, TicketType.BUSINESS, "2 business tickets"),
+                new TicketNumberDiscountTemplate(3, 4, TicketType.BUSINESS, "3 business tickets"),
+                new TicketNumberDiscountTemplate(4, 5, TicketType.BUSINESS, "4 business tickets"),
+                new TicketNumberDiscountTemplate(5, Integer.MAX_VALUE, TicketType.BUSINESS, "5 or more business tickets"),
+
+                new TicketNumberDiscountTemplate(2, 3, TicketType.ECONOMIC, "2 business tickets"),
+                new TicketNumberDiscountTemplate(3, 4, TicketType.ECONOMIC, "3 business tickets"),
+                new TicketNumberDiscountTemplate(4, 5, TicketType.ECONOMIC, "4 business tickets"),
+                new TicketNumberDiscountTemplate(5, Integer.MAX_VALUE, TicketType.ECONOMIC, "5 or more business tickets")
+        );
+
+        ObjectDataCompiler compiler = new ObjectDataCompiler();
+        String drl = compiler.compile(ticketNumberDiscountTemplates, template);
+
+        KieHelper kieHelper = new KieHelper();
+        kieHelper.addContent(drl, ResourceType.DRL);
+        KieSession ksession = kieHelper.build().newKieSession();
+
+        ksession.insert(flight);
+        ksession.insert(ticket);
+
+        discountRepository.findAll().forEach(ksession::insert);
+
+        int rulesFired = ksession.fireAllRules();
+        System.out.println("Rules fired for ticket number discount template: " + rulesFired);
+        ticketRepository.save(ticket);
+    }
+
     private User createNewUser(PassengerDataDTO passengerData) {
         User user = new User(passengerData);
         this.userRepository.save(user);
@@ -136,7 +168,7 @@ public class TicketService {
 
         long newId = this.ticketRepository.count() + 1;
 
-        Ticket ticket = new Ticket(newId, passenger, payer, null, 0,
+        Ticket ticket = new Ticket(newId, passenger, payer, null,0, 0,
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
 
         ticketRepository.save(ticket);

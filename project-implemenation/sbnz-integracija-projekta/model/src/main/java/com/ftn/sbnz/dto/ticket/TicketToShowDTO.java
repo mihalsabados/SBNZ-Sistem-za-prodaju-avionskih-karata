@@ -14,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class TicketToShowDTO {
     private List<Discount> discounts;
+    private double basePrice;
     private double finalPrice;
     private long alternativeFlightId;
 
@@ -21,6 +22,7 @@ public class TicketToShowDTO {
         this.discounts = ticket.getDiscounts();
         this.finalPrice = ticket.getFinalPrice();
         this.alternativeFlightId = flightId;
+        this.basePrice = ticket.getBasePrice();
     }
 
     public TicketToShowDTO(long alternativeFlightId){
