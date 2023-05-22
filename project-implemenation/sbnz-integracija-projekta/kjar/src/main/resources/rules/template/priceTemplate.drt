@@ -4,7 +4,7 @@ minDistance
 maxDistance
 price
 
-package template
+package rules.template
 
 import com.ftn.sbnz.model.Ticket
 import com.ftn.sbnz.model.Flight

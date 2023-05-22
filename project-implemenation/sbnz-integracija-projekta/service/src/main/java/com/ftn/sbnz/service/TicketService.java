@@ -2,6 +2,7 @@ package com.ftn.sbnz.service;
 
 import com.ftn.sbnz.dto.ticket.PassengerDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
+import com.ftn.sbnz.enums.LoyaltyType;
 import com.ftn.sbnz.enums.TicketType;
 import com.ftn.sbnz.exception.UserNotFoundException;
 import com.ftn.sbnz.model.*;
@@ -13,7 +14,12 @@ import com.ftn.sbnz.repository.TicketRepository;
 import com.ftn.sbnz.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.drools.template.ObjectDataCompiler;
+import org.kie.api.KieBase;
+import org.kie.api.KieBaseConfiguration;
 import org.kie.api.KieServices;
+import org.kie.api.builder.KieFileSystem;
+import org.kie.api.conf.EventProcessingOption;
+import org.kie.api.io.Resource;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
@@ -21,7 +27,11 @@ import org.kie.internal.utils.KieHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.io.StringReader;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -47,7 +57,7 @@ public class TicketService {
         long newId = this.ticketRepository.count() + 1;
 
         Ticket ticket = new Ticket(newId, passenger, payer, null,0, 0,
-                TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
+                TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()), new Date());
 
         long suggestedFlightId = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
         if(suggestedFlightId != ticketDataDTO.getFlightId())
@@ -55,8 +65,60 @@ public class TicketService {
         ticketRepository.save(ticket);
 
         setPrice(suggestedFlightId, ticket);
+        setPopularFlightWithOver8000kmDiscount(ticket);
         setTicketNumberDiscount(suggestedFlightId, ticket);
+        setUserLoyaltyStatusAndDiscount(payer, ticket);
+        setUserLoyaltyDiscounts(payer, ticket);
         return new TicketToShowDTO(ticket, suggestedFlightId);
+    }
+
+    private void setUserLoyaltyDiscounts(User payer, Ticket ticket) {
+        if(ticket.getDiscounts() != null && !(payer.getLoyaltyStatus() == LoyaltyType.REGULAR)){
+            Discount discount = ticket.getDiscounts().stream().filter(discount1 -> discount1.getName().endsWith("loyalty status")).collect(Collectors.toList()).get(0);
+            double finalPrice = ticket.getFinalPrice();
+            double percentage = discount.getPercentage()/100;
+            ticket.setFinalPrice(finalPrice - finalPrice*percentage);
+            ticketRepository.save(ticket);
+        }
+    }
+
+    private void setPopularFlightWithOver8000kmDiscount(Ticket ticket) {
+        if(ticket.getDiscounts() != null){
+            double finalPrice = ticket.getFinalPrice();
+            double percentage = ticket.getDiscounts().get(0).getPercentage()/100;
+            ticket.setFinalPrice(finalPrice - finalPrice*percentage);
+            ticketRepository.save(ticket);
+        }
+    }
+
+    private void setUserLoyaltyStatusAndDiscount(User payer, Ticket ticket) {
+        InputStream template = TicketService.class.getResourceAsStream("/rules/template/loyaltyStatusTemplate.drt");
+
+        List<LoyaltyStatusTemplate> loyaltyStatusTemplates = List.of(
+                new LoyaltyStatusTemplate(250000, 400000, LoyaltyType.BRONZE, "Bronze loyalty status"),
+                new LoyaltyStatusTemplate(400000, 600000, LoyaltyType.SILVER, "Silver loyalty status"),
+                new LoyaltyStatusTemplate(600000, Double.MAX_VALUE, LoyaltyType.GOLD, "Gold loyalty status")
+        );
+        ObjectDataCompiler compiler = new ObjectDataCompiler();
+        String drl = compiler.compile(loyaltyStatusTemplates, template);
+
+        KieHelper kieHelper = new KieHelper();
+        kieHelper.addContent(drl, ResourceType.DRL);
+        KieSession ksession = kieHelper.build().newKieSession();
+
+        ksession.insert(payer);
+        ksession.insert(ticket);
+        this.flightRepository.findAll().forEach(ksession::insert);
+        this.discountRepository.findAll().forEach(ksession::insert);
+
+
+        int rulesFired = ksession.fireAllRules();
+        System.out.println("Rules fired for price template: "+rulesFired);
+
+
+
+        ticketRepository.save(ticket);
+        userRepository.save(payer);
     }
 
     private long checkTicketFlight(Long flightId, Ticket ticket) {
@@ -95,11 +157,11 @@ public class TicketService {
                 new PriceTemplate(TicketType.ECONOMIC, 0, 1000, 25000),
                 new PriceTemplate(TicketType.ECONOMIC, 1000, 2000, 35000),
                 new PriceTemplate(TicketType.ECONOMIC, 2000, 3000, 45000),
-                new PriceTemplate(TicketType.ECONOMIC, 3000, 4000, 550000),
-                new PriceTemplate(TicketType.ECONOMIC, 4000, 5000, 650000),
-                new PriceTemplate(TicketType.ECONOMIC, 5000, 6000, 750000),
-                new PriceTemplate(TicketType.ECONOMIC, 6000, 7000, 850000),
-                new PriceTemplate(TicketType.ECONOMIC, 7000, 8000, 950000),
+                new PriceTemplate(TicketType.ECONOMIC, 3000, 4000, 55000),
+                new PriceTemplate(TicketType.ECONOMIC, 4000, 5000, 65000),
+                new PriceTemplate(TicketType.ECONOMIC, 5000, 6000, 75000),
+                new PriceTemplate(TicketType.ECONOMIC, 6000, 7000, 85000),
+                new PriceTemplate(TicketType.ECONOMIC, 7000, 8000, 95000),
                 new PriceTemplate(TicketType.ECONOMIC, 8000, 9000, 105000),
                 new PriceTemplate(TicketType.ECONOMIC, 9000, 10000, 115000),
                 new PriceTemplate(TicketType.ECONOMIC, 10000, Integer.MAX_VALUE, 125000)
@@ -169,7 +231,7 @@ public class TicketService {
         long newId = this.ticketRepository.count() + 1;
 
         Ticket ticket = new Ticket(newId, passenger, payer, null,0, 0,
-                TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()));
+                TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()), new Date());
 
         ticketRepository.save(ticket);
         long suggestedFlightId = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
