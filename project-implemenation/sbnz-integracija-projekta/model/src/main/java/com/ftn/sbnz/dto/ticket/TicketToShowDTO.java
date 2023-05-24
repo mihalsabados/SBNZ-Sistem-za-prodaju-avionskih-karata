@@ -17,15 +17,18 @@ public class TicketToShowDTO {
     private double basePrice;
     private double finalPrice;
     private long alternativeFlightId;
+    private boolean flightFound;
 
-    public TicketToShowDTO(Ticket ticket, long flightId){
+    public TicketToShowDTO(Ticket ticket, long flightId, boolean flightFound){
         this.discounts = ticket.getDiscounts();
         this.finalPrice = ticket.getFinalPrice();
         this.alternativeFlightId = flightId;
         this.basePrice = ticket.getBasePrice();
+        this.flightFound = flightFound;
     }
 
-    public TicketToShowDTO(long alternativeFlightId){
+    public TicketToShowDTO(long alternativeFlightId, boolean flightFound){
         this.alternativeFlightId = alternativeFlightId;
+        this.flightFound = flightFound;
     }
 }

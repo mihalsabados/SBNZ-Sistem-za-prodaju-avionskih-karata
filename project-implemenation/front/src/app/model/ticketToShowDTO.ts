@@ -5,4 +5,5 @@ export interface TicketToShowDTO{
     basePrice: number
     finalPrice: number
     alternativeFlightId: number
+    flightFound: boolean
 }
