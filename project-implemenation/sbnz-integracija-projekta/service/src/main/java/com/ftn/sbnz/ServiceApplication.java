@@ -3,14 +3,8 @@ package com.ftn.sbnz;
 import com.ftn.sbnz.enums.LoyaltyType;
 import com.ftn.sbnz.enums.TicketType;
 import com.ftn.sbnz.enums.UserType;
-import com.ftn.sbnz.model.Discount;
-import com.ftn.sbnz.model.Flight;
-import com.ftn.sbnz.model.Ticket;
-import com.ftn.sbnz.model.User;
-import com.ftn.sbnz.repository.DiscountRepository;
-import com.ftn.sbnz.repository.FlightRepository;
-import com.ftn.sbnz.repository.TicketRepository;
-import com.ftn.sbnz.repository.UserRepository;
+import com.ftn.sbnz.model.*;
+import com.ftn.sbnz.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +33,7 @@ public class ServiceApplication implements CommandLineRunner{
 	private final FlightRepository flightRepository;
 	private final TicketRepository ticketRepository;
 	private final DiscountRepository discountRepository;
+	private final PriceTemplateRepository priceTemplateRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ServiceApplication.class, args);
@@ -51,7 +46,10 @@ public class ServiceApplication implements CommandLineRunner{
 		createInitialDiscounts();
 		List<Ticket> tickets = createInitialTickets();
 		createInitialFlights(tickets);
+		createInitialPriceTemplates();
 	}
+
+
 
 	private void deleteAllEntities() {
 		this.userRepository.deleteAll();
@@ -128,6 +126,36 @@ public class ServiceApplication implements CommandLineRunner{
 		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 5, 30), tickets, 6, false));
 		flightRepository.save(new Flight(15L, "London", 1694, 110000, LocalDateTime.of(2023, 7, 11, 5, 30), tickets, 5, true)); //radi testa
 		flightRepository.save(new Flight(16L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 8, 30), tickets, 6, false));
+	}
+
+	private void createInitialPriceTemplates() {
+		List<PriceTemplate> priceTemplates = List.of(
+				new PriceTemplate(1L, TicketType.BUSINESS, 0, 1000, 50000),
+				new PriceTemplate(2L, TicketType.BUSINESS, 1000, 2000, 70000),
+				new PriceTemplate(3L, TicketType.BUSINESS, 2000, 3000, 90000),
+				new PriceTemplate(4L, TicketType.BUSINESS, 3000, 4000, 110000),
+				new PriceTemplate(5L, TicketType.BUSINESS, 4000, 5000, 130000),
+				new PriceTemplate(6L, TicketType.BUSINESS, 5000, 6000, 150000),
+				new PriceTemplate(7L, TicketType.BUSINESS, 6000, 7000, 170000),
+				new PriceTemplate(8L, TicketType.BUSINESS, 7000, 8000, 190000),
+				new PriceTemplate(9L, TicketType.BUSINESS, 8000, 9000, 210000),
+				new PriceTemplate(10L, TicketType.BUSINESS, 9000, 10000, 230000),
+				new PriceTemplate(11L, TicketType.BUSINESS, 10000, Integer.MAX_VALUE, 250000),
+
+				new PriceTemplate(12L, TicketType.ECONOMIC, 0, 1000, 25000),
+				new PriceTemplate(13L, TicketType.ECONOMIC, 1000, 2000, 35000),
+				new PriceTemplate(14L, TicketType.ECONOMIC, 2000, 3000, 45000),
+				new PriceTemplate(15L, TicketType.ECONOMIC, 3000, 4000, 55000),
+				new PriceTemplate(16L, TicketType.ECONOMIC, 4000, 5000, 65000),
+				new PriceTemplate(17L, TicketType.ECONOMIC, 5000, 6000, 75000),
+				new PriceTemplate(18L, TicketType.ECONOMIC, 6000, 7000, 85000),
+				new PriceTemplate(19L, TicketType.ECONOMIC, 7000, 8000, 95000),
+				new PriceTemplate(20L, TicketType.ECONOMIC, 8000, 9000, 105000),
+				new PriceTemplate(21L, TicketType.ECONOMIC, 9000, 10000, 115000),
+				new PriceTemplate(22L, TicketType.ECONOMIC, 10000, Integer.MAX_VALUE, 125000)
+		);
+		this.priceTemplateRepository.saveAll(priceTemplates);
+
 	}
 
 }

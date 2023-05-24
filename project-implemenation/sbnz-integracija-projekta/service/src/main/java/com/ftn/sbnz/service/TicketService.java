@@ -8,10 +8,7 @@ import com.ftn.sbnz.exception.UserNotFoundException;
 import com.ftn.sbnz.model.*;
 import com.ftn.sbnz.dto.ticket.TicketToShowDTO;
 import com.ftn.sbnz.exception.FlightNotFoundException;
-import com.ftn.sbnz.repository.DiscountRepository;
-import com.ftn.sbnz.repository.FlightRepository;
-import com.ftn.sbnz.repository.TicketRepository;
-import com.ftn.sbnz.repository.UserRepository;
+import com.ftn.sbnz.repository.*;
 import lombok.AllArgsConstructor;
 import org.drools.template.ObjectDataCompiler;
 import org.kie.api.KieServices;
@@ -34,6 +31,8 @@ public class TicketService {
     private final UserRepository userRepository;
     private final FlightRepository flightRepository;
     private final DiscountRepository discountRepository;
+    private final PriceTemplateRepository priceTemplateRepository;
+
 
 
     private KieContainer getKieContainer(){
@@ -139,31 +138,7 @@ public class TicketService {
                 orElseThrow(() -> new FlightNotFoundException("Flight with this id not found!"));
         InputStream template = TicketService.class.getResourceAsStream("/rules/template/priceTemplate.drt");
 
-        List<PriceTemplate> priceTemplates = List.of(
-                new PriceTemplate(TicketType.BUSINESS, 0, 1000, 50000),
-                new PriceTemplate(TicketType.BUSINESS, 1000, 2000, 70000),
-                new PriceTemplate(TicketType.BUSINESS, 2000, 3000, 90000),
-                new PriceTemplate(TicketType.BUSINESS, 3000, 4000, 110000),
-                new PriceTemplate(TicketType.BUSINESS, 4000, 5000, 130000),
-                new PriceTemplate(TicketType.BUSINESS, 5000, 6000, 150000),
-                new PriceTemplate(TicketType.BUSINESS, 6000, 7000, 170000),
-                new PriceTemplate(TicketType.BUSINESS, 7000, 8000, 190000),
-                new PriceTemplate(TicketType.BUSINESS, 8000, 9000, 210000),
-                new PriceTemplate(TicketType.BUSINESS, 9000, 10000, 230000),
-                new PriceTemplate(TicketType.BUSINESS, 10000, Integer.MAX_VALUE, 250000),
-
-                new PriceTemplate(TicketType.ECONOMIC, 0, 1000, 25000),
-                new PriceTemplate(TicketType.ECONOMIC, 1000, 2000, 35000),
-                new PriceTemplate(TicketType.ECONOMIC, 2000, 3000, 45000),
-                new PriceTemplate(TicketType.ECONOMIC, 3000, 4000, 55000),
-                new PriceTemplate(TicketType.ECONOMIC, 4000, 5000, 65000),
-                new PriceTemplate(TicketType.ECONOMIC, 5000, 6000, 75000),
-                new PriceTemplate(TicketType.ECONOMIC, 6000, 7000, 85000),
-                new PriceTemplate(TicketType.ECONOMIC, 7000, 8000, 95000),
-                new PriceTemplate(TicketType.ECONOMIC, 8000, 9000, 105000),
-                new PriceTemplate(TicketType.ECONOMIC, 9000, 10000, 115000),
-                new PriceTemplate(TicketType.ECONOMIC, 10000, Integer.MAX_VALUE, 125000)
-        );
+        List<PriceTemplate> priceTemplates =priceTemplateRepository.findAll();
 
         ObjectDataCompiler compiler = new ObjectDataCompiler();
         String drl = compiler.compile(priceTemplates, template);
@@ -237,5 +212,9 @@ public class TicketService {
             return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId(), suggestedTicketDTO.isFlightFound());
         setPrice(ticketDataDTO.getFlightId(), ticket);
         return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId(), suggestedTicketDTO.isFlightFound());
+    }
+
+    public List<PriceTemplate> getPriceTemplate() {
+        return this.priceTemplateRepository.findAll();
     }
 }
