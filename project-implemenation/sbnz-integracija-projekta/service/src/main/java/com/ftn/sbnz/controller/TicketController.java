@@ -25,6 +25,8 @@ public class TicketController {
     @PostMapping("/create-ticket")
     public ResponseEntity<?> createTicket(@RequestBody TicketDataDTO ticketDataDTO) {
         TicketToShowDTO ticketToShowDTO = ticketService.createTicket(ticketDataDTO);
+        if(!ticketToShowDTO.isFlightFound())
+            return ResponseEntity.ok(ticketToShowDTO);
         if(ticketToShowDTO.getAlternativeFlightId() != ticketDataDTO.getFlightId()){
             Flight flight = flightService.getFlightById(ticketToShowDTO.getAlternativeFlightId());
             FlightDTO suggestedFlightDTO = new FlightDTO(flight);

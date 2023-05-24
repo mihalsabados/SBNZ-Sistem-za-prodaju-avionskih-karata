@@ -75,6 +75,7 @@ export class BuyTicketPageComponent {
         if (typeof res === 'object' && res !== null && 'discounts' in res) {
           this.toastrService.success("Ticket successfully reserved");
           this.ticketToShow = res;
+          console.log(this.ticketToShow)
           this.openResponseDialog();
         }
 

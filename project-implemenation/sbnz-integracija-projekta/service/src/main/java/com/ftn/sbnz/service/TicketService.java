@@ -53,9 +53,12 @@ public class TicketService {
         Ticket ticket = new Ticket(newId, passenger, payer, null,0, 0,
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()), new Date());
 
-        long suggestedFlightId = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
-        if(suggestedFlightId != ticketDataDTO.getFlightId())
-            return new TicketToShowDTO(suggestedFlightId);
+        TicketToShowDTO suggestedTicketDTO = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
+        long suggestedFlightId = suggestedTicketDTO.getAlternativeFlightId();
+        if(!suggestedTicketDTO.isFlightFound())
+            return new TicketToShowDTO(suggestedFlightId, suggestedTicketDTO.isFlightFound());
+        if(suggestedTicketDTO.getAlternativeFlightId() != ticketDataDTO.getFlightId())
+            return new TicketToShowDTO(suggestedFlightId, suggestedTicketDTO.isFlightFound());
         ticketRepository.save(ticket);
 
         setPrice(suggestedFlightId, ticket);
@@ -63,7 +66,7 @@ public class TicketService {
         setTicketNumberDiscount(suggestedFlightId, ticket);
         setUserLoyaltyStatus(payer, ticket);
         setUserLoyaltyDiscounts(payer, ticket);
-        return new TicketToShowDTO(ticket, suggestedFlightId);
+        return new TicketToShowDTO(ticket, suggestedFlightId, suggestedTicketDTO.isFlightFound());
     }
 
     private void setUserLoyaltyDiscounts(User payer, Ticket ticket) {
@@ -116,11 +119,11 @@ public class TicketService {
         userRepository.save(payer);
     }
 
-    private long checkTicketFlight(Long flightId, Ticket ticket) {
+    private TicketToShowDTO checkTicketFlight(Long flightId, Ticket ticket) {
         KieSession ksession = getKieContainer().newKieSession("forwardKsession");
 
         ksession.setGlobal("flightId", flightId);
-        TicketToShowDTO ticketToShowDTO = new TicketToShowDTO(flightId);
+        TicketToShowDTO ticketToShowDTO = new TicketToShowDTO(flightId, false);
         ksession.insert(ticketToShowDTO);
         List<Flight> allFlights = this.flightRepository.findAll();
         allFlights.forEach(ksession::insert);
@@ -128,7 +131,7 @@ public class TicketService {
         this.discountRepository.findAll().forEach(ksession::insert);
         ksession.fireAllRules();
         this.flightRepository.saveAll(allFlights);
-        return ticketToShowDTO.getAlternativeFlightId();
+        return ticketToShowDTO;
     }
 
     private void setPrice(Long flightId, Ticket ticket) {
@@ -229,8 +232,10 @@ public class TicketService {
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()), new Date());
 
         ticketRepository.save(ticket);
-        long suggestedFlightId = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
+        TicketToShowDTO suggestedTicketDTO = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
+        if (!suggestedTicketDTO.isFlightFound())
+            return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId(), suggestedTicketDTO.isFlightFound());
         setPrice(ticketDataDTO.getFlightId(), ticket);
-        return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId());
+        return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId(), suggestedTicketDTO.isFlightFound());
     }
 }
