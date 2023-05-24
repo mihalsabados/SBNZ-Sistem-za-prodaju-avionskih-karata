@@ -2,6 +2,7 @@ package com.ftn.sbnz;
 
 import com.ftn.sbnz.enums.LoyaltyType;
 import com.ftn.sbnz.enums.TicketType;
+import com.ftn.sbnz.enums.UserType;
 import com.ftn.sbnz.model.Discount;
 import com.ftn.sbnz.model.Flight;
 import com.ftn.sbnz.model.Ticket;
@@ -60,10 +61,11 @@ public class ServiceApplication implements CommandLineRunner{
 
 	private void createInitialUsers() {
 		String password = "12345678"; //svi ce imati istu sifru radi olaksanja
-		userRepository.save(new User("misa@gmail.com", password, "Misa", "Jokic", "Stojanova 22", "0613005551", "Novi Sad", LoyaltyType.BRONZE));
-		userRepository.save(new User("jelena@gmail.com", password, "Jelena", "Jelenic", "Stojanova 23", "0613005552", "Novi Sad", LoyaltyType.SILVER));
-		userRepository.save(new User("pera@gmail.com", password, "Pera", "Peric", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.GOLD));
-		userRepository.save(new User("milica@gmail.com", password, "Milica", "Milicic", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR));
+		userRepository.save(new User("misa@gmail.com", password, "Misa", "Jokic", "Stojanova 22", "0613005551", "Novi Sad", LoyaltyType.BRONZE, UserType.PASSENGER));
+		userRepository.save(new User("jelena@gmail.com", password, "Jelena", "Jelenic", "Stojanova 23", "0613005552", "Novi Sad", LoyaltyType.SILVER, UserType.PASSENGER));
+		userRepository.save(new User("pera@gmail.com", password, "Pera", "Peric", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.GOLD, UserType.PASSENGER));
+		userRepository.save(new User("milica@gmail.com", password, "Milica", "Milicic", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR, UserType.PASSENGER));
+		userRepository.save(new User("admin@gmail.com", password, "Admin", "Admin", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR, UserType.ADMIN));
 	}
 
 	private void createInitialDiscounts(){
@@ -110,15 +112,15 @@ public class ServiceApplication implements CommandLineRunner{
 	}
 
 	private void createInitialFlights(List<Ticket> tickets) {
-		flightRepository.save(new Flight(1L, "London", 1694, 40000, LocalDateTime.of(2023, 6, 10, 14, 0), tickets, 120, false));
+		flightRepository.save(new Flight(1L, "London", 1694, 40000, LocalDateTime.of(2023, 6, 10, 14, 0), tickets, 5, false));
 		flightRepository.save(new Flight(2L, "Istanbul", 642, 40000, LocalDateTime.of(2023, 6, 10, 12, 0), tickets, 120, false));
 		flightRepository.save(new Flight(3L, "Vienna", 536, 35000, LocalDateTime.of(2023, 6, 11, 9, 0), tickets, 125, true));
 		flightRepository.save(new Flight(4L, "Munich", 871, 45000, LocalDateTime.of(2023, 6, 7, 8, 30), tickets, 125, false));
 		flightRepository.save(new Flight(5L, "Zurich", 1082, 55000, LocalDateTime.of(2023, 6, 11, 10, 0), tickets, 120, false));
 		flightRepository.save(new Flight(6L, "Rome", 1107, 48000, LocalDateTime.of(2023, 6, 10, 15, 0), tickets, 150, true));
-		flightRepository.save(new Flight(7L, "Paris", 1376, 60000, LocalDateTime.of(2023, 6, 9, 11, 30), tickets, 180, false));
-		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, LocalDateTime.of(2023, 6, 9, 5, 0), tickets, 150, false));
-		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, LocalDateTime.of(2023, 6, 8, 19, 30), tickets, 180, false));
+		flightRepository.save(new Flight(7L, "Paris", 1376, 60000, LocalDateTime.of(2023, 6, 9, 11, 30), tickets, 5, false));
+		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, LocalDateTime.of(2023, 6, 9, 5, 0), tickets, 6, false));
+		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, LocalDateTime.of(2023, 6, 8, 19, 30), tickets, 5, false));
 		flightRepository.save(new Flight(10L, "New York City", 7978, 100000, LocalDateTime.of(2023, 6, 8, 22, 0), tickets, 220, false));
 		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, LocalDateTime.of(2023, 6, 12, 12, 30), tickets, 5, false));
 		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, LocalDateTime.of(2023, 6, 9, 20, 0), tickets, 220, true));

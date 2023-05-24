@@ -127,7 +127,15 @@ rule "No available seats on the flight with the same destination and doesn't exi
     when
         $flightSuggestion: TicketToShowDTO(alternativeFlightId == flightId)
         NoFlightsWithSameDestination($dist: distance)
-        not Flight(id != flightId, soldTickets.size() < numberOfSeats, Math.abs($dist - distance) <= 500)
+        not (
+            Flight(id != flightId, soldTickets.size() < numberOfSeats, Math.abs($dist - distance) <= 500,
+            $destination: destination) and
+            $flightList: List() from collect(Flight(destination == $destination)) and
+            Number(doubleValue >= 0.05) from accumulate(
+                $fl: Flight($distance: Integer.valueOf(distance), $seatsNum: Integer.valueOf(numberOfSeats)) from $flightList,
+                average($seatsNum.doubleValue() / $distance.doubleValue())
+            )
+        )
     then
         System.out.println("RULE12");
         insert(new NoFlightsWithSimilarDistance());

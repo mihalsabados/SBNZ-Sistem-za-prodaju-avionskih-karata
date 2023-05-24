@@ -1,6 +1,7 @@
 package com.ftn.sbnz.model;
 import com.ftn.sbnz.dto.ticket.PassengerDataDTO;
 import com.ftn.sbnz.enums.LoyaltyType;
+import com.ftn.sbnz.enums.UserType;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,6 +23,7 @@ public class User {
     private String phoneNumber;
     private String place;
     private LoyaltyType loyaltyStatus;
+    private UserType userType;
 
     public User(PassengerDataDTO passengerData) {
         this.email = passengerData.getEmailPassenger();
