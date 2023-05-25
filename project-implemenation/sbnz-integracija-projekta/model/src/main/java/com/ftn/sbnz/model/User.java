@@ -34,5 +34,6 @@ public class User {
         this.phoneNumber = passengerData.getPhoneNumberPassenger();
         this.place = passengerData.getPlacePassenger();
         this.loyaltyStatus = LoyaltyType.REGULAR;
+        this.userType = UserType.PASSENGER;
     }
 }

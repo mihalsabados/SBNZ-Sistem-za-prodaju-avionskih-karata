@@ -1,0 +1,57 @@
+<div class="container">
+    <div class="userInfo">
+        <div >
+            <h4>{{loggedUser.firstName + " "+loggedUser.lastName}}</h4>
+            <h4>{{loggedUser.email}}</h4>
+        </div>
+        <div class="logOut">
+            <button mat-mini-fab matTooltip="Link" color="primary" (click)="logOut()">
+                <mat-icon>exit_to_app</mat-icon>
+            </button>
+        </div>
+       
+    </div>
+
+    <div class="formContainer">
+        <h1>Business ticket prices:</h1>
+        <form *ngFor="let priceTemp of businessForm" [formGroup]="priceTemp">
+            <mat-form-field>
+                <mat-label>Minimum distance</mat-label>
+                <input matInput type="number" placeholder="Minimum distance" formControlName="minDistance" name="minDistance" required>
+                <span matTextSuffix>km&nbsp;</span>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Maximum distance</mat-label>
+                <input matInput type="number" placeholder="Maximum distance" formControlName="maxDistance" name="maxDistance" required>
+                <span matTextSuffix>km&nbsp;</span>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Price</mat-label>
+                <input matInput type="number" placeholder="Price" formControlName="price" name="price" required>
+                <span matTextPrefix>$&nbsp;</span>
+            </mat-form-field>
+        </form>
+        <h1>Economic ticket prices:</h1>
+        <form *ngFor="let priceTemp of economicForm" [formGroup]="priceTemp">
+            <mat-form-field>
+                <mat-label>Minimum distance</mat-label>
+                <input matInput type="number" placeholder="Minimum distance" formControlName="minDistance" name="minDistance" required>
+                <span matTextSuffix>km&nbsp;</span>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Maximum distance</mat-label>
+                <input matInput type="number" placeholder="Maximum distance" formControlName="maxDistance" name="maxDistance" required>
+                <span matTextSuffix>km&nbsp;</span>
+            </mat-form-field>
+            <mat-form-field>
+                <mat-label>Price</mat-label>
+                <input matInput type="number" placeholder="Price" formControlName="price" name="price" required>
+                <span matTextPrefix>$&nbsp;</span>
+            </mat-form-field>
+        </form>
+        <div class="buttonDiv">
+            <button mat-raised-button color="primary" (click)="saveTemplate()" class="cancel-button">Save</button>
+        </div>
+    </div>
+    
+  </div>
