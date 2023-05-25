@@ -7,6 +7,8 @@ import { TicketData } from 'src/app/model/ticketData';
   providedIn: 'root'
 })
 export class TicketService {
+ 
+  
 
   backUrl: string = 'http://localhost:8081/ticket/';
   
@@ -18,5 +20,13 @@ export class TicketService {
 
   acceptSuggestedFlight(ticketData: TicketData): Observable<any>{
     return this.http.post(this.backUrl + "accept-suggested-flight", ticketData);
+  }
+
+  getPriceTemplate(): Observable<any> {
+    return this.http.get(this.backUrl + "get-price-template");
+  }
+
+  setPriceTemplates(data: any): Observable<any> {
+    return this.http.post(this.backUrl + "set-price-template", data);
   }
 }

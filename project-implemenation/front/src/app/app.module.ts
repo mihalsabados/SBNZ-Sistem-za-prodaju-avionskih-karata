@@ -22,6 +22,7 @@ import { ResponseDialogComponent } from './buy-ticket/response-dialog/response-d
 import {MatDialogModule} from "@angular/material/dialog";
 import { FlightSuggestionDialogComponent } from './buy-ticket/flight-suggestion/flight-suggestion-dialog/flight-suggestion-dialog.component'
 import {MatGridListModule} from '@angular/material/grid-list';
+import { AdminPageComponent } from './admin-page/admin-page.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import {MatGridListModule} from '@angular/material/grid-list';
     LoginComponent,
     FlightsPageComponent,
     ResponseDialogComponent,
-    FlightSuggestionDialogComponent
+    FlightSuggestionDialogComponent,
+    AdminPageComponent
   ],
   imports: [
     BrowserModule,

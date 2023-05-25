@@ -37,8 +37,11 @@ export class LoginComponent {
       next:(res)=>{
         this.loading = false;
         this.toastr.success("Successful login");
-        this.router.navigateByUrl("flights");
         this.authService.setCurrentUser(res);
+        if(this.authService.getCurrentUser().userType == "ADMIN")
+          this.router.navigateByUrl("admin-page");
+        else
+          this.router.navigateByUrl("flights");
       },
       error:(err)=>{
         this.loading = false;
