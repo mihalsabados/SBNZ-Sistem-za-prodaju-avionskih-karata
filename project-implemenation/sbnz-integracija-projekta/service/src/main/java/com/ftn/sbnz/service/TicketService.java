@@ -73,11 +73,10 @@ public class TicketService {
     private void runCepRules(Ticket ticket, long flightId) {
         KieSession ksession = getKieContainer().newKieSession("cepKsession");
 
-        List<Flight> allFlights = this.flightRepository.findAll();
-        allFlights.forEach(ksession::insert);
+        this.flightRepository.findAll().forEach(ksession::insert);
         ksession.insert(ticket);
         ksession.setGlobal("flightId", flightId);
-        ksession.fireAllRules();
+        int firedRules = ksession.fireAllRules();
     }
 
     private void setUserLoyaltyDiscounts(User payer, Ticket ticket) {
@@ -125,7 +124,7 @@ public class TicketService {
 
 
         int rulesFired = ksession.fireAllRules();
-        System.out.println("Rules fired for price template: "+rulesFired);
+        System.out.println("Rules fired for loyalty status template: "+rulesFired);
 
         userRepository.save(payer);
     }
