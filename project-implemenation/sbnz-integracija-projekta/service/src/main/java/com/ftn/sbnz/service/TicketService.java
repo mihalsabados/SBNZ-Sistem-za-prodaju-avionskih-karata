@@ -53,6 +53,8 @@ public class TicketService {
         Ticket ticket = new Ticket(newId, passenger, payer, null,0, 0,
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()), new Date());
 
+        runCepRules(ticket, ticketDataDTO.getFlightId());
+
         TicketToShowDTO suggestedTicketDTO = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
         long suggestedFlightId = suggestedTicketDTO.getAlternativeFlightId();
         if(!suggestedTicketDTO.isFlightFound())
@@ -67,6 +69,16 @@ public class TicketService {
         setUserLoyaltyStatus(payer, ticket);
         setUserLoyaltyDiscounts(payer, ticket);
         return new TicketToShowDTO(ticket, suggestedFlightId, suggestedTicketDTO.isFlightFound());
+    }
+
+    private void runCepRules(Ticket ticket, long flightId) {
+        KieSession ksession = getKieContainer().newKieSession("cepKsession");
+
+        List<Flight> allFlights = this.flightRepository.findAll();
+        allFlights.forEach(ksession::insert);
+        ksession.insert(ticket);
+        ksession.setGlobal("flightId", flightId);
+        ksession.fireAllRules();
     }
 
     private void setUserLoyaltyDiscounts(User payer, Ticket ticket) {

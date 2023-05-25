@@ -1,12 +1,6 @@
 
-x
-Hservice/src/test/java/com/ftn/sbnz/service/tests/CEPEntryPointsTest.java,c\9\c9aa5ed33391e897e266c93e6f54c7a1888cd102
 q
 Aservice/src/main/java/com/ftn/sbnz/repository/UserRepository.java,b\7\b71667b367e497c75c081bfa72737b09335d29b2
-r
-Bservice/src/test/java/com/ftn/sbnz/service/tests/CEPRulesTest.java,5\8\589e9a3e5a2e846124dc4615fd60875710b21b70
-s
-Cservice/src/test/java/com/ftn/sbnz/service/tests/CEPConfigTest.java,2\b\2b02e5d53c5579737e75c497c20b82541bc1c429
 g
 7model/src/main/java/com/ftn/sbnz/enums/LoyaltyType.java,a\b\ab5de6ec5aac1334319b3f0a4511a61500577ab8
 q
@@ -21,14 +15,10 @@ u
 Eservice/src/main/java/com/ftn/sbnz/repository/DiscountRepository.java,3\8\38833a6f8e27444a98a509c0394b0a6205d9a4dc
 B
 service/.gitignore,4\e\4e5534d7cff2ea4925a7f705910f7bb2f595abf4
-?
-service/pom.xml,a\1\a1f4042fbcf78e2ab86d486176a2378cd0a26e9a
 s
 Cservice/src/main/java/com/ftn/sbnz/repository/FlightRepository.java,e\c\ec66f15b08de21a4807fa3c7dd296cb1177b9d3f
 t
 Dservice/src/main/java/com/ftn/sbnz/service/SampleHomeController.java,4\d\4d3d66daf33a5fd226a7426bb475932d394fd9f4
-m
-=service/src/main/java/com/ftn/sbnz/service/FlightService.java,a\0\a0adbcad4cf0f5053b3f41ae96a31f2639a0d28c
 i
 9model/src/main/java/com/ftn/sbnz/model/PriceTemplate.java,6\5\658072304457061101fed32a656c2aab371e8bf9
 f
@@ -41,3 +31,7 @@ q
 Amodel/src/main/java/com/ftn/sbnz/dto/ticket/PassengerDataDTO.java,b\9\b9e68869aafb79010a55984e8b82d5fb058ba470
 b
 2model/src/main/java/com/ftn/sbnz/dto/LoginDTO.java,1\1\11240ae32f28bb8cc70b0c0dfb05c9d1fa2ab117
+m
+=service/src/main/java/com/ftn/sbnz/service/FlightService.java,a\0\a0adbcad4cf0f5053b3f41ae96a31f2639a0d28c
+j
+:service/src/main/java/com/ftn/sbnz/ServiceApplication.java,0\1\0189deb6999caf82fdfec3b5eabb18968dd094d1
