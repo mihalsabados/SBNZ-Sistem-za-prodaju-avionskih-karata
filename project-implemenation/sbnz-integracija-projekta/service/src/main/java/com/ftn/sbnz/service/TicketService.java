@@ -113,7 +113,7 @@ public class TicketService {
 
 
         int rulesFired = ksession.fireAllRules();
-        System.out.println("Rules fired for price template: "+rulesFired);
+        System.out.println("Rules fired for loyalty status: "+rulesFired);
 
         userRepository.save(payer);
     }
