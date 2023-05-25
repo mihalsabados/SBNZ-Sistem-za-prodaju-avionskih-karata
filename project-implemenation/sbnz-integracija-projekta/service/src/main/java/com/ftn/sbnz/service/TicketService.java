@@ -217,4 +217,16 @@ public class TicketService {
     public List<PriceTemplate> getPriceTemplate() {
         return this.priceTemplateRepository.findAll();
     }
+
+    public void setPriceTemplate(List<PriceTemplate> priceTemplates) {
+        List<PriceTemplate> databasePriceTemplates = (List<PriceTemplate>) this.priceTemplateRepository.findAllById(priceTemplates.stream().map(PriceTemplate::getId).collect(Collectors.toList()));
+        for (int i = 0; i< priceTemplates.size(); i++){
+            PriceTemplate oldPrice = databasePriceTemplates.get(i);
+            PriceTemplate newPrice = priceTemplates.get(i);
+            oldPrice.setMaxDistance(newPrice.getMaxDistance());
+            oldPrice.setMinDistance(newPrice.getMinDistance());
+            oldPrice.setPrice(newPrice.getPrice());
+            this.priceTemplateRepository.save(oldPrice);
+        }
+    }
 }

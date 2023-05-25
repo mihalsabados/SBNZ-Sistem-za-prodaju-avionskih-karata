@@ -11,7 +11,6 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./admin-page.component.scss']
 })
 export class AdminPageComponent implements OnInit {
-
   loggedUser:any;
   businessForm:FormGroup[] = [];
   economicForm:FormGroup[] = [];
@@ -44,6 +43,7 @@ export class AdminPageComponent implements OnInit {
         this.businessForm.push(
           new FormGroup({
             id: new FormControl(priceTemp.id, [Validators.required]),
+            ticketType: new FormControl(priceTemp.ticketType, [Validators.required]),
             minDistance: new FormControl(priceTemp.minDistance, [Validators.required]),
             maxDistance: new FormControl(priceTemp.maxDistance, [Validators.required]),
             price: new FormControl(priceTemp.price, [Validators.required]),
@@ -54,12 +54,34 @@ export class AdminPageComponent implements OnInit {
         this.economicForm.push(
           new FormGroup({
             id: new FormControl(priceTemp.id, [Validators.required]),
+            ticketType: new FormControl(priceTemp.ticketType, [Validators.required]),
             minDistance: new FormControl(priceTemp.minDistance, [Validators.required]),
             maxDistance: new FormControl(priceTemp.maxDistance, [Validators.required]),
             price: new FormControl(priceTemp.price, [Validators.required]),
           })
         )
       }
+    }
+  }
+
+  saveTemplate() {
+    if(this.economicForm.filter(form=>form.invalid).length == 0 && this.businessForm.filter(form=>form.invalid).length == 0){
+      let data:any[] = this.businessForm.map(form=>form.value);
+      data = data.concat(this.economicForm.map(form=>form.value))
+      console.log(data);
+
+
+      this.ticketService.setPriceTemplates(data).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.toaster.success("Successfully saved price templates!");
+        },
+        error: (err) => {
+          this.toaster.warning("Something went wrong, please try again!");
+        }
+      });
+
+
     }
   }
 

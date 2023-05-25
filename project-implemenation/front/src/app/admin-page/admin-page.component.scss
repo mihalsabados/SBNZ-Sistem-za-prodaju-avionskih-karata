@@ -105,6 +105,10 @@ mat-progress-bar{
     padding: 20px;
 }
 
+.formContainer h1{
+    margin-left: 20px;
+}
+
 form{
     display: flex;
     padding: 0;
@@ -114,11 +118,18 @@ form{
 }
 
 mat-form-field{
-    width: 150px;
+    width: 200px;
     padding: 0;
     margin-block: 0;
+    margin-inline: 5px;
 }
 
+
+.buttonDiv{
+    margin: 0 auto;
+    width: 150px;
+    margin-bottom: 50px;
+}
 
 
 

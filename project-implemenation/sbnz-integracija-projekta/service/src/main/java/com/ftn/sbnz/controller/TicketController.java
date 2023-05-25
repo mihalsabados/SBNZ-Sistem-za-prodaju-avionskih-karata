@@ -49,4 +49,10 @@ public class TicketController {
         List<PriceTemplate> priceTemplate = ticketService.getPriceTemplate();
         return ResponseEntity.ok(priceTemplate);
     }
+
+    @PostMapping("/set-price-template")
+    public ResponseEntity<?> setPriceTemplate(@RequestBody List<PriceTemplate> priceTemplates) {
+        ticketService.setPriceTemplate(priceTemplates);
+        return ResponseEntity.ok().build();
+    }
 }
