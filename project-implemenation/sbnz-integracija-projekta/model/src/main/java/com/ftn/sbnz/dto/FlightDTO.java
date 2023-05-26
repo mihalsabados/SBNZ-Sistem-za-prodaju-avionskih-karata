@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -28,8 +29,8 @@ public class FlightDTO {
         this.destination = flight.getDestination();
         this.distance = flight.getDistance();
         this.price = flight.getPrice();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        this.departure = flight.getDeparture().format(formatter);
+        SimpleDateFormat ft = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        this.departure = ft.format(flight.getDeparture());
         this.soldTickets = flight.getSoldTickets().size();
         this.numberOfSeats = flight.getNumberOfSeats();
         this.popular = flight.isPopular();

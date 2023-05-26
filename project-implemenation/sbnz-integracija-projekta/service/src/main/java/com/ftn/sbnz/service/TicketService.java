@@ -10,18 +10,18 @@ import com.ftn.sbnz.dto.ticket.TicketToShowDTO;
 import com.ftn.sbnz.exception.FlightNotFoundException;
 import com.ftn.sbnz.repository.*;
 import lombok.AllArgsConstructor;
+import org.drools.core.ClassObjectFilter;
 import org.drools.template.ObjectDataCompiler;
 import org.kie.api.KieServices;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
+import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.utils.KieHelper;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +32,7 @@ public class TicketService {
     private final FlightRepository flightRepository;
     private final DiscountRepository discountRepository;
     private final PriceTemplateRepository priceTemplateRepository;
+    private final LastMinuteEventRepository lastMinuteEventRepository;
 
 
 
@@ -67,7 +68,30 @@ public class TicketService {
         setTicketNumberDiscount(suggestedFlightId, ticket);
         setUserLoyaltyStatus(payer, ticket);
         setUserLoyaltyDiscounts(payer, ticket);
+        setLastMinuteDiscounts(ticket, ticketDataDTO.getFlightId());
         return new TicketToShowDTO(ticket, suggestedFlightId, suggestedTicketDTO.isFlightFound());
+    }
+
+    private void setLastMinuteDiscounts(Ticket ticket, Long flightId) {
+        KieSession ksession = getKieContainer().newKieSession("cepDiscountKsession");
+
+        this.flightRepository.findAll().forEach(ksession::insert);
+        this.discountRepository.findAll().forEach(ksession::insert);
+        this.lastMinuteEventRepository.findAll().forEach(ksession::insert);
+
+        ksession.insert(ticket);
+        ksession.setGlobal("flightId", flightId);
+        int firedRules = ksession.fireAllRules();
+        List<LastMinuteEvent> lmes = Arrays.stream(ksession.getObjects().toArray()).filter(obj->obj instanceof LastMinuteEvent).map(obj->(LastMinuteEvent)obj).collect(Collectors.toList());
+        for (LastMinuteEvent lme : lmes) {
+            if(lme.getId() == null){
+                lme.setId(this.lastMinuteEventRepository.count()+1);
+                this.lastMinuteEventRepository.save(lme);
+            }
+        }
+
+        List<Flight> flights = Arrays.stream(ksession.getObjects().toArray()).filter(obj->obj instanceof Flight).map(obj->(Flight)obj).collect(Collectors.toList());
+        this.flightRepository.saveAll(flights);
     }
 
     private void runCepRules(Ticket ticket, long flightId) {

@@ -1,5 +1,6 @@
 package rules.cep;
 import com.ftn.sbnz.model.Ticket;
+import com.ftn.sbnz.enums.TicketType;
 import com.ftn.sbnz.model.Flight;
 import com.ftn.sbnz.model.User;
 import java.util.List;
@@ -7,18 +8,19 @@ import java.util.ArrayList;
 
 global Long flightId
 
-rule "2 Tickets with same content from the same customer"
-    when
-        $t1: Ticket($payer: payer, $passenger: passenger, $ticketType: ticketType)
-        $flight: Flight(id == flightId, $soldTickets: soldTickets)
-        $t2: Ticket(
-            payer == $payer,
-            passenger == $passenger,
-            ticketType == $ticketType
-        ) from $soldTickets
-    then
-        System.out.println("RULE 15");
-end
+//rule "2 Tickets with same content from the same customer"
+//    when
+//        $t1: Ticket($payer: payer, $passenger: passenger, $ticketType: ticketType)
+//        $flight: Flight(id == flightId, $soldTickets: soldTickets)
+//        $t2: Ticket(
+//            this != $t1,
+//            payer == $payer,
+//            passenger == $passenger,
+//            ticketType == $ticketType
+//        ) from $soldTickets
+//    then
+//        System.out.println("RULE 15");
+//end
 
 //rule "2 Tickets with same content from the same customer"
 //    when
