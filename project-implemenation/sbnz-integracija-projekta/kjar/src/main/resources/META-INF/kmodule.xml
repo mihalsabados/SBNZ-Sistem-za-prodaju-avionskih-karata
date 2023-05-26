@@ -3,6 +3,10 @@
         <ksession name="cepKsession"/>
     </kbase>
 
+    <kbase name="cepDiscountKbase" eventProcessingMode="stream" packages="cepDiscount">
+        <ksession name="cepDiscountKsession"/>
+    </kbase>
+
     <kbase name="forwardKbase" eventProcessingMode="stream" packages="forward">
         <ksession name="forwardKsession"/>
     </kbase>

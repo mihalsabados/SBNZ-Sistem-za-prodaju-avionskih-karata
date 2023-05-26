@@ -5,13 +5,11 @@ import org.kie.api.definition.type.Expires;
 import org.kie.api.definition.type.Role;
 import org.kie.api.definition.type.Timestamp;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
-import java.util.List;
 
-@Document("flights")
+@Document("lastMinuteEvents")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,18 +17,16 @@ import java.util.List;
 @EqualsAndHashCode
 @ToString
 @Role(Role.Type.EVENT)
-@Timestamp("departure")
+@Timestamp("timestamp")
 @Expires("2h30m")
-public class Flight {
+public class LastMinuteEvent {
     @Id
     private Long id;
-    private String destination;
-    private int distance;
-    private double price;
-    private Date departure;
-    @DBRef
-    private List<Ticket> soldTickets;
-    private int numberOfSeats;
-    private boolean popular;
+    private Long flightId;
+    private Date timestamp;
 
+    public LastMinuteEvent(Long flightId){
+        this.flightId = flightId;
+        this.timestamp = new Date();
+    }
 }

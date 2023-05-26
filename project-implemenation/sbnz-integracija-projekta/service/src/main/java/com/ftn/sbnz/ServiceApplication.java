@@ -17,6 +17,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -34,13 +36,14 @@ public class ServiceApplication implements CommandLineRunner{
 	private final TicketRepository ticketRepository;
 	private final DiscountRepository discountRepository;
 	private final PriceTemplateRepository priceTemplateRepository;
+	private final LastMinuteEventRepository lastMinuteEventRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(ServiceApplication.class, args);
 	}
 
 	@Override
-	public void run(String... args) {
+	public void run(String... args) throws ParseException {
 		deleteAllEntities();
 		createInitialUsers();
 		createInitialDiscounts();
@@ -55,6 +58,9 @@ public class ServiceApplication implements CommandLineRunner{
 		this.userRepository.deleteAll();
 		this.flightRepository.deleteAll();
 		this.ticketRepository.deleteAll();
+		this.discountRepository.deleteAll();
+		this.priceTemplateRepository.deleteAll();
+		this.lastMinuteEventRepository.deleteAll();
 	}
 
 	private void createInitialUsers() {
@@ -81,7 +87,6 @@ public class ServiceApplication implements CommandLineRunner{
 			new Discount("Popular flight with over 8000km", 12),
 			// CEP discounts
 			new Discount("less than 4 seats", 10),
-			new Discount("4-8 seats", 5),
 			// Loyalty discounts
 			new Discount("Bronze loyalty status", 15),
 			new Discount("Silver loyalty status", 30),
@@ -109,23 +114,26 @@ public class ServiceApplication implements CommandLineRunner{
 		return tickets;
 	}
 
-	private void createInitialFlights(List<Ticket> tickets) {
-		flightRepository.save(new Flight(1L, "London", 1694, 40000, LocalDateTime.of(2023, 6, 10, 14, 0), tickets, 5, false));
-		flightRepository.save(new Flight(2L, "Istanbul", 642, 40000, LocalDateTime.of(2023, 6, 10, 12, 0), tickets, 120, false));
-		flightRepository.save(new Flight(3L, "Vienna", 536, 35000, LocalDateTime.of(2023, 6, 11, 9, 0), tickets, 125, true));
-		flightRepository.save(new Flight(4L, "Munich", 871, 45000, LocalDateTime.of(2023, 6, 7, 8, 30), tickets, 125, false));
-		flightRepository.save(new Flight(5L, "Zurich", 1082, 55000, LocalDateTime.of(2023, 6, 11, 10, 0), tickets, 120, false));
-		flightRepository.save(new Flight(6L, "Rome", 1107, 48000, LocalDateTime.of(2023, 6, 10, 15, 0), tickets, 150, true));
-		flightRepository.save(new Flight(7L, "Paris", 1376, 60000, LocalDateTime.of(2023, 6, 9, 11, 30), tickets, 5, false));
-		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, LocalDateTime.of(2023, 6, 9, 5, 0), tickets, 6, false));
-		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, LocalDateTime.of(2023, 6, 8, 19, 30), tickets, 5, false));
-		flightRepository.save(new Flight(10L, "New York City", 7978, 100000, LocalDateTime.of(2023, 6, 8, 22, 0), tickets, 220, false));
-		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, LocalDateTime.of(2023, 6, 12, 12, 30), tickets, 5, false));
-		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, LocalDateTime.of(2023, 6, 9, 20, 0), tickets, 220, true));
-		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, LocalDateTime.of(2023, 6, 7, 7, 30), tickets, 220, false));
-		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 5, 30), tickets, 6, false));
-		flightRepository.save(new Flight(15L, "London", 1694, 110000, LocalDateTime.of(2023, 7, 11, 5, 30), tickets, 5, true)); //radi testa
-		flightRepository.save(new Flight(16L, "Tokyo", 9178, 110000, LocalDateTime.of(2023, 6, 11, 8, 30), tickets, 6, false));
+	private void createInitialFlights(List<Ticket> tickets) throws ParseException {
+		SimpleDateFormat ft = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		flightRepository.save(new Flight(1L, "London", 1694, 40000, ft.parse("10.06.2023 12:00"), tickets, 5, false));
+		flightRepository.save(new Flight(2L, "Istanbul", 642, 40000, ft.parse("10.06.2023 12:00"), tickets, 120, false));
+		flightRepository.save(new Flight(3L, "Vienna", 536, 35000, ft.parse("11.06.2023 09:00"), tickets, 125, true));
+		flightRepository.save(new Flight(4L, "Munich", 871, 45000, ft.parse("07.06.2023 07:30"), tickets, 125, false));
+		flightRepository.save(new Flight(5L, "Zurich", 1082, 55000, ft.parse("11.06.2023 10:00"), tickets, 120, false));
+		flightRepository.save(new Flight(6L, "Rome", 1107, 48000, ft.parse("10.06.2023 15:0"), tickets, 150, true));
+		flightRepository.save(new Flight(7L, "Paris", 1376, 60000, ft.parse("09.06.2023 09:30"), tickets, 5, false));
+		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, ft.parse("09.06.2023 05:00"), tickets, 6, false));
+		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, ft.parse("08.06.2023 17:30"), tickets, 5, false));
+		flightRepository.save(new Flight(10L, "New York City", 7978, 100000, ft.parse("08.06.2023 10:00"), tickets, 220, false));
+		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, ft.parse("12.06.2023 12:30"), tickets, 5, false));
+		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, ft.parse("09.06.2023 20:00"), tickets, 220, true));
+		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, ft.parse("07.06.2023 07:30"), tickets, 220, false));
+		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, ft.parse("11.06.2023 05:30"), tickets, 6, false));
+		flightRepository.save(new Flight(15L, "London", 1694, 110000, ft.parse("11.06.2023 05:30"), tickets, 5, true)); //radi testa
+		flightRepository.save(new Flight(16L, "Tokyo", 9178, 110000, ft.parse("11.06.2023 08:30"), tickets, 6, false));
+		flightRepository.save(new Flight(17L, "New York City", 7978, 100000, ft.parse("27.05.2023 20:00"), tickets, 8, false));
+		flightRepository.save(new Flight(18L, "New York City", 7978, 100000, ft.parse("27.05.2023 22:00"), tickets, 120, false));
 	}
 
 	private void createInitialPriceTemplates() {

@@ -1,0 +1,75 @@
+package rules.cepDiscount;
+
+import com.ftn.sbnz.model.Ticket;
+import com.ftn.sbnz.enums.TicketType;
+import com.ftn.sbnz.model.Flight;
+import com.ftn.sbnz.model.User;
+import com.ftn.sbnz.model.Discount;
+import com.ftn.sbnz.model.LastMinuteEvent;
+import java.util.List;
+import java.util.Date;
+import java.util.ArrayList;
+
+global Long flightId
+
+declare PopularFlightEvent
+    flId: Long
+end
+
+rule "Flight happening 48 hours from ticket buying and with less than 4 available seats"
+    no-loop
+    when
+        $discount: Discount(name=="less than 4 seats")
+        $t: Ticket()
+        $f: Flight(
+                id == flightId,
+                this meets[48h] $t,
+                $soldTickets: soldTickets,
+                soldTickets.size() + 3 > numberOfSeats
+        )
+        not PopularFlightEvent(flId == flightId)
+    then
+        System.out.println("Rule 18");
+        insert(new LastMinuteEvent(flightId));
+        if ($t.getDiscounts() == null)
+            $t.setDiscounts(new ArrayList<>(List.of($discount)));
+        else
+            $t.getDiscounts().add($discount);
+        $t.setFinalPrice($t.getFinalPrice() - (($discount.getPercentage() / 100) * $t.getFinalPrice()));
+end
+
+rule "2 or more Last minute events within 3 minutes on same flight"
+    no-loop
+    when
+        LastMinuteEvent(id == null)
+        $fl:Flight(id == flightId)
+        Number(intValue >= 2) from accumulate(
+            $lme:LastMinuteEvent(flightId == flightId)
+            over window: time(3m),
+            count($lme)
+        )
+    then
+        System.out.println("Rule 19");
+        modify($fl){
+            setPopular(true)
+        }
+        insert(new PopularFlightEvent(flightId));
+
+end
+
+rule "PopularFlightEvent with same destination with time meets 3 hours"
+    when
+        PopularFlightEvent($flId: flId)
+        $fl1: Flight(id == $flId, $dest:destination)
+        $fl2: Flight(
+            id != flightId,
+            destination == $dest,
+            this meets[3h] $fl1,
+            popular == false
+        )
+    then
+        System.out.println("Rule 20");
+        modify($fl2){
+            setPopular(true)
+        }
+end
