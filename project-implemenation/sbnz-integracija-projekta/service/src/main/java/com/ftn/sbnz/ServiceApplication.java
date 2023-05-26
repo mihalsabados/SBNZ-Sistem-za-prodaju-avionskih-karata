@@ -65,11 +65,11 @@ public class ServiceApplication implements CommandLineRunner{
 
 	private void createInitialUsers() {
 		String password = "12345678"; //svi ce imati istu sifru radi olaksanja
-		userRepository.save(new User("misa@gmail.com", password, "Misa", "Jokic", "Stojanova 22", "0613005551", "Novi Sad", LoyaltyType.BRONZE, UserType.PASSENGER));
-		userRepository.save(new User("jelena@gmail.com", password, "Jelena", "Jelenic", "Stojanova 23", "0613005552", "Novi Sad", LoyaltyType.SILVER, UserType.PASSENGER));
-		userRepository.save(new User("pera@gmail.com", password, "Pera", "Peric", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.GOLD, UserType.PASSENGER));
-		userRepository.save(new User("milica@gmail.com", password, "Milica", "Milicic", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR, UserType.PASSENGER));
-		userRepository.save(new User("admin@gmail.com", password, "Admin", "Admin", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR, UserType.ADMIN));
+		userRepository.save(new User("misa@gmail.com", password, "Misa", "Jokic", "Stojanova 22", "0613005551", "Novi Sad", LoyaltyType.BRONZE, UserType.PASSENGER, false));
+		userRepository.save(new User("jelena@gmail.com", password, "Jelena", "Jelenic", "Stojanova 23", "0613005552", "Novi Sad", LoyaltyType.SILVER, UserType.PASSENGER, false));
+		userRepository.save(new User("pera@gmail.com", password, "Pera", "Peric", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.GOLD, UserType.PASSENGER, false));
+		userRepository.save(new User("milica@gmail.com", password, "Milica", "Milicic", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR, UserType.PASSENGER, false));
+		userRepository.save(new User("admin@gmail.com", password, "Admin", "Admin", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR, UserType.ADMIN, false));
 	}
 
 	private void createInitialDiscounts(){
