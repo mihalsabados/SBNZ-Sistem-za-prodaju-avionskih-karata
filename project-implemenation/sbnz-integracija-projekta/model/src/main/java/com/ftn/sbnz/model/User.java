@@ -24,6 +24,7 @@ public class User {
     private String place;
     private LoyaltyType loyaltyStatus;
     private UserType userType;
+    private boolean blocked;
 
     public User(PassengerDataDTO passengerData) {
         this.email = passengerData.getEmailPassenger();

@@ -69,7 +69,7 @@ rule "2 suspicious transactions within 10 days"
         $payer: User(payerEmail == $payerEmail)
     then
         System.out.println("RULE 17");
-        modify($payer){setDisabled(true)};
+        modify($payer){setBlocked(true)};
 end
 
 //rule "2 Tickets with same content from the same customer"

@@ -41,5 +41,3 @@ s
 Cservice/src/main/java/com/ftn/sbnz/controller/FlightController.java,d\c\dc07442b9af2625f3c6b415c6f6178e0a5a3e3d6
 r
 Bservice/src/test/java/com/ftn/sbnz/service/tests/CEPRulesTest.java,5\8\589e9a3e5a2e846124dc4615fd60875710b21b70
-`
-0model/src/main/java/com/ftn/sbnz/model/User.java,c\b\cbf591a1fe28a1fae7ce4c29eef9306f59305bc5
