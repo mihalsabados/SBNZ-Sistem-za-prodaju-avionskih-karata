@@ -75,6 +75,7 @@ public class TicketService {
 
         this.flightRepository.findAll().forEach(ksession::insert);
         ksession.insert(ticket);
+        ksession.setGlobal("ticketId", ticket.getId());
         ksession.setGlobal("flightId", flightId);
         int firedRules = ksession.fireAllRules();
     }

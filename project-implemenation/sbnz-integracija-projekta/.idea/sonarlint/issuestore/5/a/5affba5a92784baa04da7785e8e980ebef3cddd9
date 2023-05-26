@@ -1,10 +1,0 @@
-
-K
-java:S1940U")Use the opposite operator ("!=") instead.(ñ¾Œ¿şÿÿÿÿ8ª¾Ë™…1
-J
-java:S1172l"-Remove this unused method parameter "ticket".(ÛçÓ–8£‘Ì™…1
-[	java:S106"9Replace this use of System.out or System.err by a logger.(‹ ˜şÿÿÿÿ8¾¾Ë™…1
-[	java:S106¿"9Replace this use of System.out or System.err by a logger.(‹ ˜şÿÿÿÿ8Ê¾Ë™…1
-V	java:S106á"9Replace this use of System.out or System.err by a logger.(Æ¢Ã¹8Ñ¾Ë™…1
-Z
-java:S1128"8Remove this unused import 'java.util.stream.Collectors'.(Óóº´úÿÿÿÿ8ÀÔš…1

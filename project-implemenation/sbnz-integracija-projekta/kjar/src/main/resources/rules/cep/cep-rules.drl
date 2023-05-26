@@ -5,19 +5,71 @@ import com.ftn.sbnz.model.User;
 import java.util.List;
 import java.util.ArrayList;
 
+global Long ticketId
 global Long flightId
+
+declare RedundantPaymentEvent
+    @role(event)
+    payerEmail: String
+    flightId: Long
+    ticket1Id: Long
+    ticket2Id: Long
+end
+
+declare SuspiciousTransactionEvent
+    @role(event)
+    payerEmail: String
+    flightId: Long
+end
 
 rule "2 Tickets with same content from the same customer"
     when
-        $t1: Ticket($payer: payer, $passenger: passenger, $ticketType: ticketType)
+        $t1: Ticket(
+            $payerEmail: payer.getEmail(),
+            $passengerEmail: passenger.getEmail(),
+            $ticketType: ticketType,
+            $ticket1Id: id
+         )
         $flight: Flight(id == flightId, $soldTickets: soldTickets)
         $t2: Ticket(
-            payer == $payer,
-            passenger == $passenger,
-            ticketType == $ticketType
+            $ticket2Id: id,
+            payer.getEmail() == $payerEmail,
+            passenger.getEmail() == $passengerEmail,
+            ticketType == $ticketType,
+            this meets[1h] $t1
         ) from $soldTickets
+        not RedundantPaymentEvent(ticket1Id == $ticket1Id)
+        not RedundantPaymentEvent(ticket1Id == $ticket2Id)
+        not RedundantPaymentEvent(ticket2Id == $ticket1Id)
+        not RedundantPaymentEvent(ticket2Id == $ticket2Id)
     then
         System.out.println("RULE 15");
+        insert(new RedundantPaymentEvent($payerEmail, flightId, $ticket1Id, $ticket2Id));
+end
+
+rule "2 redundant payments within 30 minutes"
+    when
+        $rp1: RedundantPaymentEvent($payerEmail: payerEmail)
+        Number(intValue >= 2) from accumulate(
+            $rp2: RedundantPaymentEvent(payerEmail == $payerEmail)
+            over window: time(30m), count($rp2)
+        )
+    then
+        System.out.println("RULE 16");
+        insert(new SuspiciousTransactionEvent($payerEmail, flightId));
+end
+
+rule "2 suspicious transactions within 10 days"
+    when
+        $st1: SuspiciousTransactionEvent($payerEmail: payerEmail)
+        Number(intValue >= 2) from accumulate(
+            $st2: SuspiciousTransactionEvent(payerEmail == $payerEmail)
+            over window: time(10d), count($st2)
+        )
+        $payer: User(payerEmail == $payerEmail)
+    then
+        System.out.println("RULE 17");
+        modify($payer){setDisabled(true)};
 end
 
 //rule "2 Tickets with same content from the same customer"
