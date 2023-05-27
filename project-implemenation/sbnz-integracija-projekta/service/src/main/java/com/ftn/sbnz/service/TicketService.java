@@ -202,10 +202,10 @@ public class TicketService {
                 new TicketNumberDiscountTemplate(4, 5, TicketType.BUSINESS, "4 business tickets"),
                 new TicketNumberDiscountTemplate(5, Integer.MAX_VALUE, TicketType.BUSINESS, "5 or more business tickets"),
 
-                new TicketNumberDiscountTemplate(2, 3, TicketType.ECONOMIC, "2 business tickets"),
-                new TicketNumberDiscountTemplate(3, 4, TicketType.ECONOMIC, "3 business tickets"),
-                new TicketNumberDiscountTemplate(4, 5, TicketType.ECONOMIC, "4 business tickets"),
-                new TicketNumberDiscountTemplate(5, Integer.MAX_VALUE, TicketType.ECONOMIC, "5 or more business tickets")
+                new TicketNumberDiscountTemplate(2, 3, TicketType.ECONOMIC, "2 economic tickets"),
+                new TicketNumberDiscountTemplate(3, 4, TicketType.ECONOMIC, "3 economic tickets"),
+                new TicketNumberDiscountTemplate(4, 5, TicketType.ECONOMIC, "4 economic tickets"),
+                new TicketNumberDiscountTemplate(5, Integer.MAX_VALUE, TicketType.ECONOMIC, "5 or more economic tickets")
         );
 
         ObjectDataCompiler compiler = new ObjectDataCompiler();

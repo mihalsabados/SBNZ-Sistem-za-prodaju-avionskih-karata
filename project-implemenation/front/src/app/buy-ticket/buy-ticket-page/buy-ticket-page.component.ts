@@ -11,6 +11,8 @@ import { ResponseDialogComponent } from '../response-dialog/response-dialog/resp
 import { TicketToShowDTO } from 'src/app/model/ticketToShowDTO';
 import { FlightSuggestionDialogComponent } from '../flight-suggestion/flight-suggestion-dialog/flight-suggestion-dialog.component';
 import { FlightDTO } from 'src/app/model/flightDTO';
+import { UserService } from 'src/app/services/user/user.service';
+import { catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-buy-ticket-page',
@@ -24,6 +26,7 @@ export class BuyTicketPageComponent {
   destination: string;
   departure: Date;
   loyaltyColor: string;
+  userStatus:string;
 
   pickedPassengerStatus: string = 'Only for me';
   passengerStatuses: string[] = ['Only for me', 'For another passenger'];
@@ -36,7 +39,7 @@ export class BuyTicketPageComponent {
 
   loading: boolean = false;
 
-  constructor(private toastrService:ToastrService, private router:Router, private authService:AuthService, private route: ActivatedRoute, private location: Location, private ticketService: TicketService, private responseDialog: MatDialog, private flightSuggestionDialog: MatDialog){
+  constructor(private toastrService:ToastrService, private router:Router, private authService:AuthService, private route: ActivatedRoute, private location: Location, private ticketService: TicketService, private responseDialog: MatDialog, private flightSuggestionDialog: MatDialog, private userService:UserService){
     this.flightId = (route.snapshot.paramMap.get('id') as string) as unknown as number;
     this.destination = (route.snapshot.paramMap.get('destination') as string) as unknown as string;
     this.departure = (route.snapshot.paramMap.get('departure') as string) as unknown as Date;
@@ -45,7 +48,7 @@ export class BuyTicketPageComponent {
 
   ngOnInit(): void {
     this.loggedUser = this.authService.getCurrentUser();
-    this.loyaltyColor = this.loggedUser.loyaltyStatus == "REGULAR"?"#F0F8FF":this.loggedUser.loyaltyStatus == "BRONZE"?"#CD7F32":this.loggedUser.loyaltyStatus == "SILVER"?"#C0C0C0":"#FFD700";
+    this.getUserStatus();
 
     this.anotherPassengerForm = new FormGroup({
       emailPassenger: new FormControl('', [Validators.required, Validators.email]),
@@ -57,6 +60,21 @@ export class BuyTicketPageComponent {
     })
 
     this.passengerIsPayer();
+  }
+
+  private getUserStatus() {
+    this.userService.getUserStatus(this.loggedUser.email)
+    .pipe(catchError(err => {return throwError(() => {new Error('greska')} )}))
+    .subscribe({
+      next: (response:string) => {
+        this.userStatus = response;
+        this.loyaltyColor = this.userStatus == "REGULAR"?"#F0F8FF":this.userStatus == "BRONZE"?"#CD7F32":this.userStatus == "SILVER"?"#C0C0C0":"#FFD700";
+      },
+      error: (err) => {
+        console.log("Greska");
+      }
+    }
+  );
   }
 
   onSubmit(){

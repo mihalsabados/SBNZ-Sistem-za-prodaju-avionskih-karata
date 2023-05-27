@@ -26,4 +26,8 @@ public class UserService {
         return this.userRepository.findByEmail(payerEmail).orElseThrow(() ->
                 new UserNotFoundException("User with this email not found!"));
     }
+
+    public String getUserLoyaltyStatus(String email) {
+        return this.getUserByEmail(email).getLoyaltyStatus().name();
+    }
 }

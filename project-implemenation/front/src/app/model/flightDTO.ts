@@ -7,4 +7,5 @@ export interface FlightDTO{
     soldTickets: number
     numberOfSeats: number
     popular: boolean
+    flightNumber: string
 }

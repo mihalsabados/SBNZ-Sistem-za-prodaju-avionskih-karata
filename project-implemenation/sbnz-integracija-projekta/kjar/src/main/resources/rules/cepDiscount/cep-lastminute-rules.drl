@@ -42,7 +42,7 @@ rule "2 or more Last minute events within 3 minutes on same flight"
     no-loop
     when
         LastMinuteEvent(id == null)
-        $fl:Flight(id == flightId)
+        $fl:Flight(id == flightId, popular == false)
         Number(intValue >= 2) from accumulate(
             $lme:LastMinuteEvent(flightId == flightId)
             over window: time(3m),

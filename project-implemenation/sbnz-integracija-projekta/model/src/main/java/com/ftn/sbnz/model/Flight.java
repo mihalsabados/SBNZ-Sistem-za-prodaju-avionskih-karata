@@ -32,5 +32,6 @@ public class Flight {
     private List<Ticket> soldTickets;
     private int numberOfSeats;
     private boolean popular;
+    private String flightNumber;
 
 }

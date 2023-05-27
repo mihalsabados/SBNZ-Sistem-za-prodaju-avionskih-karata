@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.*;
 
+import javax.websocket.server.PathParam;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,5 +26,11 @@ public class UserController {
         } else {
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
+    }
+
+    @GetMapping("/get-status/{email}")
+    public ResponseEntity<?> getUserLoyaltyStatus(@PathVariable String email) {
+        String loyaltyStatus = userService.getUserLoyaltyStatus(email);
+        return new ResponseEntity<>(loyaltyStatus, HttpStatus.OK);
     }
 }

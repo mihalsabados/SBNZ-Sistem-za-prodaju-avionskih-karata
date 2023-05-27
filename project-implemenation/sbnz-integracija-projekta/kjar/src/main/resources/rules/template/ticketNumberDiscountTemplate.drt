@@ -22,7 +22,7 @@ rule "TicketNumberDiscount_@{row.rowNumber}"
         $t: Ticket(ticketType == TicketType.valueOf("@{ticketType}"), $payer: payer)
         $fl: Flight($tickets: soldTickets, soldTickets contains $t)
         $numberOfTickets: Number(intValue >= @{minTicketNumber}, intValue < @{maxTicketNumber}) from accumulate(
-            $ticketWithBuyer: Ticket(payer == $payer) from $tickets,
+            $ticketWithBuyer: Ticket(payer == $payer, ticketType == TicketType.valueOf("@{ticketType}")) from $tickets,
             count($ticketWithBuyer)
         )
     then

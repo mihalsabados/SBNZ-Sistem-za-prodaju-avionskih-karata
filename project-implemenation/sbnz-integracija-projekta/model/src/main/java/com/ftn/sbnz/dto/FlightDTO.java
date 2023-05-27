@@ -23,6 +23,7 @@ public class FlightDTO {
     private int soldTickets;
     private int numberOfSeats;
     private boolean popular;
+    private String flightNumber;
 
     public FlightDTO(Flight flight){
         this.id = flight.getId();
@@ -34,5 +35,6 @@ public class FlightDTO {
         this.soldTickets = flight.getSoldTickets().size();
         this.numberOfSeats = flight.getNumberOfSeats();
         this.popular = flight.isPopular();
+        this.flightNumber = flight.getFlightNumber();
     }
 }

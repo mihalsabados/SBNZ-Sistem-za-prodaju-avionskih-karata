@@ -68,7 +68,7 @@ rule "2 suspicious transactions within 10 days"
             $st2: SuspiciousTransactionEvent(payerEmail == $payerEmail)
             over window: time(10d), count($st2)
         )
-        $payer: User(payerEmail == $payerEmail)
+        $payer: User(email == $payerEmail)
     then
         System.out.println("RULE 17");
         modify($payer){setBlocked(true)};

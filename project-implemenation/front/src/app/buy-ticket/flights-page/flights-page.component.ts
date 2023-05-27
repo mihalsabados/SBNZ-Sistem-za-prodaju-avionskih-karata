@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { catchError, throwError } from 'rxjs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -12,20 +13,36 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./flights-page.component.scss']
 })
 export class FlightsPageComponent implements OnInit{
-  displayedColumns = ['destination', 'distance', 'price', 'departure', 'soldTickets', 'numberOfSeats', 'popular'];
+  displayedColumns = ['flightNum','destination', 'distance', 'price', 'departure', 'soldTickets', 'numberOfSeats', 'popular'];
 
   flights:any = [];
   loggedUser:any;
+  userStatus:string;
   loyaltyColor: string;
 
   dataSource = new MatTableDataSource(this.flights);
 
-  constructor(private flightService:FlightService, private toaster:ToastrService, private router:Router, private authService:AuthService) {}
+  constructor(private flightService:FlightService, private toaster:ToastrService, private router:Router, private authService:AuthService, private userService:UserService) {}
 
   ngOnInit(): void {
     this.loadData();
     this.loggedUser = this.authService.getCurrentUser();
-    this.loyaltyColor = this.loggedUser.loyaltyStatus == "REGULAR"?"#F0F8FF":this.loggedUser.loyaltyStatus == "BRONZE"?"#CD7F32":this.loggedUser.loyaltyStatus == "SILVER"?"#C0C0C0":"#FFD700";
+    this.getUserStatus();
+  }
+
+  private getUserStatus() {
+    this.userService.getUserStatus(this.loggedUser.email)
+    .pipe(catchError(err => {return throwError(() => {new Error('greska')} )}))
+    .subscribe({
+      next: (response:string) => {
+        this.userStatus = response;
+        this.loyaltyColor = this.userStatus == "REGULAR"?"#F0F8FF":this.userStatus == "BRONZE"?"#CD7F32":this.userStatus == "SILVER"?"#C0C0C0":"#FFD700";
+      },
+      error: (err) => {
+        console.log("Greska");
+      }
+    }
+  );
   }
 
   private loadData(){

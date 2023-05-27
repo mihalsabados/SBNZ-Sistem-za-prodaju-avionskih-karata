@@ -7,10 +7,6 @@ import com.ftn.sbnz.model.*;
 import com.ftn.sbnz.repository.*;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
-import org.kie.api.KieServices;
-import org.kie.api.builder.KieScanner;
-import org.kie.api.runtime.KieContainer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -19,7 +15,6 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -52,8 +47,6 @@ public class ServiceApplication implements CommandLineRunner{
 		createInitialPriceTemplates();
 	}
 
-
-
 	private void deleteAllEntities() {
 		this.userRepository.deleteAll();
 		this.flightRepository.deleteAll();
@@ -65,9 +58,9 @@ public class ServiceApplication implements CommandLineRunner{
 
 	private void createInitialUsers() {
 		String password = "12345678"; //svi ce imati istu sifru radi olaksanja
-		userRepository.save(new User("misa@gmail.com", password, "Misa", "Jokic", "Stojanova 22", "0613005551", "Novi Sad", LoyaltyType.BRONZE, UserType.PASSENGER, false));
-		userRepository.save(new User("jelena@gmail.com", password, "Jelena", "Jelenic", "Stojanova 23", "0613005552", "Novi Sad", LoyaltyType.SILVER, UserType.PASSENGER, false));
-		userRepository.save(new User("pera@gmail.com", password, "Pera", "Peric", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.GOLD, UserType.PASSENGER, false));
+		userRepository.save(new User("misa@gmail.com", password, "Misa", "Jokic", "Stojanova 22", "0613005551", "Novi Sad", LoyaltyType.REGULAR, UserType.PASSENGER, false));
+		userRepository.save(new User("jelena@gmail.com", password, "Jelena", "Jelenic", "Stojanova 23", "0613005552", "Novi Sad", LoyaltyType.REGULAR, UserType.PASSENGER, false));
+		userRepository.save(new User("pera@gmail.com", password, "Pera", "Peric", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR, UserType.PASSENGER, false));
 		userRepository.save(new User("milica@gmail.com", password, "Milica", "Milicic", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR, UserType.PASSENGER, false));
 		userRepository.save(new User("admin@gmail.com", password, "Admin", "Admin", "Stojanova 24", "0613005553", "Novi Sad", LoyaltyType.REGULAR, UserType.ADMIN, false));
 	}
@@ -116,24 +109,24 @@ public class ServiceApplication implements CommandLineRunner{
 
 	private void createInitialFlights(List<Ticket> tickets) throws ParseException {
 		SimpleDateFormat ft = new SimpleDateFormat("dd.MM.yyyy HH:mm");
-		flightRepository.save(new Flight(1L, "London", 1694, 40000, ft.parse("10.06.2023 12:00"), tickets, 5, false));
-		flightRepository.save(new Flight(2L, "Istanbul", 642, 40000, ft.parse("10.06.2023 12:00"), tickets, 120, false));
-		flightRepository.save(new Flight(3L, "Vienna", 536, 35000, ft.parse("11.06.2023 09:00"), tickets, 125, true));
-		flightRepository.save(new Flight(4L, "Munich", 871, 45000, ft.parse("07.06.2023 07:30"), tickets, 125, false));
-		flightRepository.save(new Flight(5L, "Zurich", 1082, 55000, ft.parse("11.06.2023 10:00"), tickets, 120, false));
-		flightRepository.save(new Flight(6L, "Rome", 1107, 48000, ft.parse("10.06.2023 15:0"), tickets, 150, true));
-		flightRepository.save(new Flight(7L, "Paris", 1376, 60000, ft.parse("09.06.2023 09:30"), tickets, 5, false));
-		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, ft.parse("09.06.2023 05:00"), tickets, 6, false));
-		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, ft.parse("08.06.2023 17:30"), tickets, 5, false));
-		flightRepository.save(new Flight(10L, "New York City", 7978, 100000, ft.parse("08.06.2023 10:00"), tickets, 220, false));
-		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, ft.parse("12.06.2023 12:30"), tickets, 5, false));
-		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, ft.parse("09.06.2023 20:00"), tickets, 220, true));
-		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, ft.parse("07.06.2023 07:30"), tickets, 220, false));
-		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, ft.parse("11.06.2023 05:30"), tickets, 6, false));
-		flightRepository.save(new Flight(15L, "London", 1694, 110000, ft.parse("11.06.2023 05:30"), tickets, 5, true)); //radi testa
-		flightRepository.save(new Flight(16L, "Tokyo", 9178, 110000, ft.parse("11.06.2023 08:30"), tickets, 6, false));
-		flightRepository.save(new Flight(17L, "New York City", 7978, 100000, ft.parse("27.05.2023 20:00"), tickets, 8, false));
-		flightRepository.save(new Flight(18L, "New York City", 7978, 100000, ft.parse("27.05.2023 22:00"), tickets, 120, false));
+		flightRepository.save(new Flight(1L, "London", 1694, 40000, ft.parse("10.06.2023 12:00"), tickets, 5, false, "LON1"));
+		flightRepository.save(new Flight(2L, "Istanbul", 642, 40000, ft.parse("10.06.2023 12:00"), tickets, 120, false, "IST2"));
+		flightRepository.save(new Flight(3L, "Vienna", 536, 35000, ft.parse("11.06.2023 09:00"), tickets, 125, true, "VIE3"));
+		flightRepository.save(new Flight(4L, "Munich", 871, 45000, ft.parse("07.06.2023 07:30"), tickets, 125, false, "MUN4"));
+		flightRepository.save(new Flight(5L, "Zurich", 1082, 55000, ft.parse("11.06.2023 10:00"), tickets, 120, false, "ZUR5"));
+		flightRepository.save(new Flight(6L, "Rome", 1107, 48000, ft.parse("10.06.2023 15:0"), tickets, 150, true, "ROM6"));
+		flightRepository.save(new Flight(7L, "Paris", 1376, 60000, ft.parse("09.06.2023 09:30"), tickets, 5, false, "PAR7"));
+		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, ft.parse("09.06.2023 05:00"), tickets, 6, false, "AMS8"));
+		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, ft.parse("08.06.2023 17:30"), tickets, 5, false, "MOS9"));
+		flightRepository.save(new Flight(10L, "New York City", 7978, 100000, ft.parse("08.06.2023 10:00"), tickets, 220, false, "NYC10"));
+		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, ft.parse("12.06.2023 12:30"), tickets, 5, false, "CHI11"));
+		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, ft.parse("09.06.2023 20:00"), tickets, 220, true, "LA12"));
+		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, ft.parse("07.06.2023 07:30"), tickets, 220, false, "SYD13"));
+		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, ft.parse("11.06.2023 05:30"), tickets, 6, false, "TKY14"));
+		flightRepository.save(new Flight(15L, "London", 1694, 110000, ft.parse("11.06.2023 05:30"), tickets, 5, true, "LON15")); //radi testa
+		flightRepository.save(new Flight(16L, "Tokyo", 9178, 110000, ft.parse("11.06.2023 08:30"), tickets, 6, false, "TKY16"));
+		flightRepository.save(new Flight(17L, "New York City", 7978, 100000, ft.parse("27.05.2023 20:00"), tickets, 8, false, "NYC17"));
+		flightRepository.save(new Flight(18L, "New York City", 7978, 100000, ft.parse("27.05.2023 22:00"), tickets, 120, false, "NYC18"));
 	}
 
 	private void createInitialPriceTemplates() {
