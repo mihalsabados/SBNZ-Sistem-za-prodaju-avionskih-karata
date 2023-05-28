@@ -33,7 +33,8 @@ public class TicketService {
     private final DiscountRepository discountRepository;
     private final PriceTemplateRepository priceTemplateRepository;
     private final LastMinuteEventRepository lastMinuteEventRepository;
-
+    private final RedundantPaymentEventRepository redundantPaymentEventRepository;
+    private final SuspiciousTransactionEventRepository suspiciousTransactionEventRepository;
 
 
     private KieContainer getKieContainer(){
@@ -53,7 +54,7 @@ public class TicketService {
         Ticket ticket = new Ticket(newId, passenger, payer, null,0, 0,
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()), new Date());
 
-        runCepRules(ticket, ticketDataDTO.getFlightId());
+        setSuspiciousTransactions(ticket, ticketDataDTO.getFlightId());
 
         TicketToShowDTO suggestedTicketDTO = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
         long suggestedFlightId = suggestedTicketDTO.getAlternativeFlightId();
@@ -94,14 +95,45 @@ public class TicketService {
         this.flightRepository.saveAll(flights);
     }
 
-    private void runCepRules(Ticket ticket, long flightId) {
+    private void setSuspiciousTransactions(Ticket ticket, long flightId) {
         KieSession ksession = getKieContainer().newKieSession("cepKsession");
 
         this.flightRepository.findAll().forEach(ksession::insert);
+        this.redundantPaymentEventRepository.findAll().forEach(ksession::insert);
+        this.suspiciousTransactionEventRepository.findAll().forEach(ksession::insert);
         ksession.insert(ticket);
         ksession.setGlobal("ticketId", ticket.getId());
         ksession.setGlobal("flightId", flightId);
         int firedRules = ksession.fireAllRules();
+
+        saveRedundantPaymentEvents(ksession);
+        saveSuspiciousTransactionEvents(ksession);
+        saveUsers(ksession);
+    }
+
+    private void saveUsers(KieSession ksession) {
+        List<User> users = Arrays.stream(ksession.getObjects().toArray()).filter(obj->obj instanceof User).map(obj->(User)obj).collect(Collectors.toList());
+        this.userRepository.saveAll(users);
+    }
+
+    private void saveRedundantPaymentEvents(KieSession ksession) {
+        List<RedundantPaymentEvent> redundantPaymentEvents = Arrays.stream(ksession.getObjects().toArray()).filter(obj->obj instanceof RedundantPaymentEvent).map(obj->(RedundantPaymentEvent)obj).collect(Collectors.toList());
+        for (RedundantPaymentEvent redundantPaymentEvent : redundantPaymentEvents) {
+            if(redundantPaymentEvent.getId() == null){
+                redundantPaymentEvent.setId(this.redundantPaymentEventRepository.count()+1);
+                this.redundantPaymentEventRepository.save(redundantPaymentEvent);
+            }
+        }
+    }
+
+    private void saveSuspiciousTransactionEvents(KieSession ksession) {
+        List<SuspiciousTransactionEvent> suspiciousTransactionEvents = Arrays.stream(ksession.getObjects().toArray()).filter(obj->obj instanceof SuspiciousTransactionEvent).map(obj->(SuspiciousTransactionEvent)obj).collect(Collectors.toList());
+        for (SuspiciousTransactionEvent suspiciousTransactionEvent : suspiciousTransactionEvents) {
+            if(suspiciousTransactionEvent.getId() == null){
+                suspiciousTransactionEvent.setId(this.suspiciousTransactionEventRepository.count()+1);
+                this.suspiciousTransactionEventRepository.save(suspiciousTransactionEvent);
+            }
+        }
     }
 
     private void setUserLoyaltyDiscounts(User payer, Ticket ticket) {

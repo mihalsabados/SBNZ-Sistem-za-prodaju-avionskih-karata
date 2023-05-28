@@ -3,28 +3,19 @@ import com.ftn.sbnz.model.Ticket;
 import com.ftn.sbnz.enums.TicketType;
 import com.ftn.sbnz.model.Flight;
 import com.ftn.sbnz.model.User;
+import com.ftn.sbnz.model.RedundantPaymentEvent;
+import com.ftn.sbnz.model.SuspiciousTransactionEvent;
+import com.ftn.sbnz.repository.RedundantPaymentEventRepository
 import java.util.List;
-import java.util.ArrayList;
+import java.util.ArrayList
+import javax.sound.midi.SysexMessage;
+import java.util.Arrays;
 
 global Long ticketId
 global Long flightId
 
-
-declare RedundantPaymentEvent
-    @role(event)
-    payerEmail: String
-    flightId: Long
-    ticket1Id: Long
-    ticket2Id: Long
-end
-
-declare SuspiciousTransactionEvent
-    @role(event)
-    payerEmail: String
-    flightId: Long
-end
-
 rule "2 Tickets with same content from the same customer"
+    no-loop
     when
         $t1: Ticket(
             $payerEmail: payer.getEmail(),
@@ -34,10 +25,10 @@ rule "2 Tickets with same content from the same customer"
          )
         $flight: Flight(id == flightId, $soldTickets: soldTickets)
         $t2: Ticket(
-            $ticket2Id: id,
             payer.getEmail() == $payerEmail,
             passenger.getEmail() == $passengerEmail,
             ticketType == $ticketType,
+            $ticket2Id: id,
             this meets[1h] $t1
         ) from $soldTickets
         not RedundantPaymentEvent(ticket1Id == $ticket1Id)
@@ -46,27 +37,37 @@ rule "2 Tickets with same content from the same customer"
         not RedundantPaymentEvent(ticket2Id == $ticket2Id)
     then
         System.out.println("RULE 15");
-        insert(new RedundantPaymentEvent($payerEmail, flightId, $ticket1Id, $ticket2Id));
+        System.out.println($ticket1Id);
+        insert(new RedundantPaymentEvent(flightId, $payerEmail, $ticket1Id, $ticket2Id));
 end
 
-rule "2 redundant payments within 30 minutes"
+rule "2 redundant payments within 3 hours"
+    no-loop
     when
-        $rp1: RedundantPaymentEvent($payerEmail: payerEmail)
+        RedundantPaymentEvent(id == null, $payerEmail: payerEmail, $ticket1Id: ticket1Id, $ticket2Id: ticket2Id)
+        $fl: Flight(id == flightId)
         Number(intValue >= 2) from accumulate(
-            $rp2: RedundantPaymentEvent(payerEmail == $payerEmail)
-            over window: time(30m), count($rp2)
+            $rp: RedundantPaymentEvent(flightId == flightId)
+            over window: time(3m),
+            count($rp)
         )
+        not SuspiciousTransactionEvent(flightId == flightId, payerEmail == payerEmail, ticket1Id == $ticket1Id, ticket2Id == $ticket2Id)
     then
         System.out.println("RULE 16");
-        insert(new SuspiciousTransactionEvent($payerEmail, flightId));
+        insert(new SuspiciousTransactionEvent(flightId, $payerEmail, $ticket1Id, $ticket2Id));
+        System.out.println(flightId);
+        System.out.println($payerEmail);
 end
 
 rule "2 suspicious transactions within 10 days"
+    no-loop
     when
-        $st1: SuspiciousTransactionEvent($payerEmail: payerEmail)
+        $st1: SuspiciousTransactionEvent(id == null, $payerEmail: payerEmail)
+        $fl: Flight(id == flightId)
         Number(intValue >= 2) from accumulate(
-            $st2: SuspiciousTransactionEvent(payerEmail == $payerEmail)
-            over window: time(10d), count($st2)
+            $st2: SuspiciousTransactionEvent(flightId == flightId)
+            over window: time(10d),
+            count($st2)
         )
         $payer: User(email == $payerEmail)
     then
