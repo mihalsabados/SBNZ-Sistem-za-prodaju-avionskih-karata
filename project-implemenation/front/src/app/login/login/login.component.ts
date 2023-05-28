@@ -46,7 +46,10 @@ export class LoginComponent {
       error:(err)=>{
         console.log(err)
         this.loading = false;
-        this.toastr.error("Bad credentials");
+        if(err.status == 403)
+          this.toastr.error("User is blocked");
+        else
+          this.toastr.error("Bad credentials");
       }
     });
   }

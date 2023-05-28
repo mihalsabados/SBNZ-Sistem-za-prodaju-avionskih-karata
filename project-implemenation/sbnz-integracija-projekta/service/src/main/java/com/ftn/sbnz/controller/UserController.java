@@ -5,6 +5,7 @@ import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.*;
 import lombok.*;
 
@@ -21,14 +22,13 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> checkCredentials(@RequestBody LoginDTO loginDTO) {
-        User user = userService.login(loginDTO);
         try {
-            if (user == null) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return new ResponseEntity<>(user, HttpStatus.OK);
-            }
+            User user = userService.login(loginDTO);
+            return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (UserIsBlockedException e){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+        catch (BadCredentialsException e){
             return ResponseEntity.badRequest().build();
         }
 

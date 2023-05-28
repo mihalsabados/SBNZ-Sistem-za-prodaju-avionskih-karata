@@ -32,6 +32,9 @@ public class ServiceApplication implements CommandLineRunner{
 	private final DiscountRepository discountRepository;
 	private final PriceTemplateRepository priceTemplateRepository;
 	private final LastMinuteEventRepository lastMinuteEventRepository;
+	private final RedundantPaymentEventRepository redundantPaymentEventRepository;
+	private final SuspiciousTransactionEventRepository suspiciousTransactionEventRepository;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(ServiceApplication.class, args);
@@ -54,6 +57,8 @@ public class ServiceApplication implements CommandLineRunner{
 		this.discountRepository.deleteAll();
 		this.priceTemplateRepository.deleteAll();
 		this.lastMinuteEventRepository.deleteAll();
+		this.redundantPaymentEventRepository.deleteAll();
+		this.suspiciousTransactionEventRepository.deleteAll();
 	}
 
 	private void createInitialUsers() {

@@ -105,7 +105,10 @@ export class BuyTicketPageComponent {
         
       },
       error: (err) => {
+        console.log(err);
         this.toastrService.warning("Something went wrong, please try again!");
+        this.authService.logOut();
+        this.router.navigateByUrl("/");
       }
 	  });
   }

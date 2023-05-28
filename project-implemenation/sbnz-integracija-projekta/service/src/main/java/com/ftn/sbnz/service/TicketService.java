@@ -56,6 +56,8 @@ public class TicketService {
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()), new Date());
 
         setSuspiciousTransactions(ticket, ticketDataDTO.getFlightId());
+        payer = this.userRepository.findByEmail(ticketDataDTO.getPayerEmail()).
+                orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
         if(payer.isBlocked())
             throw new UserIsBlockedException("User is blocked exception");
 
@@ -104,6 +106,7 @@ public class TicketService {
         this.flightRepository.findAll().forEach(ksession::insert);
         this.redundantPaymentEventRepository.findAll().forEach(ksession::insert);
         this.suspiciousTransactionEventRepository.findAll().forEach(ksession::insert);
+        this.userRepository.findAll().forEach(ksession::insert);
         ksession.insert(ticket);
         ksession.setGlobal("ticketId", ticket.getId());
         ksession.setGlobal("flightId", flightId);

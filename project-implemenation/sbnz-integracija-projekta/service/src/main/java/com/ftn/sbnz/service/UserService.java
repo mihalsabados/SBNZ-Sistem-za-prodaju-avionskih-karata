@@ -5,6 +5,7 @@ import com.ftn.sbnz.exception.UserNotFoundException;
 import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,15 +15,14 @@ public class UserService {
     private final UserRepository userRepository;
 
     public User login(LoginDTO loginDTO) {
-        try {
-            User user = userRepository.findByEmail(loginDTO.getEmail())
-                    .orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
-            if(user.getPassword().equals(loginDTO.getPassword()) && !user.isBlocked())
-                return user;
+        User user = userRepository.findByEmail(loginDTO.getEmail())
+                .orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
+        if(user.getPassword().equals(loginDTO.getPassword()) && !user.isBlocked())
+            return user;
+        if(user.isBlocked())
             throw new UserIsBlockedException("User is blocked exception");
-        }catch (Exception e){
-            return null;
-        }
+        else
+            throw new BadCredentialsException("Bad credentials");
 
     }
 
