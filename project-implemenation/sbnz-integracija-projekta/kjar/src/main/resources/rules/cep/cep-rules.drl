@@ -5,7 +5,6 @@ import com.ftn.sbnz.model.Flight;
 import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.model.RedundantPaymentEvent;
 import com.ftn.sbnz.model.SuspiciousTransactionEvent;
-import com.ftn.sbnz.repository.RedundantPaymentEventRepository
 import java.util.List;
 import java.util.ArrayList
 import javax.sound.midi.SysexMessage;
@@ -32,9 +31,6 @@ rule "2 Tickets with same content from the same customer"
             this meets[1h] $t1
         ) from $soldTickets
         not RedundantPaymentEvent(ticket1Id == $ticket1Id)
-        not RedundantPaymentEvent(ticket1Id == $ticket2Id)
-        not RedundantPaymentEvent(ticket2Id == $ticket1Id)
-        not RedundantPaymentEvent(ticket2Id == $ticket2Id)
     then
         System.out.println("RULE 15");
         System.out.println($ticket1Id);
@@ -48,7 +44,7 @@ rule "2 redundant payments within 3 hours"
         $fl: Flight(id == flightId)
         Number(intValue >= 2) from accumulate(
             $rp: RedundantPaymentEvent(flightId == flightId)
-            over window: time(3m),
+            over window: time(3h),
             count($rp)
         )
         not SuspiciousTransactionEvent(flightId == flightId, payerEmail == payerEmail, ticket1Id == $ticket1Id, ticket2Id == $ticket2Id)
