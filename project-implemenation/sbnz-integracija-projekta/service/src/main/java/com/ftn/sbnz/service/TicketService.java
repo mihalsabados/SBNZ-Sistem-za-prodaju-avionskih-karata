@@ -4,6 +4,7 @@ import com.ftn.sbnz.dto.ticket.PassengerDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
 import com.ftn.sbnz.enums.LoyaltyType;
 import com.ftn.sbnz.enums.TicketType;
+import com.ftn.sbnz.exception.UserIsBlockedException;
 import com.ftn.sbnz.exception.UserNotFoundException;
 import com.ftn.sbnz.model.*;
 import com.ftn.sbnz.dto.ticket.TicketToShowDTO;
@@ -55,6 +56,8 @@ public class TicketService {
                 TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()), new Date());
 
         setSuspiciousTransactions(ticket, ticketDataDTO.getFlightId());
+        if(payer.isBlocked())
+            throw new UserIsBlockedException("User is blocked exception");
 
         TicketToShowDTO suggestedTicketDTO = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
         long suggestedFlightId = suggestedTicketDTO.getAlternativeFlightId();

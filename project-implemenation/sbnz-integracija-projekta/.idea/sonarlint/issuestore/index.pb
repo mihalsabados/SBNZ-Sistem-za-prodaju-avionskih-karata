@@ -1,12 +1,8 @@
 
 g
 7model/src/main/java/com/ftn/sbnz/enums/LoyaltyType.java,a\b\ab5de6ec5aac1334319b3f0a4511a61500577ab8
-q
-Aservice/src/main/java/com/ftn/sbnz/controller/UserController.java,6\4\6489c5db8a5ccb84e0891b11acb7406c53df1e95
 p
 @service/src/main/java/com/ftn/sbnz/service/SampleAppService.java,7\b\7b39e6704218b3038303a997148c16a03c96bd4f
-w
-Gservice/src/main/java/com/ftn/sbnz/exception/UserNotFoundException.java,c\1\c1dd73c751b81696beebea934e35bc6d11aa17ca
 y
 Iservice/src/main/java/com/ftn/sbnz/exception/FlightNotFoundException.java,e\6\e6affb58f4922cf05dd5ca094a8b954aeb9ad8e3
 u
@@ -37,7 +33,5 @@ x
 Hservice/src/test/java/com/ftn/sbnz/service/tests/CEPEntryPointsTest.java,c\9\c9aa5ed33391e897e266c93e6f54c7a1888cd102
 ?
 service/pom.xml,a\1\a1f4042fbcf78e2ab86d486176a2378cd0a26e9a
-s
-Cservice/src/main/java/com/ftn/sbnz/controller/FlightController.java,d\c\dc07442b9af2625f3c6b415c6f6178e0a5a3e3d6
 r
 Bservice/src/test/java/com/ftn/sbnz/service/tests/CEPRulesTest.java,5\8\589e9a3e5a2e846124dc4615fd60875710b21b70
