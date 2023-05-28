@@ -44,6 +44,7 @@ export class LoginComponent {
           this.router.navigateByUrl("flights");
       },
       error:(err)=>{
+        console.log(err)
         this.loading = false;
         this.toastr.error("Bad credentials");
       }
