@@ -1,0 +1,36 @@
+.example-icon {
+  padding: 0 14px;
+}
+  
+.example-spacer {
+  flex: 1 0 auto;
+}
+
+.toolbar{
+    position:relative;
+    background-color: white;
+    border-bottom: 1px solid black;
+}
+
+.logo{
+  font-size: 26px;
+  margin-left: 50px;
+}
+
+.imagelogo{
+  width: 100px;
+  height: 30px;
+  margin-left: 5px;
+  background-image: url("../../assets/logo.png");
+  background-repeat:no-repeat;
+  background-size:contain;
+  z-index: 50;
+}
+
+.menu-button{
+  margin-left: 100px;
+}
+
+.menu-button button{
+  margin: 0 10px;
+}

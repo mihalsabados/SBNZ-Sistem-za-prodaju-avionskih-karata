@@ -23,6 +23,8 @@ import {MatDialogModule} from "@angular/material/dialog";
 import { FlightSuggestionDialogComponent } from './buy-ticket/flight-suggestion/flight-suggestion-dialog/flight-suggestion-dialog.component'
 import {MatGridListModule} from '@angular/material/grid-list';
 import { AdminPageComponent } from './admin-page/admin-page.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
 
 
 @NgModule({
@@ -33,7 +35,8 @@ import { AdminPageComponent } from './admin-page/admin-page.component';
     FlightsPageComponent,
     ResponseDialogComponent,
     FlightSuggestionDialogComponent,
-    AdminPageComponent
+    AdminPageComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +55,7 @@ import { AdminPageComponent } from './admin-page/admin-page.component';
     FormsModule,
     MatDialogModule,
     MatGridListModule,
+    MatToolbarModule,
     ToastrModule.forRoot({
       timeOut: 5000,
       positionClass: 'toast-bottom-center',
