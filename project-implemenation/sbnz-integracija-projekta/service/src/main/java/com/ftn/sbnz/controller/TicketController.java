@@ -1,6 +1,7 @@
 package com.ftn.sbnz.controller;
 
 import com.ftn.sbnz.dto.FlightDTO;
+import com.ftn.sbnz.dto.ReportDTO;
 import com.ftn.sbnz.dto.TicketDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketToShowDTO;
@@ -30,8 +31,8 @@ public class TicketController {
 
     @GetMapping("/")
     public ResponseEntity<?> getAllTickets(){
-        List<TicketDTO> tickets = ticketService.getAllTickets();
-        return ResponseEntity.ok(tickets);
+        ReportDTO reportDTO = ticketService.getAllTickets();
+        return ResponseEntity.ok(reportDTO);
     }
 
     @GetMapping("/{email}")
@@ -78,7 +79,7 @@ public class TicketController {
 
     @PostMapping("/tickets-report")
     public ResponseEntity<?> getTicketsReport(@RequestBody TicketsReportTemplate filterTicketsTemplate) {
-        Report report = ticketService.getTicketsReport(filterTicketsTemplate);
-        return ResponseEntity.ok(report);
+        ReportDTO reportDTO = ticketService.getTicketsReport(filterTicketsTemplate);
+        return ResponseEntity.ok(reportDTO);
     }
 }

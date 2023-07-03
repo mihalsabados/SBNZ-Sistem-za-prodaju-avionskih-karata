@@ -10,8 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Document("flights")
 @Getter
@@ -22,7 +21,7 @@ import java.util.List;
 @ToString
 @Role(Role.Type.EVENT)
 @Timestamp("departure")
-@Expires("2h30m")
+@Expires("100d")
 public class Flight {
     @Id
     private Long id;
@@ -36,9 +35,24 @@ public class Flight {
     private boolean popular;
     private String flightNumber;
 
+    public boolean isDepartureBetweenDates(String dateFromStr, String dateToStr) throws ParseException {
+        Date dateFrom, dateTo;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat sdfPattern = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
+        if(dateFromStr.equals("null"))
+            dateFrom = sdf.parse("01-01-2000");
+        else
+            dateFrom = sdfPattern.parse(dateFromStr);
+        if(dateToStr.equals("null"))
+            dateTo = sdf.parse("01-01-2040");
+        else
+            dateTo = sdfPattern.parse(dateToStr);
 
-    public int compareDates(String dateToCompare) throws ParseException {
-        return departure.compareTo(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(dateToCompare));
+        return dateFrom.compareTo(departure) * departure.compareTo(dateTo) > 0;
+    }
+
+    public boolean isDestinationNull(String destination){
+        return destination.equals("null");
     }
 
 }

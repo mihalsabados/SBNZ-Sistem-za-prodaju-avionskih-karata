@@ -304,13 +304,14 @@ public class TicketService {
         }
     }
 
-    public List<TicketDTO> getAllTickets() {
-        List<Flight> flights = flightRepository.findAll();
-        List<TicketDTO> tickets = new ArrayList<>();
-        for (Flight flight :flights)
-            for (Ticket soldTicket: flight.getSoldTickets())
-                tickets.add(new TicketDTO(soldTicket, flight));
-        return tickets;
+    public ReportDTO getAllTickets() {
+//        List<Flight> flights = flightRepository.findAll();
+//        List<TicketDTO> tickets = new ArrayList<>();
+//        for (Flight flight :flights)
+//            for (Ticket soldTicket: flight.getSoldTickets())
+//                tickets.add(new TicketDTO(soldTicket, flight));
+//        return tickets;
+        return getTicketsReport(new TicketsReportTemplate());
     }
 
     public List<TicketDTO> getTicketsForUser(String email) {
@@ -325,7 +326,10 @@ public class TicketService {
         return tickets;
     }
 
-    public Report getTicketsReport(TicketsReportTemplate filterTicketsTemplate) {
+    public ReportDTO getTicketsReport(TicketsReportTemplate filterTicketsTemplate) {
+        filterTicketsTemplate.setFilterSalience(3);
+        filterTicketsTemplate.setCountSalience(2);
+        filterTicketsTemplate.setAverageSalience(1);
 
         InputStream template = TicketService.class.getResourceAsStream("/rules/template/ticketsReportTemplate.drt");
 
@@ -347,7 +351,7 @@ public class TicketService {
 
         ReportDTO reportDTO = new ReportDTO(newReport);
         reportDTO.setTickets(convertTicketsToDTO(newReport.getTickets()));
-        return newReport;
+        return reportDTO;
     }
 
     private List<TicketDTO> convertTicketsToDTO(List<Ticket> existingTickets) {

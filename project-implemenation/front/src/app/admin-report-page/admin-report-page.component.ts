@@ -26,6 +26,11 @@ export class AdminReportPageComponent implements OnInit {
 
   filterData: FormGroup;
   range:FormGroup;
+
+  ticketChartData: any;
+  avgOccuChartData: any;
+  chartOptions:any;
+  report:any;
   
   constructor(private ticketService:TicketService, private authService:AuthService){
   }
@@ -41,14 +46,23 @@ export class AdminReportPageComponent implements OnInit {
       startDeparture: new FormControl<Date | null>(null),
       endDeparture: new FormControl<Date | null>(null),
     });
+
+    this.fillChart();
   }
+
+
 
   loadData(){
     this.ticketService.getAllTickets()
     .subscribe({
       next: (response:any) => {
-        this.tickets = response;
-        this.dataSource = new MatTableDataSource(response);
+        console.log(response);
+        this.report = response;
+        this.report.totalAmount = new Intl.NumberFormat().format(this.report.totalAmount);
+        this.report.averagePrice = new Intl.NumberFormat().format(this.report.averagePrice.toFixed());
+        this.tickets = response.tickets;
+        this.dataSource = new MatTableDataSource(this.tickets);
+        this.fillChart();
       }
     }
   );
@@ -67,11 +81,52 @@ export class AdminReportPageComponent implements OnInit {
     .subscribe({
       next: (response:any) => {
         console.log(response);
-        // this.tickets = response;
-        // this.dataSource = new MatTableDataSource(response);
+        this.report = response;
+        this.report.totalAmount = new Intl.NumberFormat().format(this.report.totalAmount);
+        this.report.averagePrice = new Intl.NumberFormat().format(this.report.averagePrice.toFixed());
+        this.tickets = response.tickets;
+        this.dataSource = new MatTableDataSource(this.tickets);
+        this.fillChart();
       }
     }
   );
+  }
+
+  fillChart(){
+    this.ticketChartData = {
+        labels: ['Business Tickets', 'Economic Tickets'],
+        datasets: [
+            {
+                data: [this.report.numberOfBusinessTickets, this.report.numberOfEconomicTickets],
+                backgroundColor: ['rgba(255, 159, 64, 0.8)', 'rgba(75, 192, 192, 0.8)'],
+                hoverBackgroundColor: ['rgba(255, 159, 64, 0.9)', 'rgba(75, 192, 192, 0.9)']
+            }
+        ]
+    };
+    
+    this.avgOccuChartData = {
+        labels: ['Occupied', 'Empty'],
+        datasets: [
+            {
+                data: [this.report.averageOccupancy*100, 100-this.report.averageOccupancy*100],
+                backgroundColor: ['rgba(255, 159, 64, 0.8)', 'rgba(75, 192, 192, 0.8)'],
+                hoverBackgroundColor: ['rgba(255, 159, 64, 0.9)', 'rgba(75, 192, 192, 0.9)']
+            }
+        ]
+    };
+
+    this.chartOptions = {
+      cutout: '60%',
+      plugins: {
+          legend: {
+              labels: {
+                  color: 'black',
+                  useBorderRadius: true,
+                  borderRadius: 50
+              }
+          }
+      }
+  };
   }
 
 }

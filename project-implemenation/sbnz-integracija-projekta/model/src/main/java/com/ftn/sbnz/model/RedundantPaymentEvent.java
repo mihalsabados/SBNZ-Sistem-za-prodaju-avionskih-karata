@@ -18,7 +18,7 @@ import java.util.Date;
 @ToString
 @Role(Role.Type.EVENT)
 @Timestamp("timestamp")
-@Expires("2h30m")
+@Expires("100d")
 public class RedundantPaymentEvent {
     @Id
     private Long id;

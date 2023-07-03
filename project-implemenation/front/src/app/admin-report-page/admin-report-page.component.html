@@ -2,13 +2,13 @@
     <app-navbar></app-navbar>
     <div class="container">
         <div class="infoDiv">
-            <h1 class="table-title">Purchased Tickets</h1>
+            <h1 class="table-title">Report</h1>
         </div>
 
         <div class="tableDiv">
             <div class="filterDiv">
                 <form [formGroup]="filterData" (ngSubmit)="onFilter()">
-                <h4>Filter</h4>
+                <!-- <h4>Report</h4> -->
                 <mat-form-field class="destinationField">
                     <mat-label>Destination</mat-label>
                     <input type="text"
@@ -34,6 +34,35 @@
                   </mat-form-field>
                   <button mat-raised-button color="primary" class="filterButton">Generate Report</button>
                 </form>
+            </div>
+
+            <div class="report">
+                <div class="card-stack">
+                    <div class="card">
+                        <h4>Number of Flights</h4>
+                        <h1>{{report.numberOfFlights}}</h1>
+                    </div>
+                    <div class="card">
+                        <h4>Number of Tickets</h4>
+                        <h1>{{report.numberOfTickets}}</h1>
+                    </div>
+                    <div class="card">
+                        <h4>Total Amount</h4>
+                        <h1>{{report.totalAmount}} RSD</h1>
+                    </div>
+                    <div class="card">
+                        <h4>Average Price</h4>
+                        <h1>{{report.averagePrice}} RSD</h1>
+                    </div>
+                </div>
+                <div class="chart-stack">
+                    <div class="chart">
+                        <p-chart type="pie" [data]="ticketChartData" [options]="chartOptions"></p-chart>
+                    </div>
+                    <div class="chart">
+                        <p-chart type="pie" [data]="avgOccuChartData" [options]="chartOptions"></p-chart>
+                    </div>
+                </div>
             </div>
 
             <div class="sortDiv">

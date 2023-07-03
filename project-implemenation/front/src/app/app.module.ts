@@ -33,6 +33,7 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { AdminReportPageComponent } from './admin-report-page/admin-report-page.component';
+import { ChartModule } from 'primeng/chart';
 
 
 @NgModule({
@@ -72,6 +73,7 @@ import { AdminReportPageComponent } from './admin-report-page/admin-report-page.
     MatAutocompleteModule,
     MatButtonToggleModule,
     MatSelectModule,
+    ChartModule,
     ToastrModule.forRoot({
       timeOut: 5000,
       positionClass: 'toast-bottom-center',
