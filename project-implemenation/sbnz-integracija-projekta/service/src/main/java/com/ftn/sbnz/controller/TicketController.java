@@ -1,12 +1,14 @@
 package com.ftn.sbnz.controller;
 
 import com.ftn.sbnz.dto.FlightDTO;
+import com.ftn.sbnz.dto.TicketDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketToShowDTO;
 import com.ftn.sbnz.exception.UserIsBlockedException;
+import com.ftn.sbnz.model.Report;
+import com.ftn.sbnz.model.TicketsReportTemplate;
 import com.ftn.sbnz.model.Flight;
 import com.ftn.sbnz.model.PriceTemplate;
-import com.ftn.sbnz.model.User;
 import com.ftn.sbnz.service.FlightService;
 import com.ftn.sbnz.service.TicketService;
 import com.ftn.sbnz.service.UserService;
@@ -25,6 +27,18 @@ public class TicketController {
     private final TicketService ticketService;
     private final FlightService flightService;
     private final UserService userService;
+
+    @GetMapping("/")
+    public ResponseEntity<?> getAllTickets(){
+        List<TicketDTO> tickets = ticketService.getAllTickets();
+        return ResponseEntity.ok(tickets);
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getTicketsForUser(@PathVariable String email){
+        List<TicketDTO> tickets = ticketService.getTicketsForUser(email);
+        return ResponseEntity.ok(tickets);
+    }
 
     @PostMapping("/create-ticket")
     public ResponseEntity<?> createTicket(@RequestBody TicketDataDTO ticketDataDTO) {
@@ -60,5 +74,11 @@ public class TicketController {
     public ResponseEntity<?> setPriceTemplate(@RequestBody List<PriceTemplate> priceTemplates) {
         ticketService.setPriceTemplate(priceTemplates);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/tickets-report")
+    public ResponseEntity<?> getTicketsReport(@RequestBody TicketsReportTemplate filterTicketsTemplate) {
+        Report report = ticketService.getTicketsReport(filterTicketsTemplate);
+        return ResponseEntity.ok(report);
     }
 }

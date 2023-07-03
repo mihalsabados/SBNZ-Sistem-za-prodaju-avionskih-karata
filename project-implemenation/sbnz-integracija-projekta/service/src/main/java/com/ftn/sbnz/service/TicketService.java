@@ -1,5 +1,7 @@
 package com.ftn.sbnz.service;
 
+import com.ftn.sbnz.dto.ReportDTO;
+import com.ftn.sbnz.dto.TicketDTO;
 import com.ftn.sbnz.dto.ticket.PassengerDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
 import com.ftn.sbnz.enums.LoyaltyType;
@@ -11,13 +13,11 @@ import com.ftn.sbnz.dto.ticket.TicketToShowDTO;
 import com.ftn.sbnz.exception.FlightNotFoundException;
 import com.ftn.sbnz.repository.*;
 import lombok.AllArgsConstructor;
-import org.drools.core.ClassObjectFilter;
 import org.drools.template.ObjectDataCompiler;
 import org.kie.api.KieServices;
 import org.kie.api.io.ResourceType;
 import org.kie.api.runtime.KieContainer;
 import org.kie.api.runtime.KieSession;
-import org.kie.api.runtime.rule.FactHandle;
 import org.kie.internal.utils.KieHelper;
 import org.springframework.stereotype.Service;
 
@@ -302,5 +302,63 @@ public class TicketService {
             oldPrice.setPrice(newPrice.getPrice());
             this.priceTemplateRepository.save(oldPrice);
         }
+    }
+
+    public List<TicketDTO> getAllTickets() {
+        List<Flight> flights = flightRepository.findAll();
+        List<TicketDTO> tickets = new ArrayList<>();
+        for (Flight flight :flights)
+            for (Ticket soldTicket: flight.getSoldTickets())
+                tickets.add(new TicketDTO(soldTicket, flight));
+        return tickets;
+    }
+
+    public List<TicketDTO> getTicketsForUser(String email) {
+        List<Flight> flights = flightRepository.findAll();
+        List<TicketDTO> tickets = new ArrayList<>();
+        for (Flight flight :flights) {
+            List<Ticket> filteredTickets = flight.getSoldTickets().stream().filter(ticket -> ticket.getPassenger().getEmail().equals(email) || ticket.getPayer().getEmail().equals(email)).collect(Collectors.toList());
+            for (Ticket soldTicket : filteredTickets) {
+                tickets.add(new TicketDTO(soldTicket, flight));
+            }
+        }
+        return tickets;
+    }
+
+    public Report getTicketsReport(TicketsReportTemplate filterTicketsTemplate) {
+
+        InputStream template = TicketService.class.getResourceAsStream("/rules/template/ticketsReportTemplate.drt");
+
+        List<TicketsReportTemplate> ticketsReportTemplates = List.of(filterTicketsTemplate);
+        ObjectDataCompiler compiler = new ObjectDataCompiler();
+        String drl = compiler.compile(ticketsReportTemplates, template);
+
+        KieHelper kieHelper = new KieHelper();
+        kieHelper.addContent(drl, ResourceType.DRL);
+        KieSession ksession = kieHelper.build().newKieSession();
+
+        Report newReport = new Report();
+
+        flightRepository.findAll().forEach(ksession::insert);
+        ksession.insert(newReport);
+
+        int rulesFired = ksession.fireAllRules();
+        System.out.println("Rules fired for ticket number discount template: " + rulesFired);
+
+        ReportDTO reportDTO = new ReportDTO(newReport);
+        reportDTO.setTickets(convertTicketsToDTO(newReport.getTickets()));
+        return newReport;
+    }
+
+    private List<TicketDTO> convertTicketsToDTO(List<Ticket> existingTickets) {
+        List<Flight> flights = flightRepository.findAll();
+        List<TicketDTO> tickets = new ArrayList<>();
+        for (Flight flight :flights)
+            for (Ticket soldTicket: flight.getSoldTickets())
+                for (Ticket ticket : existingTickets)
+                    if(Objects.equals(soldTicket.getId(), ticket.getId()))
+                        tickets.add(new TicketDTO(soldTicket, flight));
+
+        return tickets;
     }
 }

@@ -2,11 +2,32 @@
     <mat-toolbar-row>
       <span class="logo">FlySerbia </span><div class="imagelogo"></div>
       <div class="menu-button">
-        <button mat-button>All Flights</button>
-        <button mat-button>Purchased Tickets</button>
+        <div *ngIf="loggedUser.userType != 'ADMIN'">
+          <button mat-button (click)="goToAllFlightsPage()">All Flights</button>
+          <button mat-button (click)="goToPurchasedTicketsPage()">Purchased Tickets</button>
+        </div>
+        <div *ngIf="loggedUser.userType == 'ADMIN'">
+          <button mat-button (click)="goToSetPricesPage()">Set Prices</button>
+          <button mat-button (click)="goToReportPage()">Ticket Report</button>
+        </div>
       </div>
       <span class="example-spacer"></span>
-      <mat-icon class="example-icon">favorite</mat-icon>
-      <mat-icon class="example-icon">delete</mat-icon>
+      <div class="userInfo">
+        <div class="loyaltyDiv" [matTooltip]="userStatus+' STATUS'" *ngIf="loggedUser.userType != 'ADMIN'">
+            <mat-icon [style]="{color: loyaltyColor}" class="icon">star</mat-icon>
+        </div>
+        <div class="adminDiv" matTooltip="Super Admin" *ngIf="loggedUser.userType == 'ADMIN'">
+            <mat-icon class="super-icon">supervised_user_circle</mat-icon>
+        </div>
+        <div>
+            <p>{{loggedUser.firstName + " "+loggedUser.lastName}}<br>{{loggedUser.email}}</p>
+        </div>
+        <div class="logOut">
+            <button mat-mini-fab matTooltip="Log Out" color="none" aria-label="log out button" (click)="logOut()">
+                <mat-icon>exit_to_app</mat-icon>
+            </button>
+        </div>
+       
+    </div>
     </mat-toolbar-row>
   </mat-toolbar>

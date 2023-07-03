@@ -8,6 +8,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -33,5 +35,10 @@ public class Flight {
     private int numberOfSeats;
     private boolean popular;
     private String flightNumber;
+
+
+    public int compareDates(String dateToCompare) throws ParseException {
+        return departure.compareTo(new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy").parse(dateToCompare));
+    }
 
 }

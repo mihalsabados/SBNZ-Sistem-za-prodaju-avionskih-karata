@@ -1,0 +1,87 @@
+template header
+destination
+startDeparture
+endDeparture
+
+package rules.template
+
+import com.ftn.sbnz.model.Ticket
+import com.ftn.sbnz.model.Flight
+import com.ftn.sbnz.model.Report
+
+import java.util.ArrayList;
+import java.util.List;
+import java.text.SimpleDateFormat;
+
+template "Tickets Report template"
+
+    rule "Filtering_tickets_@{row.rowNumber}"
+        salience 10
+        when
+            $r: Report()
+            $flight: Flight($soldTickets: soldTickets, compareDates("@{startDeparture}") > 0 && compareDates("${endDeparture}") < 0 &&
+                    destination == "${destination}")
+            $t: Ticket() from $soldTickets
+        then
+            $r.getTickets().add($t);
+    end
+
+    rule "Counting_tickets_@{row.rowNumber}"
+        salience 9
+        when
+            $r: Report($tickets: tickets)
+            List($ticketSize: size > 0) from $tickets
+        then
+            modify($r){
+                setNumberOfTickets($ticketSize)
+            }
+    end
+
+    rule "Total_Price_@{row.rowNumber}"
+        salience 8
+        when
+            $r: Report($tickets: tickets)
+            Number($totalPrice: doubleValue) from accumulate(
+                $fl: Ticket($finalPrice: finalPrice) from $tickets,
+                sum($finalPrice)
+            )
+        then
+            modify($r){
+                setTotalAmount($totalPrice)
+            }
+    end
+
+    rule "Average_Occupancy_@{row.rowNumber}"
+        salience 7
+        when
+            $r: Report()
+            Number($avgOccu: doubleValue) from accumulate(
+                $fl: Flight(
+                    $ticketNum: Integer.valueOf(soldTickets.size()),
+                    $seatsNum: Integer.valueOf(numberOfSeats),
+                    compareDates("@{startDeparture}") > 0 && compareDates("${endDeparture}") < 0 &&
+                    destination == "${destination}"),
+                average($ticketNum.doubleValue() / $seatsNum.doubleValue())
+            )
+        then
+            modify($r){
+                setAverageOccupancy($avgOccu)
+            }
+    end
+
+    rule "Average_Price_@{row.rowNumber}"
+        salience 6
+        when
+            $r: Report($tickets: tickets)
+           Number($averagePrice: doubleValue) from accumulate(
+               $fl: Ticket($finalPrice: finalPrice) from $tickets,
+               average($finalPrice)
+           )
+        then
+            modify($r){
+                setAveragePrice($averagePrice)
+            }
+    end
+
+
+end template

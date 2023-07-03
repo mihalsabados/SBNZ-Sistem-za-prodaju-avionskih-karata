@@ -25,6 +25,14 @@ import {MatGridListModule} from '@angular/material/grid-list';
 import { AdminPageComponent } from './admin-page/admin-page.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { PurchasedTicketsPageComponent } from './buy-ticket/purchased-tickets-page/purchased-tickets-page.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatSelectModule} from '@angular/material/select';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { AdminReportPageComponent } from './admin-report-page/admin-report-page.component';
 
 
 @NgModule({
@@ -36,7 +44,9 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     ResponseDialogComponent,
     FlightSuggestionDialogComponent,
     AdminPageComponent,
-    NavbarComponent
+    NavbarComponent,
+    PurchasedTicketsPageComponent,
+    AdminReportPageComponent
   ],
   imports: [
     BrowserModule,
@@ -56,6 +66,12 @@ import {MatToolbarModule} from '@angular/material/toolbar';
     MatDialogModule,
     MatGridListModule,
     MatToolbarModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatAutocompleteModule,
+    MatButtonToggleModule,
+    MatSelectModule,
     ToastrModule.forRoot({
       timeOut: 5000,
       positionClass: 'toast-bottom-center',
