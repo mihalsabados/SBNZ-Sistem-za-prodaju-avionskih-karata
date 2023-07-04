@@ -32,6 +32,9 @@ export class AdminReportPageComponent implements OnInit {
   chartOptions:any;
   report:any;
   
+  sortVariable:any = "";
+  ascOrder:boolean = true;
+
   constructor(private ticketService:TicketService, private authService:AuthService){
   }
   
@@ -58,8 +61,8 @@ export class AdminReportPageComponent implements OnInit {
       next: (response:any) => {
         console.log(response);
         this.report = response;
-        this.report.totalAmount = new Intl.NumberFormat().format(this.report.totalAmount);
-        this.report.averagePrice = new Intl.NumberFormat().format(this.report.averagePrice.toFixed());
+        this.report.totalAmount = new Intl.NumberFormat('en-DE').format(this.report.totalAmount);
+        this.report.averagePrice = new Intl.NumberFormat('en-DE').format(this.report.averagePrice.toFixed());
         this.tickets = response.tickets;
         this.dataSource = new MatTableDataSource(this.tickets);
         this.fillChart();
@@ -82,8 +85,8 @@ export class AdminReportPageComponent implements OnInit {
       next: (response:any) => {
         console.log(response);
         this.report = response;
-        this.report.totalAmount = new Intl.NumberFormat().format(this.report.totalAmount);
-        this.report.averagePrice = new Intl.NumberFormat().format(this.report.averagePrice.toFixed());
+        this.report.totalAmount = new Intl.NumberFormat('en-DE').format(this.report.totalAmount);
+        this.report.averagePrice = new Intl.NumberFormat('en-DE').format(this.report.averagePrice.toFixed());
         this.tickets = response.tickets;
         this.dataSource = new MatTableDataSource(this.tickets);
         this.fillChart();
@@ -97,9 +100,9 @@ export class AdminReportPageComponent implements OnInit {
         labels: ['Business Tickets', 'Economic Tickets'],
         datasets: [
             {
-                data: [this.report.numberOfBusinessTickets, this.report.numberOfEconomicTickets],
-                backgroundColor: ['rgba(255, 159, 64, 0.8)', 'rgba(75, 192, 192, 0.8)'],
-                hoverBackgroundColor: ['rgba(255, 159, 64, 0.9)', 'rgba(75, 192, 192, 0.9)']
+                data: [this.report?.numberOfBusinessTickets, this.report?.numberOfEconomicTickets],
+                backgroundColor: ['#3250a8', '#a3aabf'],
+                hoverBackgroundColor: ['#3250a8', '#a3aaba']
             }
         ]
     };
@@ -108,25 +111,41 @@ export class AdminReportPageComponent implements OnInit {
         labels: ['Occupied', 'Empty'],
         datasets: [
             {
-                data: [this.report.averageOccupancy*100, 100-this.report.averageOccupancy*100],
-                backgroundColor: ['rgba(255, 159, 64, 0.8)', 'rgba(75, 192, 192, 0.8)'],
-                hoverBackgroundColor: ['rgba(255, 159, 64, 0.9)', 'rgba(75, 192, 192, 0.9)']
+                data: [this.report?.averageOccupancy*100, 100-this.report?.averageOccupancy*100],
+                backgroundColor: ['#3250a8', '#a3aabf'],
+                hoverBackgroundColor: ['#3250a8', '#a3aabf']
             }
         ]
     };
+  }
 
-    this.chartOptions = {
-      cutout: '60%',
-      plugins: {
-          legend: {
-              labels: {
-                  color: 'black',
-                  useBorderRadius: true,
-                  borderRadius: 50
-              }
-          }
-      }
-  };
+  setSortVariable(event:any, variable:any){
+    event.preventDefault();
+    event.stopPropagation();
+    if(this.sortVariable == variable)
+      this.ascOrder = !this.ascOrder
+    else{
+      this.ascOrder = true;
+      this.sortVariable = variable;
+    }
+
+    let data = {
+      ticketsReportTemplate: {
+        ...this.filterData.value,
+        ...this.range.value,
+      },
+      sortBy: this.sortVariable,
+      ascOrder: this.ascOrder
+    }
+
+    this.ticketService.sortTickets(data).subscribe({
+        next: (response:any) => {
+          console.log(response);
+          this.tickets = response;
+          this.dataSource = new MatTableDataSource(this.tickets);
+        }
+    });
+
   }
 
 }

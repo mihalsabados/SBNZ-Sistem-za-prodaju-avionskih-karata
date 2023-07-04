@@ -34,6 +34,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 import { AdminReportPageComponent } from './admin-report-page/admin-report-page.component';
 import { ChartModule } from 'primeng/chart';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -74,6 +75,7 @@ import { ChartModule } from 'primeng/chart';
     MatButtonToggleModule,
     MatSelectModule,
     ChartModule,
+    MatProgressSpinnerModule,
     ToastrModule.forRoot({
       timeOut: 5000,
       positionClass: 'toast-bottom-center',

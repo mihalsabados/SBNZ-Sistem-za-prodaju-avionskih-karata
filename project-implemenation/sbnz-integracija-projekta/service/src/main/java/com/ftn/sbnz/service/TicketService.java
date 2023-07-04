@@ -1,6 +1,7 @@
 package com.ftn.sbnz.service;
 
 import com.ftn.sbnz.dto.ReportDTO;
+import com.ftn.sbnz.dto.SortDTO;
 import com.ftn.sbnz.dto.TicketDTO;
 import com.ftn.sbnz.dto.ticket.PassengerDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
@@ -364,5 +365,39 @@ public class TicketService {
                         tickets.add(new TicketDTO(soldTicket, flight));
 
         return tickets;
+    }
+
+    public List<TicketDTO> sortTickets(SortDTO sortDTO) {
+        ReportDTO reportDTO = this.getTicketsReport(sortDTO.getTicketsReportTemplate());
+        List<TicketDTO> tickets = reportDTO.getTickets();
+
+        switch (sortDTO.getSortBy()){
+            case "destination":{
+                tickets.sort(Comparator.comparing(TicketDTO::getDestination));
+                break;
+            }
+            case "departure":{
+                tickets.sort(Comparator.comparing(TicketDTO::getDepartureInDate));
+                break;
+            }
+            case "passenger":{
+                tickets.sort(Comparator.comparing(TicketDTO::getPassengerEmail));
+                break;
+            }
+            case "payer":{
+                tickets.sort(Comparator.comparing(TicketDTO::getPayerEmail));
+                break;
+            }
+            case "price":{
+                tickets.sort(Comparator.comparing(TicketDTO::getFinalPrice));
+                break;
+            }
+        }
+        if(!sortDTO.isAscOrder())
+            Collections.reverse(tickets);
+
+        return tickets;
+
+
     }
 }

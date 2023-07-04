@@ -6,67 +6,6 @@
         </div>
 
         <div class="tableDiv">
-            <div class="filterDiv">
-                <form [formGroup]="filterData" (ngSubmit)="onFilter()">
-                <h4>Filter</h4>
-                <mat-form-field class="destinationField">
-                    <mat-label>Destination</mat-label>
-                    <input type="text"
-                           placeholder="Pick one"
-                           aria-label="Number"
-                           matInput
-                           formControlName="destination"
-                           [matAutocomplete]="auto">
-                    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-                      <mat-option *ngFor="let option of destinations" [value]="option">
-                        {{option}}
-                      </mat-option>
-                    </mat-autocomplete>
-                  </mat-form-field>
-                <mat-form-field>
-                    <mat-label>Enter a date range</mat-label>
-                    <mat-date-range-input [rangePicker]="picker" [formGroup]="range">
-                      <input matStartDate formControlName="startDeparture" placeholder="Start date">
-                      <input matEndDate formControlName="endDeparture" placeholder="End date">
-                    </mat-date-range-input>
-                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                    <mat-date-range-picker #picker></mat-date-range-picker>
-                  </mat-form-field>
-                  <mat-form-field floatLabel="always" class="priceFrom">
-                    <mat-label>Lower Price</mat-label>
-                    <input matInput formControlName="lowerPrice" type="number" class="example-right-align" placeholder="0">
-                    <span matTextPrefix>RSD&nbsp;</span>
-                    <span matTextSuffix>.00</span>
-                  </mat-form-field>
-                  <mat-form-field floatLabel="always" class="priceFrom">
-                    <mat-label>Higher Price</mat-label>
-                    <input matInput formControlName="higherPrice" type="number" class="example-right-align" placeholder="0">
-                    <span matTextPrefix>RSD&nbsp;</span>
-                    <span matTextSuffix>.00</span>
-                  </mat-form-field>
-                  <mat-form-field class="ticketTypeDiv">
-                    <mat-label>Ticket Type</mat-label>
-                    <mat-select formControlName="ticketType" name="food">
-                        <mat-option *ngFor="let ticketType of ticketTypes" [value]="ticketType">
-                          {{ticketType}}
-                        </mat-option>
-                      </mat-select>
-                  </mat-form-field>
-                  <button mat-raised-button color="primary" class="filterButton">Filter</button>
-                </form>
-            </div>
-
-            <div class="sortDiv">
-                <h4>Sort</h4>
-                <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
-                    <mat-button-toggle value="destination">Destination</mat-button-toggle>
-                    <mat-button-toggle value="departure">Departure</mat-button-toggle>
-                    <mat-button-toggle value="passenger">Passenger</mat-button-toggle>
-                    <mat-button-toggle value="passenger">Payer</mat-button-toggle>
-                    <mat-button-toggle value="price">Price</mat-button-toggle>
-                </mat-button-toggle-group>
-            </div>
-
             <table mat-table matSort [dataSource]="dataSource" class="mat-elevation-z8 demo-table">
                 <ng-container matColumnDef="flightNo">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Flight</th>

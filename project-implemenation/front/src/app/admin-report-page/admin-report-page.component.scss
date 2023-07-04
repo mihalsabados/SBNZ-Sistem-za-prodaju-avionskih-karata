@@ -71,8 +71,12 @@
 }
 
 .sortDiv{
-    margin-top: 0;
+    margin-top: 10px;
     margin-bottom: 10px;
+}
+
+.sortDiv h1{
+    text-align: center;
 }
 
 .sortDiv h4{
@@ -97,8 +101,8 @@
 }
 
 .card{
-    background-color: #9dbedf;
     // background-color: white;
+    background-color: #9dbedf;
     justify-content: center;
     align-items: start;
     border-radius: 10%;
@@ -108,11 +112,13 @@
     margin-left: 10px;
     padding: 20px;
     border: 3px solid white;
+    // background-color: rgba(255, 255, 255, 0.349);
 }
 
 .card-stack{
     display: flex;
     justify-content: center;
+    
 }
 
 .chart-stack{
@@ -125,4 +131,21 @@
 .chart{
     width: 500px;
     background-color: rgba(255, 255, 255, 0.349);
+    text-align: center;
+}
+
+.line{
+    margin-top: 50px;
+    margin-bottom: 20px;
+    border: 1px solid white;
+    width: 75%;
+}
+
+.spinner{
+    width: 200px;
+    margin: 0 auto;
+}
+
+.noFound{
+    text-align: center;
 }
