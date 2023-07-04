@@ -1,20 +1,6 @@
+<div>
+    <app-navbar></app-navbar>
 <div class="container">
-    <div class="userInfo">
-        <div >
-            <h4>{{loggedUser.firstName + " "+loggedUser.lastName}}</h4>
-            <h4>{{loggedUser.email}}</h4>
-            <div class="loyaltyDiv">
-                <mat-icon [style]="{color: loyaltyColor}">stars</mat-icon>
-                <h4>{{userStatus}}</h4>
-            </div>
-        </div>
-        <div class="logOut">
-            <button mat-mini-fab matTooltip="Link" color="primary" (click)="logOut()">
-                <mat-icon>exit_to_app</mat-icon>
-            </button>
-        </div>
-       
-    </div>
 
     <div class="infoDiv">
         <h1 class="table-title">Flights</h1>
@@ -66,4 +52,5 @@
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="clickedRow(row)"></tr>
         </table>
     </div>
+</div>
 </div>

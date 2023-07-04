@@ -23,6 +23,18 @@ import {MatDialogModule} from "@angular/material/dialog";
 import { FlightSuggestionDialogComponent } from './buy-ticket/flight-suggestion/flight-suggestion-dialog/flight-suggestion-dialog.component'
 import {MatGridListModule} from '@angular/material/grid-list';
 import { AdminPageComponent } from './admin-page/admin-page.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { PurchasedTicketsPageComponent } from './buy-ticket/purchased-tickets-page/purchased-tickets-page.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatSelectModule} from '@angular/material/select';
+import {MatButtonToggleModule} from '@angular/material/button-toggle';
+import { AdminReportPageComponent } from './admin-report-page/admin-report-page.component';
+import { ChartModule } from 'primeng/chart';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -33,7 +45,10 @@ import { AdminPageComponent } from './admin-page/admin-page.component';
     FlightsPageComponent,
     ResponseDialogComponent,
     FlightSuggestionDialogComponent,
-    AdminPageComponent
+    AdminPageComponent,
+    NavbarComponent,
+    PurchasedTicketsPageComponent,
+    AdminReportPageComponent
   ],
   imports: [
     BrowserModule,
@@ -52,6 +67,15 @@ import { AdminPageComponent } from './admin-page/admin-page.component';
     FormsModule,
     MatDialogModule,
     MatGridListModule,
+    MatToolbarModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatAutocompleteModule,
+    MatButtonToggleModule,
+    MatSelectModule,
+    ChartModule,
+    MatProgressSpinnerModule,
     ToastrModule.forRoot({
       timeOut: 5000,
       positionClass: 'toast-bottom-center',

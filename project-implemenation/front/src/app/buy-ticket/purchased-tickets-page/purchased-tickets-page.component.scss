@@ -38,14 +38,15 @@
 }
 
 .tableDiv{
-    width: 1200px;
+    width: 1400px;
     margin: 0 auto;
+    margin-top: 50px;
 }
 
 .mat-mdc-row .mat-mdc-cell {
     border-bottom: 1px solid transparent;
     border-top: 1px solid transparent;
-    cursor: pointer;
+    // cursor: pointer;
   }
 
 .mat-mdc-row:hover .mat-mdc-cell {
@@ -53,5 +54,37 @@
 }
   
 .demo-row-is-clicked {
-font-weight: bold;
+    font-weight: bold;
+}
+
+.priceFrom{
+    margin-left: 10px;
+    width: 200px;
+}
+
+.destinationField{
+    margin-right: 10px;
+}
+
+.ticketTypeDiv{
+    margin-left: 10px;
+}
+
+.sortDiv{
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.sortDiv h4{
+    margin: 10px 0;
+
+}
+
+.filterButton{
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+.filterDiv{
+    align-items: center;
 }

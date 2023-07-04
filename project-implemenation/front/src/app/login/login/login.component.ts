@@ -39,7 +39,7 @@ export class LoginComponent {
         this.toastr.success("Successful login");
         this.authService.setCurrentUser(res);
         if(this.authService.getCurrentUser().userType == "ADMIN")
-          this.router.navigateByUrl("admin-page");
+          this.router.navigateByUrl("set-prices-page");
         else
           this.router.navigateByUrl("flights");
       },

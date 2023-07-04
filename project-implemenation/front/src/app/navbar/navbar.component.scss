@@ -1,0 +1,94 @@
+.example-icon {
+  padding: 0 14px;
+}
+  
+.example-spacer {
+  flex: 1 0 auto;
+}
+
+.toolbar{
+    position:relative;
+    background-color: white;
+    border-bottom: 1px solid black;
+}
+
+.logo{
+  font-size: 26px;
+  margin-left: 50px;
+}
+
+.imagelogo{
+  width: 100px;
+  height: 30px;
+  margin-left: 5px;
+  background-image: url("../../assets/logo.png");
+  background-repeat:no-repeat;
+  background-size:contain;
+  z-index: 50;
+}
+
+.menu-button{
+  // margin-left: 520px;
+  margin-left: 100px;
+}
+
+.menu-button button{
+  margin: 0 10px;
+}
+
+.infoDiv{
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.userInfo{
+  max-width: 500px;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  background-color: #9dbedf;
+  border-radius: 6px;
+  padding: 8px 12px;
+}
+
+.userInfo p{
+  padding: 0px;
+  margin: 0px;
+  font-size: 14px;
+  line-height: 18px;
+  // font-weight: 600;
+}
+
+.loyaltyDiv{
+  display: flex;
+  margin-right: 8px;
+  // height: 50px;
+  // width: 50px;
+  background-color: black;
+  // transform: scale(1.2);
+  border-radius: 15px;
+}
+
+.adminDiv{
+  display: flex;
+  margin-right: 8px;
+}
+
+.icon{
+  // font-size: 32px;
+  transform: scale(0.8);
+}
+
+.super-icon{
+  transform: scale(1.4);
+}
+
+.logOut{
+  margin-left: 80px;
+  z-index: 10;
+}

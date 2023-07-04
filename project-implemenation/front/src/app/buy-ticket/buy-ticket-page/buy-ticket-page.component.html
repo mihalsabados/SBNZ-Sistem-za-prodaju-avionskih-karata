@@ -1,15 +1,10 @@
+<div>
+  <app-navbar></app-navbar>
+
 <div class="container">
   <button mat-icon-button (click)="goBack()" class="back-button">
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <div class="userInfo">
-      <h4>{{loggedUser.firstName + " "+loggedUser.lastName}}</h4>
-      <h4>{{loggedUser.email}}</h4>
-      <div class="loyaltyDiv">
-          <mat-icon [style]="{color: loyaltyColor}">stars</mat-icon>
-          <h4>{{userStatus}}</h4>
-      </div>
-  </div>
   <mat-card class="flight-info">
     <mat-card-content class="flight-info-content">
       <h2>Buy ticket for flight with Destination: {{destination}} | Departure: {{departure}}</h2>
@@ -93,7 +88,7 @@
     </div>
   </mat-card>
 </div>
-
+</div>
 
 
   

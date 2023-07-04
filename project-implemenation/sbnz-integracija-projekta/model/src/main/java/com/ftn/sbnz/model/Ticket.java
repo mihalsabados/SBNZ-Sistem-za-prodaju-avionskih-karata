@@ -23,7 +23,7 @@ import java.util.List;
 @ToString
 @Role(Role.Type.EVENT)
 @Timestamp("timestamp")
-@Expires("2h30m")
+@Expires("100d")
 public class Ticket {
     @Id
     private Long id;

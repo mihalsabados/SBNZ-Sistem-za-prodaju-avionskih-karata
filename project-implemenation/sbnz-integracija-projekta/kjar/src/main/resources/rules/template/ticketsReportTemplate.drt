@@ -1,0 +1,139 @@
+template header
+destination
+startDeparture
+endDeparture
+filterSalience
+countSalience
+averageSalience
+
+package rules.template
+
+import com.ftn.sbnz.model.Ticket
+import com.ftn.sbnz.model.Flight
+import com.ftn.sbnz.model.Report
+
+import java.util.ArrayList;
+import java.util.List;
+
+template "Tickets Report template"
+
+    rule "Filtering_tickets_@{row.rowNumber}"
+        salience @{filterSalience}
+        when
+            $r: Report()
+            $flight: Flight(
+                $soldTickets: soldTickets,
+                isDepartureBetweenDates("${startDeparture}", "${endDeparture}"),
+                (isDestinationNull("${destination}") || destination == "${destination}"))
+            $t: Ticket() from $soldTickets
+        then
+            $r.getTickets().add($t);
+    end
+
+    rule "Count_flights_@{row.rowNumber}"
+        salience @{countSalience}
+        when
+            $r: Report($tickets: tickets)
+            Number($numOfFlights: intValue) from accumulate(
+                $flight: Flight(
+                    $soldTickets: soldTickets,
+                    isDepartureBetweenDates("${startDeparture}", "${endDeparture}"),
+                    (isDestinationNull("${destination}") || destination == "${destination}")),
+                count($flight)
+            )
+        then
+            modify($r){
+                setNumberOfFlights($numOfFlights)
+            }
+    end
+
+    rule "Count_tickets_@{row.rowNumber}"
+        salience @{countSalience}
+        when
+            $r: Report($tickets: tickets)
+            Number($ticketSize: intValue) from accumulate(
+                $t:Ticket() from $tickets,
+                count($t)
+            )
+        then
+            modify($r){
+                setNumberOfTickets($ticketSize)
+            }
+    end
+
+    rule "Count_Business_tickets_@{row.rowNumber}"
+        salience @{countSalience}
+        when
+            $r: Report($tickets: tickets)
+            Number($ticketSize: intValue) from accumulate(
+                $t:Ticket(ticketType == TicketType.BUSINESS) from $tickets,
+                count($t)
+            )
+        then
+            modify($r){
+                setNumberOfBusinessTickets($ticketSize)
+            }
+    end
+
+    rule "Count_Economic_tickets_@{row.rowNumber}"
+        salience @{countSalience}
+        when
+            $r: Report($tickets: tickets)
+            Number($ticketSize: intValue) from accumulate(
+                $t:Ticket(ticketType == TicketType.ECONOMIC) from $tickets,
+                count($t)
+            )
+        then
+            modify($r){
+                setNumberOfEconomicTickets($ticketSize)
+            }
+    end
+
+    rule "Total_Price_@{row.rowNumber}"
+        salience @{countSalience}
+        when
+            $r: Report($tickets: tickets)
+            Number($totalPrice: doubleValue) from accumulate(
+                $fl: Ticket($finalPrice: finalPrice) from $tickets,
+                sum($finalPrice)
+            )
+        then
+            modify($r){
+                setTotalAmount($totalPrice)
+            }
+    end
+
+    rule "Average_Occupancy_@{row.rowNumber}"
+        salience @{averageSalience}
+        when
+            $r: Report()
+            Number($avgOccupancy: doubleValue) from accumulate(
+                $fl: Flight(
+                    isDepartureBetweenDates("${startDeparture}", "${endDeparture}"),
+                    (isDestinationNull("${destination}") || destination == "${destination}"),
+                    $ticketNum: Integer.valueOf(soldTickets.size()),
+                    $seatsNum: Integer.valueOf(numberOfSeats)),
+                average($ticketNum.doubleValue() / $seatsNum.doubleValue())
+            )
+        then
+            modify($r){
+                setAverageOccupancy($avgOccupancy)
+            }
+    end
+
+    rule "Average_Price_@{row.rowNumber}"
+        salience @{averageSalience}
+        when
+            $r: Report($tickets: tickets)
+           Number($averagePrice: doubleValue) from accumulate(
+               $fl: Ticket($finalPrice: finalPrice) from $tickets,
+               average($finalPrice)
+           )
+        then
+            modify($r){
+                setAveragePrice($averagePrice)
+            }
+    end
+
+
+end template
