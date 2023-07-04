@@ -15,10 +15,10 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
     <div class="base-price-div" *ngIf="(data.flightFound) && (data.basePrice !== data.finalPrice)">
-        <label class="final-price">Base price:<b>  {{data.basePrice}} RSD</b></label>
+        <label class="final-price">Base price:<b>  {{parser.format(data.basePrice)}} RSD</b></label>
     </div>
     <div class="final-price-div" *ngIf="data.flightFound">
-        <label class="final-price">Final price:<b>  {{data.finalPrice}} RSD</b></label>
+        <label class="final-price">Final price:<b>  {{parser.format(data.finalPrice)}} RSD</b></label>
     </div>
     <div *ngIf="!data.flightFound" class="div-fail">
         <label class="final-price">No flight found</label>

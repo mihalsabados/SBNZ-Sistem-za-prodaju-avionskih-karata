@@ -12,6 +12,7 @@ export class ResponseDialogComponent {
   constructor(@Inject(MAT_DIALOG_DATA) public data: TicketToShowDTO, private dialogRef: MatDialogRef<ResponseDialogComponent>, private location: Location) {
     this.dialogRef.disableClose = true;
   }
+  parser = new Intl.NumberFormat('en-DE');
 
   displayedColumns: ['name', 'percentage'];
 

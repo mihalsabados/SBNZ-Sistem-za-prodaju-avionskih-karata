@@ -18,7 +18,7 @@ import java.util.Date;
 @ToString
 @Role(Role.Type.EVENT)
 @Timestamp("timestamp")
-@Expires("100d")
+@Expires("500d")
 public class LastMinuteEvent {
     @Id
     private Long id;

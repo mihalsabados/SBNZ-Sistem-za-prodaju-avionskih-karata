@@ -103,7 +103,7 @@ public class ServiceApplication implements CommandLineRunner{
 
 		long index = 1L;
 		for (Flight flight: flights) {
-			for (int i = 0; i < 2; i++){
+			for (int i = 0; i < 5; i++){
 				Random rand = new Random();
 				Ticket newTicket = new Ticket(index++, passengerList.get(rand.nextInt(passengerList.size())),
 						passengerList.get(rand.nextInt(passengerList.size())), null, flight.getPrice(),
@@ -113,15 +113,6 @@ public class ServiceApplication implements CommandLineRunner{
 				flightRepository.save(flight);
 			}
 		}
-
-//		List<Ticket> tickets = List.of(
-//			new Ticket(1L, passengerList.get(0), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS, new Date()),
-//			new Ticket(2L, passengerList.get(1), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS, new Date()),
-//			new Ticket(3L, passengerList.get(2), passengerList.get(0), null, 40000, 40000, TicketType.BUSINESS, new Date()),
-//			new Ticket(4L, passengerList.get(1), passengerList.get(1), null, 40000, 40000, TicketType.BUSINESS, new Date()),
-//			new Ticket(5L, passengerList.get(2), passengerList.get(3), null, 40000, 40000, TicketType.BUSINESS, new Date())
-//		);
-//		ticketRepository.saveAll(tickets);
 	}
 
 	private void createInitialFlights() throws ParseException {

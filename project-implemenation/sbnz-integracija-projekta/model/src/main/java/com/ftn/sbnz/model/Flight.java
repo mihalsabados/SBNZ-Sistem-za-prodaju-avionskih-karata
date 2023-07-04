@@ -21,7 +21,7 @@ import java.util.*;
 @ToString
 @Role(Role.Type.EVENT)
 @Timestamp("departure")
-@Expires("100d")
+@Expires("500d")
 public class Flight {
     @Id
     private Long id;
