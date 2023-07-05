@@ -50,4 +50,13 @@ public class TicketDTO {
         }
     }
 
+    public Date getTimestampInDate(){
+        SimpleDateFormat ft = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+        try {
+            return ft.parse(this.timestamp);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
 }

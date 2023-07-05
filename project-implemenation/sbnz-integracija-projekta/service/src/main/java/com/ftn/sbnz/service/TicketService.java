@@ -1,7 +1,7 @@
 package com.ftn.sbnz.service;
 
 import com.ftn.sbnz.dto.ReportDTO;
-import com.ftn.sbnz.dto.SortDTO;
+import com.ftn.sbnz.dto.SortTicketsDTO;
 import com.ftn.sbnz.dto.TicketDTO;
 import com.ftn.sbnz.dto.ticket.PassengerDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
@@ -46,10 +46,11 @@ public class TicketService {
 
 
     public TicketToShowDTO createTicket(TicketDataDTO ticketDataDTO) {
-        User passenger = this.userRepository.findByEmail(ticketDataDTO.getPassengerData().getEmailPassenger()).
-                orElse(createNewUser(ticketDataDTO.getPassengerData()));
-        User payer = this.userRepository.findByEmail(ticketDataDTO.getPayerEmail()).
-                orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
+        User passenger = this.userRepository.findByEmail(ticketDataDTO.getPassengerData().getEmailPassenger())
+                .orElseGet(() -> createNewUser(ticketDataDTO.getPassengerData()));
+
+        User payer = this.userRepository.findByEmail(ticketDataDTO.getPayerEmail())
+                .orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
 
         long newId = this.ticketRepository.count() + 1;
 
@@ -272,7 +273,7 @@ public class TicketService {
 
     public TicketToShowDTO acceptSuggestedFlight(TicketDataDTO ticketDataDTO) {
         User passenger = this.userRepository.findByEmail(ticketDataDTO.getPassengerData().getEmailPassenger()).
-                orElse(createNewUser(ticketDataDTO.getPassengerData()));
+                orElseGet(() -> createNewUser(ticketDataDTO.getPassengerData()));
         User payer = this.userRepository.findByEmail(ticketDataDTO.getPayerEmail()).
                 orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
 
@@ -306,12 +307,6 @@ public class TicketService {
     }
 
     public ReportDTO getAllTickets() {
-//        List<Flight> flights = flightRepository.findAll();
-//        List<TicketDTO> tickets = new ArrayList<>();
-//        for (Flight flight :flights)
-//            for (Ticket soldTicket: flight.getSoldTickets())
-//                tickets.add(new TicketDTO(soldTicket, flight));
-//        return tickets;
         return getTicketsReport(new TicketsReportTemplate());
     }
 
@@ -324,13 +319,14 @@ public class TicketService {
                 tickets.add(new TicketDTO(soldTicket, flight));
             }
         }
+        tickets.sort(Comparator.comparing(TicketDTO::getTimestampInDate));
+        Collections.reverse(tickets);
         return tickets;
     }
 
     public ReportDTO getTicketsReport(TicketsReportTemplate filterTicketsTemplate) {
-        filterTicketsTemplate.setFilterSalience(3);
-        filterTicketsTemplate.setCountSalience(2);
-        filterTicketsTemplate.setAverageSalience(1);
+        filterTicketsTemplate.setFilterSalience(4);
+        filterTicketsTemplate.setAccumulateSalience(3);
 
         InputStream template = TicketService.class.getResourceAsStream("/rules/template/ticketsReportTemplate.drt");
 
@@ -348,7 +344,7 @@ public class TicketService {
         ksession.insert(newReport);
 
         int rulesFired = ksession.fireAllRules();
-        System.out.println("Rules fired for ticket number discount template: " + rulesFired);
+        System.out.println("Rules fired for ticket report template: " + rulesFired);
 
         ReportDTO reportDTO = new ReportDTO(newReport);
         reportDTO.setTickets(convertTicketsToDTO(newReport.getTickets()));
@@ -367,37 +363,48 @@ public class TicketService {
         return tickets;
     }
 
-    public List<TicketDTO> sortTickets(SortDTO sortDTO) {
-        ReportDTO reportDTO = this.getTicketsReport(sortDTO.getTicketsReportTemplate());
-        List<TicketDTO> tickets = reportDTO.getTickets();
+    public List<TicketDTO> sortTickets(SortTicketsDTO sortTicketsDTO) {
+        sortTicketsDTO.getSortTemplate().setSortSalience(2);
+        sortTicketsDTO.getSortTemplate().setOrderSalience(1);
+        renameSortingParameters(sortTicketsDTO);
+        ReportDTO reportDTO = this.getTicketsReport(sortTicketsDTO.getTicketsReportTemplate());
 
-        switch (sortDTO.getSortBy()){
-            case "destination":{
-                tickets.sort(Comparator.comparing(TicketDTO::getDestination));
+        InputStream template = TicketService.class.getResourceAsStream("/rules/template/sortTicketsTemplate.drt");
+
+        List<SortTemplate> ticketsReportTemplates = List.of(sortTicketsDTO.getSortTemplate());
+        ObjectDataCompiler compiler = new ObjectDataCompiler();
+        String drl = compiler.compile(ticketsReportTemplates, template);
+
+        KieHelper kieHelper = new KieHelper();
+        kieHelper.addContent(drl, ResourceType.DRL);
+        KieSession ksession = kieHelper.build().newKieSession();
+
+        ksession.insert(reportDTO);
+
+        int rulesFired = ksession.fireAllRules();
+        System.out.println("Rules fired for sort template: " + rulesFired);
+
+        return reportDTO.getTickets();
+    }
+
+    private void renameSortingParameters(SortTicketsDTO sortTicketsDTO) {
+        switch (sortTicketsDTO.getSortTemplate().getSortParameter()){
+            case "Departure":{
+                sortTicketsDTO.getSortTemplate().setSortParameter("DepartureInDate");
                 break;
             }
-            case "departure":{
-                tickets.sort(Comparator.comparing(TicketDTO::getDepartureInDate));
+            case "Passenger":{
+                sortTicketsDTO.getSortTemplate().setSortParameter("PassengerEmail");
                 break;
             }
-            case "passenger":{
-                tickets.sort(Comparator.comparing(TicketDTO::getPassengerEmail));
+            case "Payer":{
+                sortTicketsDTO.getSortTemplate().setSortParameter("PayerEmail");
                 break;
             }
-            case "payer":{
-                tickets.sort(Comparator.comparing(TicketDTO::getPayerEmail));
-                break;
-            }
-            case "price":{
-                tickets.sort(Comparator.comparing(TicketDTO::getFinalPrice));
+            case "Price":{
+                sortTicketsDTO.getSortTemplate().setSortParameter("FinalPrice");
                 break;
             }
         }
-        if(!sortDTO.isAscOrder())
-            Collections.reverse(tickets);
-
-        return tickets;
-
-
     }
 }

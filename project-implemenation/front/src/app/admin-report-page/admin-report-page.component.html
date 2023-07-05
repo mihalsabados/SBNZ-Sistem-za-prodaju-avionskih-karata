@@ -78,30 +78,30 @@
                 <h1>Tickets</h1>
                 <h4>Sort by</h4>
                 <div class="sortVars" aria-label="Font Style" >
-                    <button mat-flat-button [disabled]="tickets.length < 2" (click)="setSortVariable($event,'destination')" [style]="{backgroundColor:sortVariable == 'destination'?'#aeb0b5':'white'}">
+                    <button mat-flat-button [disabled]="tickets.length < 2" (click)="setSortVariable($event,'Destination')" [style]="{backgroundColor:sortVariable == 'Destination'?'#aeb0b5':'white'}">
                         Destination 
-                        <mat-icon *ngIf="!ascOrder && sortVariable == 'destination'">keyboard_arrow_down</mat-icon>
-                        <mat-icon *ngIf="ascOrder && sortVariable == 'destination'">keyboard_arrow_up</mat-icon>
+                        <mat-icon *ngIf="!ascOrder && sortVariable == 'Destination'">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="ascOrder && sortVariable == 'Destination'">keyboard_arrow_up</mat-icon>
                     </button>
-                    <button mat-flat-button [disabled]="tickets.length < 2" (click)="setSortVariable($event,'departure')" [style]="{backgroundColor:sortVariable == 'departure'?'#aeb0b5':'white'}">
+                    <button mat-flat-button [disabled]="tickets.length < 2" (click)="setSortVariable($event,'Departure')" [style]="{backgroundColor:sortVariable == 'Departure'?'#aeb0b5':'white'}">
                         Departure
-                        <mat-icon *ngIf="!ascOrder && sortVariable == 'departure'">keyboard_arrow_down</mat-icon>
-                        <mat-icon *ngIf="ascOrder && sortVariable == 'departure'">keyboard_arrow_up</mat-icon>
+                        <mat-icon *ngIf="!ascOrder && sortVariable == 'Departure'">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="ascOrder && sortVariable == 'Departure'">keyboard_arrow_up</mat-icon>
                     </button>
-                    <button mat-flat-button [disabled]="tickets.length < 2" (click)="setSortVariable($event,'passenger')" [style]="{backgroundColor:sortVariable == 'passenger'?'#aeb0b5':'white'}">
+                    <button mat-flat-button [disabled]="tickets.length < 2" (click)="setSortVariable($event,'Passenger')" [style]="{backgroundColor:sortVariable == 'Passenger'?'#aeb0b5':'white'}">
                         Passenger
-                        <mat-icon *ngIf="!ascOrder && sortVariable == 'passenger'">keyboard_arrow_down</mat-icon>
-                        <mat-icon *ngIf="ascOrder && sortVariable == 'passenger'">keyboard_arrow_up</mat-icon>
+                        <mat-icon *ngIf="!ascOrder && sortVariable == 'Passenger'">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="ascOrder && sortVariable == 'Passenger'">keyboard_arrow_up</mat-icon>
                     </button>
-                    <button mat-flat-button [disabled]="tickets.length < 2" (click)="setSortVariable($event,'payer')" [style]="{backgroundColor:sortVariable == 'payer'?'#aeb0b5':'white'}">
+                    <button mat-flat-button [disabled]="tickets.length < 2" (click)="setSortVariable($event,'Payer')" [style]="{backgroundColor:sortVariable == 'Payer'?'#aeb0b5':'white'}">
                         Payer
-                        <mat-icon *ngIf="!ascOrder && sortVariable == 'payer'">keyboard_arrow_down</mat-icon>
-                        <mat-icon *ngIf="ascOrder && sortVariable == 'payer'">keyboard_arrow_up</mat-icon>
+                        <mat-icon *ngIf="!ascOrder && sortVariable == 'Payer'">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="ascOrder && sortVariable == 'Payer'">keyboard_arrow_up</mat-icon>
                     </button>
-                    <button mat-flat-button [disabled]="tickets.length < 2" (click)="setSortVariable($event,'price')" [style]="{backgroundColor:sortVariable == 'price'?'#aeb0b5':'white'}">
+                    <button mat-flat-button [disabled]="tickets.length < 2" (click)="setSortVariable($event,'Price')" [style]="{backgroundColor:sortVariable == 'Price'?'#aeb0b5':'white'}">
                         Price
-                        <mat-icon *ngIf="!ascOrder && sortVariable == 'price'">keyboard_arrow_down</mat-icon>
-                        <mat-icon *ngIf="ascOrder && sortVariable == 'price'">keyboard_arrow_up</mat-icon>
+                        <mat-icon *ngIf="!ascOrder && sortVariable == 'Price'">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="ascOrder && sortVariable == 'Price'">keyboard_arrow_up</mat-icon>
                     </button>
                 </div>
             </div>

@@ -16,6 +16,5 @@ public class TicketsReportTemplate {
     private Date startDeparture;
     private Date endDeparture;
     private int filterSalience;
-    private int countSalience;
-    private int averageSalience;
+    private int accumulateSalience;
 }

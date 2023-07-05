@@ -1,5 +1,6 @@
 package com.ftn.sbnz.dto;
 
+import com.ftn.sbnz.model.SortTemplate;
 import com.ftn.sbnz.model.TicketsReportTemplate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SortDTO {
+public class SortTicketsDTO {
     private TicketsReportTemplate ticketsReportTemplate;
-    private String sortBy;
-    private boolean ascOrder;
+    private SortTemplate sortTemplate;
 }

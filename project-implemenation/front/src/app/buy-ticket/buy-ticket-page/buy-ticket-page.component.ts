@@ -12,7 +12,6 @@ import { TicketToShowDTO } from 'src/app/model/ticketToShowDTO';
 import { FlightSuggestionDialogComponent } from '../flight-suggestion/flight-suggestion-dialog/flight-suggestion-dialog.component';
 import { FlightDTO } from 'src/app/model/flightDTO';
 import { UserService } from 'src/app/services/user/user.service';
-import { catchError, throwError } from 'rxjs';
 
 @Component({
   selector: 'app-buy-ticket-page',
@@ -48,7 +47,6 @@ export class BuyTicketPageComponent {
 
   ngOnInit(): void {
     this.loggedUser = this.authService.getCurrentUser();
-    this.getUserStatus();
 
     this.anotherPassengerForm = new FormGroup({
       emailPassenger: new FormControl('', [Validators.required, Validators.email]),
@@ -60,21 +58,6 @@ export class BuyTicketPageComponent {
     })
 
     this.passengerIsPayer();
-  }
-
-  private getUserStatus() {
-    this.userService.getUserStatus(this.loggedUser.email)
-    .pipe(catchError(err => {return throwError(() => {new Error('greska')} )}))
-    .subscribe({
-      next: (response:string) => {
-        this.userStatus = response;
-        this.loyaltyColor = this.userStatus == "REGULAR"?"#F0F8FF":this.userStatus == "BRONZE"?"#CD7F32":this.userStatus == "SILVER"?"#C0C0C0":"#FFD700";
-      },
-      error: (err) => {
-        console.log("Greska");
-      }
-    }
-  );
   }
 
   onSubmit(){

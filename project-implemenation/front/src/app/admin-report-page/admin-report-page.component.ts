@@ -79,6 +79,7 @@ export class AdminReportPageComponent implements OnInit {
       ...this.range.value,
     }
     console.log(data);
+    this.sortVariable = "";
 
     this.ticketService.getTicketsReport(data)
     .subscribe({
@@ -130,12 +131,14 @@ export class AdminReportPageComponent implements OnInit {
     }
 
     let data = {
-      ticketsReportTemplate: {
+      ticketsReportTemplate:{
         ...this.filterData.value,
         ...this.range.value,
       },
-      sortBy: this.sortVariable,
-      ascOrder: this.ascOrder
+      sortTemplate:{
+        sortParameter: this.sortVariable,
+        ascOrder: this.ascOrder
+      }
     }
 
     this.ticketService.sortTickets(data).subscribe({

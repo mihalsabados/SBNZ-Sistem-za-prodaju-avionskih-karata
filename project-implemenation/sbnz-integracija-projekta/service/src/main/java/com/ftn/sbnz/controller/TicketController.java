@@ -2,12 +2,11 @@ package com.ftn.sbnz.controller;
 
 import com.ftn.sbnz.dto.FlightDTO;
 import com.ftn.sbnz.dto.ReportDTO;
-import com.ftn.sbnz.dto.SortDTO;
+import com.ftn.sbnz.dto.SortTicketsDTO;
 import com.ftn.sbnz.dto.TicketDTO;
 import com.ftn.sbnz.dto.ticket.TicketDataDTO;
 import com.ftn.sbnz.dto.ticket.TicketToShowDTO;
 import com.ftn.sbnz.exception.UserIsBlockedException;
-import com.ftn.sbnz.model.Report;
 import com.ftn.sbnz.model.TicketsReportTemplate;
 import com.ftn.sbnz.model.Flight;
 import com.ftn.sbnz.model.PriceTemplate;
@@ -86,8 +85,8 @@ public class TicketController {
 
 
     @PostMapping("/sort-tickets")
-    public ResponseEntity<?> sortTickets(@RequestBody SortDTO sortDTO) {
-        List<TicketDTO> sortedTickets = ticketService.sortTickets(sortDTO);
+    public ResponseEntity<?> sortTickets(@RequestBody SortTicketsDTO sortTicketsDTO) {
+        List<TicketDTO> sortedTickets = ticketService.sortTickets(sortTicketsDTO);
         return ResponseEntity.ok(sortedTickets);
     }
 }
