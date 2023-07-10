@@ -61,7 +61,7 @@ public class TicketController {
 
     @PostMapping("/accept-suggested-flight")
     public ResponseEntity<?> acceptSuggestedFlight(@RequestBody TicketDataDTO ticketDataDTO) {
-        TicketToShowDTO ticketToShowDTO = ticketService.acceptSuggestedFlight(ticketDataDTO);
+        TicketToShowDTO ticketToShowDTO = ticketService.createTicket(ticketDataDTO);
         return ResponseEntity.ok(ticketToShowDTO);
     }
 

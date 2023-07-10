@@ -271,25 +271,6 @@ public class TicketService {
         return user;
     }
 
-    public TicketToShowDTO acceptSuggestedFlight(TicketDataDTO ticketDataDTO) {
-        User passenger = this.userRepository.findByEmail(ticketDataDTO.getPassengerData().getEmailPassenger()).
-                orElseGet(() -> createNewUser(ticketDataDTO.getPassengerData()));
-        User payer = this.userRepository.findByEmail(ticketDataDTO.getPayerEmail()).
-                orElseThrow(() -> new UserNotFoundException("User with this email not found!"));
-
-        long newId = this.ticketRepository.count() + 1;
-
-        Ticket ticket = new Ticket(newId, passenger, payer, null,0, 0,
-                TicketType.valueOf(ticketDataDTO.getCardType().toUpperCase()), new Date());
-
-        ticketRepository.save(ticket);
-        TicketToShowDTO suggestedTicketDTO = checkTicketFlight(ticketDataDTO.getFlightId(), ticket);
-        if (!suggestedTicketDTO.isFlightFound())
-            return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId(), suggestedTicketDTO.isFlightFound());
-        setPrice(ticketDataDTO.getFlightId(), ticket);
-        return new TicketToShowDTO(ticket, ticketDataDTO.getFlightId(), suggestedTicketDTO.isFlightFound());
-    }
-
     public List<PriceTemplate> getPriceTemplate() {
         return this.priceTemplateRepository.findAll();
     }
