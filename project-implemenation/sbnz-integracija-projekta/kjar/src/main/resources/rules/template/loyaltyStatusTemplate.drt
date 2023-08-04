@@ -1,0 +1,33 @@
+template header
+minPrice
+maxPrice
+status
+discountName
+
+package rules.template
+
+import com.ftn.sbnz.model.Ticket
+import com.ftn.sbnz.model.Discount
+import com.ftn.sbnz.model.User
+import com.ftn.sbnz.enums.LoyaltyType
+
+import java.util.ArrayList;
+import java.util.List;
+
+template "loyalty status template"
+
+    rule "Loyalty_@{row.rowNumber}"
+        when
+            $d: Discount(name == "@{discountName}")
+            $u:User()
+            $ticketList:List($ticketNum: size > 0) from collect(Ticket())
+            Number(@{minPrice} <= doubleValue, doubleValue < @{maxPrice}) from accumulate(
+                Ticket(payer == $u, $paid:finalPrice) from $ticketList,
+                sum($paid)
+            )
+        then
+            modify($u){
+                setLoyaltyStatus(LoyaltyType.valueOf("@{status}"))
+            }
+    end
+end template

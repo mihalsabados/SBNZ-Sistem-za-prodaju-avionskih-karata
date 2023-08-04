@@ -1,0 +1,17 @@
+<kmodule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    <kbase name="cepKbase" eventProcessingMode="stream" packages="cep">
+        <ksession name="cepKsession"/>
+    </kbase>
+
+    <kbase name="cepDiscountKbase" eventProcessingMode="stream" packages="cepDiscount">
+        <ksession name="cepDiscountKsession"/>
+    </kbase>
+
+    <kbase name="forwardKbase" eventProcessingMode="stream" packages="forward">
+        <ksession name="forwardKsession"/>
+    </kbase>
+    
+    <kbase name="cepConfigKbase" eventProcessingMode="stream" packages="cep2">
+        <ksession name="cepConfigKsessionPseudoClock" clockType="pseudo"/>
+    </kbase>
+</kmodule>

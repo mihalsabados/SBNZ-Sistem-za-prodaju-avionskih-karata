@@ -1,0 +1,87 @@
+.container{
+    padding-bottom: 50px;
+}
+
+.userInfo{
+    margin-left: 20rem;
+    margin-right: 20rem;
+    display: block; 
+    margin-bottom: 2rem;
+}
+
+.userInfo h4{
+    padding-block: 2px;
+    margin-block: 2px;
+    font-weight: 600;
+}
+
+.flight-info{
+    display: flex;
+    align-items: center;
+    margin-left: 20rem;
+    margin-right: 20rem;
+    background-color: rgba(255, 255, 255, 0.527);
+}
+
+.flight-info-content{
+    text-align: center;
+}
+
+.loyaltyDiv{
+    display: flex;
+}
+
+h4{
+    margin-top: 0.2rem;
+}
+
+.back-button{
+    margin-left: 2rem;
+    margin-top: 2rem;
+}
+
+.passenger-info{
+    width: 60%;
+    border: 1px solid black;
+    margin-top: 2rem;
+    max-height: 300px;
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.button-div{
+    text-align: center;
+    padding: 3rem;
+}
+
+.submit-button{
+    margin-right: 3rem;
+}
+
+.cancel-button{
+    margin-left: 3rem;
+}
+
+.form-card{
+    width: 60%;
+    margin-bottom: 1rem;
+}
+
+mat-form-field{
+    width: 100%;
+}
+
+.card-type{
+    width: 60%;
+    border: 1px solid black;
+    margin-top: 2rem;
+    max-height: 300px;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+mat-progress-bar{
+    margin-top: 3rem;
+}
+
+

@@ -1,0 +1,36 @@
+template header
+minTicketNumber
+maxTicketNumber
+ticketType
+discountName
+
+package rules.template
+
+import com.ftn.sbnz.model.Discount
+import com.ftn.sbnz.model.Ticket
+import com.ftn.sbnz.model.Flight
+import com.ftn.sbnz.enums.TicketType
+import java.util.ArrayList;
+import java.util.List;
+
+
+template "ticket number discount template"
+
+rule "TicketNumberDiscount_@{row.rowNumber}"
+    when
+        $d: Discount(name == "@{discountName}")
+        $t: Ticket(ticketType == TicketType.valueOf("@{ticketType}"), $payer: payer)
+        $fl: Flight($tickets: soldTickets, soldTickets contains $t)
+        $numberOfTickets: Number(intValue >= @{minTicketNumber}, intValue < @{maxTicketNumber}) from accumulate(
+            $ticketWithBuyer: Ticket(payer == $payer, ticketType == TicketType.valueOf("@{ticketType}")) from $tickets,
+            count($ticketWithBuyer)
+        )
+    then
+        if ($t.getDiscounts() == null) {
+            $t.setDiscounts(new ArrayList<>());
+        }
+        $t.getDiscounts().add($d);
+        $t.setFinalPrice($t.getFinalPrice() - (($d.getPercentage() / 100) * $t.getFinalPrice()));
+end
+
+end template

@@ -1,0 +1,151 @@
+.container{
+    padding-bottom: 50px;
+    padding-top: 0;
+}
+
+.infoDiv{
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.userInfo{
+    max-width: 500px;
+    margin: 0 auto;
+    text-align: left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.userInfo h4{
+    padding-block: 2px;
+    margin-block: 2px;
+    font-weight: 600;
+}
+
+.loyaltyDiv{
+    display: flex;
+}
+
+.logOut{
+    margin-left: 20px;
+}
+
+.tableDiv{
+    width: 1400px;
+    margin: 0 auto;
+    margin-top: 50px;
+}
+
+.mat-mdc-row .mat-mdc-cell {
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
+    // cursor: pointer;
+  }
+
+.mat-mdc-row:hover .mat-mdc-cell {
+    border-color: currentColor;
+}
+  
+.demo-row-is-clicked {
+    font-weight: bold;
+}
+
+.priceFrom{
+    margin-left: 10px;
+    width: 200px;
+}
+
+.destinationField{
+    margin-right: 10px;
+}
+
+.ticketTypeDiv{
+    margin-left: 10px;
+}
+
+.sortDiv{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.sortDiv h1{
+    text-align: center;
+}
+
+.sortDiv h4{
+    margin: 10px 0;
+
+}
+
+.filterButton{
+    margin-left: 10px;
+    margin-bottom: 20px;
+}
+
+.filterDiv{
+    align-items: center;
+    justify-content: center;
+    width: 700px;
+    margin: 0 auto;
+}
+
+.report{
+    margin-top: 50px;
+}
+
+.card{
+    // background-color: white;
+    background-color: #9dbedf;
+    justify-content: center;
+    align-items: start;
+    border-radius: 10%;
+    text-align: center;
+    min-width: 200px;
+    height: 200px;
+    margin-left: 10px;
+    padding: 20px;
+    border: 3px solid white;
+    // background-color: rgba(255, 255, 255, 0.349);
+}
+
+.card-stack{
+    display: flex;
+    justify-content: center;
+    
+}
+
+.chart-stack{
+    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chart{
+    width: 500px;
+    background-color: rgba(255, 255, 255, 0.349);
+    text-align: center;
+}
+
+.line{
+    margin-top: 50px;
+    margin-bottom: 20px;
+    border: 1px solid white;
+    width: 75%;
+}
+
+.spinner{
+    width: 200px;
+    margin: 0 auto;
+}
+
+.noFound{
+    text-align: center;
+}

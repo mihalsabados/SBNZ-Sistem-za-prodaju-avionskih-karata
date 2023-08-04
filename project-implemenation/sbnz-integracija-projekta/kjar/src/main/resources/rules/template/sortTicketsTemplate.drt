@@ -1,0 +1,37 @@
+template header
+sortParameter
+ascOrder
+sortSalience
+orderSalience
+
+package rules.template
+
+import com.ftn.sbnz.model.Ticket
+import com.ftn.sbnz.model.Flight
+import com.ftn.sbnz.dto.ReportDTO
+import com.ftn.sbnz.dto.TicketDTO
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.*;
+
+template "Sort tickets template"
+
+    rule "Sort_Tickets_@{row.rowNumber}"
+        salience @{sortSalience}
+        when
+            $r: ReportDTO($tickets: tickets)
+        then
+            $tickets.sort(Comparator.comparing(TicketDTO::get${sortParameter}));
+    end
+
+    rule "Order_Tickets_@{row.rowNumber}"
+        salience @{orderSalience}
+        when
+            $r: ReportDTO($tickets: tickets, (false == ${ascOrder}))
+        then
+            Collections.reverse($tickets);
+    end
+
+end template

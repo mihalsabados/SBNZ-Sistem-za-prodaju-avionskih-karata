@@ -1,0 +1,72 @@
+package rules.cep;
+import com.ftn.sbnz.model.Ticket;
+import com.ftn.sbnz.enums.TicketType;
+import com.ftn.sbnz.model.Flight;
+import com.ftn.sbnz.model.User;
+import com.ftn.sbnz.model.RedundantPaymentEvent;
+import com.ftn.sbnz.model.SuspiciousTransactionEvent;
+import java.util.List;
+import java.util.ArrayList
+import javax.sound.midi.SysexMessage;
+import java.util.Arrays;
+
+global Long ticketId
+global Long flightId
+
+rule "2 Tickets with same content from the same customer"
+    no-loop
+    when
+        $t1: Ticket(
+            $payerEmail: payer.getEmail(),
+            $passengerEmail: passenger.getEmail(),
+            $ticketType: ticketType,
+            $ticket1Id: id
+         )
+        $flight: Flight(id == flightId, $soldTickets: soldTickets)
+        $t2: Ticket(
+            payer.getEmail() == $payerEmail,
+            passenger.getEmail() == $passengerEmail,
+            ticketType == $ticketType,
+            $ticket2Id: id,
+            this meets[1h] $t1
+        ) from $soldTickets
+        not RedundantPaymentEvent(ticket1Id == $ticket1Id)
+    then
+        System.out.println("RULE 15");
+        System.out.println($ticket1Id);
+        insert(new RedundantPaymentEvent(flightId, $payerEmail, $ticket1Id, $ticket2Id));
+end
+
+rule "2 redundant payments within 3 hours"
+    no-loop
+    when
+        RedundantPaymentEvent(id == null, $payerEmail: payerEmail, $ticket1Id: ticket1Id, $ticket2Id: ticket2Id)
+        $fl: Flight(id == flightId)
+        Number(intValue >= 2) from accumulate(
+            $rp: RedundantPaymentEvent(flightId == flightId)
+            over window: time(3h),
+            count($rp)
+        )
+        not SuspiciousTransactionEvent(flightId == flightId, payerEmail == payerEmail, ticket1Id == $ticket1Id, ticket2Id == $ticket2Id)
+    then
+        System.out.println("RULE 16");
+        insert(new SuspiciousTransactionEvent(flightId, $payerEmail, $ticket1Id, $ticket2Id));
+        System.out.println(flightId);
+        System.out.println($payerEmail);
+end
+
+rule "2 suspicious transactions within 10 days"
+    no-loop
+    when
+        $st1: SuspiciousTransactionEvent(id == null, $payerEmail: payerEmail)
+        $fl: Flight(id == flightId)
+        Number(intValue >= 2) from accumulate(
+            $st2: SuspiciousTransactionEvent(flightId == flightId)
+            over window: time(10d),
+            count($st2)
+        )
+        $payer: User(email == $payerEmail)
+    then
+        System.out.println("RULE 17");
+        modify($payer){setBlocked(true)};
+end

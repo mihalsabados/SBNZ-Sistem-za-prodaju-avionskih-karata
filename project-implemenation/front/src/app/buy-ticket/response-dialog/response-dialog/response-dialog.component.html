@@ -1,0 +1,27 @@
+<div class="containerDiv">
+    <h2 class="table-title">Successful ticket payment!</h2>
+    <table mat-table matSort [dataSource]="data.discounts" *ngIf="data.flightFound">
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Discount name </th>
+            <td mat-cell *matCellDef="let discount"> {{discount.name}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="percentage">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Percentage </th>
+            <td mat-cell *matCellDef="let discount"> {{discount.percentage}} % </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <div class="base-price-div" *ngIf="(data.flightFound) && (data.basePrice !== data.finalPrice)">
+        <label class="final-price">Base price:<b>  {{parser.format(data.basePrice)}} RSD</b></label>
+    </div>
+    <div class="final-price-div" *ngIf="data.flightFound">
+        <label class="final-price">Final price:<b>  {{parser.format(data.finalPrice)}} RSD</b></label>
+    </div>
+    <div *ngIf="!data.flightFound" class="div-fail">
+        <label class="final-price">No flight found</label>
+    </div>
+    <button mat-raised-button color="primary" type="button" (click)="goBackToFlights()">Confirm</button>
+</div>

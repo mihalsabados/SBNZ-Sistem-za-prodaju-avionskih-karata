@@ -1,0 +1,31 @@
+<div class="container">
+  <h2 class="mat-h2">Suggested Flight</h2>
+  
+  <div cols="1" rowHeight="auto">
+    <div>
+      <h3 class="mat-h3">Flight Number: {{data.flightNumber}}</h3>
+    </div>
+    <div>
+      <h3 class="mat-h3">Destination: {{data.destination}}</h3>
+    </div>
+    <div>
+      <h3 class="mat-h3">Distance: {{data.distance}}</h3>
+    </div>
+    <div>
+      <h3 class="mat-h3">Price: {{data.price}}</h3>
+    </div>
+    <div>
+      <h3 class="mat-h3">Departure: {{data.departure}}</h3>
+    </div>
+    <div>
+      <h3 class="mat-h3">Sold Tickets: {{data.soldTickets}}</h3>
+    </div>
+    <div>
+      <h3 class="mat-h3">Number of Seats: {{data.numberOfSeats}}</h3>
+    </div>
+  </div>
+  <div class="button-div">
+    <button mat-raised-button color="primary" type="button" class="submit-button" (click)="onAccept()">Accept</button>
+    <button mat-raised-button color="warn" class="cancel-button" (click)="onCancel()">Reject</button>
+  </div>
+</div>
