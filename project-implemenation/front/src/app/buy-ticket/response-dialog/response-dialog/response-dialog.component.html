@@ -1,5 +1,5 @@
 <div class="containerDiv">
-    <h2 class="table-title">Successful ticket payment!</h2>
+    <h2 class="table-title" *ngIf="data.flightFound">Successful ticket payment!</h2>
     <table mat-table matSort [dataSource]="data.discounts" *ngIf="data.flightFound">
         <ng-container matColumnDef="name">
             <th mat-header-cell *matHeaderCellDef mat-sort-header disableClear> Discount name </th>
@@ -21,7 +21,7 @@
         <label class="final-price">Final price:<b>  {{parser.format(data.finalPrice)}} RSD</b></label>
     </div>
     <div *ngIf="!data.flightFound" class="div-fail">
-        <label class="final-price">No flight found</label>
+        <label class="final-price">Sorry, there are no available seats on this flight and no alternative flights available</label>
     </div>
     <button mat-raised-button color="primary" type="button" (click)="goBackToFlights()">Confirm</button>
 </div>

@@ -118,23 +118,23 @@ public class ServiceApplication implements CommandLineRunner{
 	private void createInitialFlights() throws ParseException {
 		SimpleDateFormat ft = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 		flightRepository.save(new Flight(1L, "London", 1694, 40000, ft.parse("10.09.2023 12:00"), new ArrayList<>(), 5, false, "LON1"));
-		flightRepository.save(new Flight(2L, "Istanbul", 642, 40000, ft.parse("10.09.2023 12:00"), new ArrayList<>(), 120, false, "IST2"));
-		flightRepository.save(new Flight(3L, "Vienna", 536, 35000, ft.parse("11.09.2023 09:00"), new ArrayList<>(), 125, true, "VIE3"));
-		flightRepository.save(new Flight(4L, "Munich", 871, 45000, ft.parse("07.09.2023 07:30"), new ArrayList<>(), 125, false, "MUN4"));
-		flightRepository.save(new Flight(5L, "Zurich", 1082, 55000, ft.parse("11.09.2023 10:00"), new ArrayList<>(), 120, false, "ZUR5"));
-		flightRepository.save(new Flight(6L, "Rome", 1107, 48000, ft.parse("10.09.2023 15:0"), new ArrayList<>(), 150, true, "ROM6"));
-		flightRepository.save(new Flight(7L, "Paris", 1376, 60000, ft.parse("09.09.2023 09:30"), new ArrayList<>(), 5, false, "PAR7"));
-		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, ft.parse("09.09.2023 05:00"), new ArrayList<>(), 6, false, "AMS8"));
-		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, ft.parse("08.09.2023 17:30"), new ArrayList<>(), 5, false, "MOS9"));
-		flightRepository.save(new Flight(10L, "New York City", 7978, 100000, ft.parse("08.09.2023 10:00"), new ArrayList<>(), 220, false, "NYC10"));
-		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, ft.parse("12.09.2023 12:30"), new ArrayList<>(), 5, false, "CHI11"));
-		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, ft.parse("09.09.2023 20:00"), new ArrayList<>(), 220, true, "LA12"));
-		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, ft.parse("07.09.2023 07:30"), new ArrayList<>(), 220, false, "SYD13"));
-		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, ft.parse("11.09.2023 05:30"), new ArrayList<>(), 6, false, "TKY14"));
-		flightRepository.save(new Flight(15L, "London", 1694, 110000, ft.parse("11.09.2023 05:30"), new ArrayList<>(), 5, true, "LON15")); //radi testa
-		flightRepository.save(new Flight(16L, "Tokyo", 9178, 110000, ft.parse("11.09.2023 08:30"), new ArrayList<>(), 6, false, "TKY16"));
-		flightRepository.save(new Flight(17L, "New York City", 7978, 100000, ft.parse("27.08.2023 20:00"), new ArrayList<>(), 8, false, "NYC17"));
-		flightRepository.save(new Flight(18L, "New York City", 7978, 100000, ft.parse("27.08.2023 22:00"), new ArrayList<>(), 120, false, "NYC18"));
+//		flightRepository.save(new Flight(2L, "Istanbul", 642, 40000, ft.parse("10.09.2023 12:00"), new ArrayList<>(), 120, false, "IST2"));
+//		flightRepository.save(new Flight(3L, "Vienna", 536, 35000, ft.parse("11.09.2023 09:00"), new ArrayList<>(), 125, true, "VIE3"));
+//		flightRepository.save(new Flight(4L, "Munich", 871, 45000, ft.parse("07.09.2023 07:30"), new ArrayList<>(), 125, false, "MUN4"));
+//		flightRepository.save(new Flight(5L, "Zurich", 1082, 55000, ft.parse("11.09.2023 10:00"), new ArrayList<>(), 120, false, "ZUR5"));
+//		flightRepository.save(new Flight(6L, "Rome", 1107, 48000, ft.parse("10.09.2023 15:0"), new ArrayList<>(), 150, true, "ROM6"));
+//		flightRepository.save(new Flight(7L, "Paris", 1376, 60000, ft.parse("09.09.2023 09:30"), new ArrayList<>(), 5, false, "PAR7"));
+//		flightRepository.save(new Flight(8L, "Amsterdam", 1314, 55000, ft.parse("09.09.2023 05:00"), new ArrayList<>(), 6, false, "AMS8"));
+//		flightRepository.save(new Flight(9L, "Moscow", 1548, 70000, ft.parse("08.09.2023 17:30"), new ArrayList<>(), 5, false, "MOS9"));
+//		flightRepository.save(new Flight(10L, "New York City", 7978, 100000, ft.parse("08.09.2023 10:00"), new ArrayList<>(), 220, false, "NYC10"));
+//		flightRepository.save(new Flight(11L, "Chicago", 8200, 110000, ft.parse("12.09.2023 12:30"), new ArrayList<>(), 5, false, "CHI11"));
+//		flightRepository.save(new Flight(12L, "Los Angeles", 10307, 110000, ft.parse("09.09.2023 20:00"), new ArrayList<>(), 220, true, "LA12"));
+//		flightRepository.save(new Flight(13L, "Sydney", 16146, 120000, ft.parse("07.09.2023 07:30"), new ArrayList<>(), 220, false, "SYD13"));
+//		flightRepository.save(new Flight(14L, "Tokyo", 9178, 110000, ft.parse("11.09.2023 05:30"), new ArrayList<>(), 6, false, "TKY14"));
+//		flightRepository.save(new Flight(15L, "London", 1694, 110000, ft.parse("11.09.2023 05:30"), new ArrayList<>(), 5, true, "LON15")); //radi testa
+//		flightRepository.save(new Flight(16L, "Tokyo", 9178, 110000, ft.parse("11.09.2023 08:30"), new ArrayList<>(), 6, false, "TKY16"));
+//		flightRepository.save(new Flight(17L, "New York City", 7978, 100000, ft.parse("27.08.2023 20:00"), new ArrayList<>(), 8, false, "NYC17"));
+//		flightRepository.save(new Flight(18L, "New York City", 7978, 100000, ft.parse("27.08.2023 22:00"), new ArrayList<>(), 120, false, "NYC18"));
 	}
 
 	private void createInitialPriceTemplates() {
